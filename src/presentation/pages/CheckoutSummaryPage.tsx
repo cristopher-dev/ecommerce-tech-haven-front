@@ -24,6 +24,20 @@ const CheckoutSummaryPage: React.FC = () => {
             </li>
           </ol>
         </nav>
+        <div className="mb-4">
+          <div className="progress">
+            <div
+              className="progress-bar"
+              role="progressbar"
+              style={{ width: "66%" }}
+              aria-valuenow={66}
+              aria-valuemin={0}
+              aria-valuemax={100}
+            >
+              Step 2 of 3: Summary
+            </div>
+          </div>
+        </div>
         <h2>Order Summary</h2>
         <div className="row">
           <div className="col-md-8">

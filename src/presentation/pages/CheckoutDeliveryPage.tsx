@@ -21,6 +21,20 @@ const CheckoutDeliveryPage: React.FC = () => {
             </li>
           </ol>
         </nav>
+        <div className="mb-4">
+          <div className="progress">
+            <div
+              className="progress-bar"
+              role="progressbar"
+              style={{ width: "33%" }}
+              aria-valuenow={33}
+              aria-valuemin={0}
+              aria-valuemax={100}
+            >
+              Step 1 of 3: Delivery
+            </div>
+          </div>
+        </div>
         <h2>Billing Details</h2>
         <form>
           <div className="row">

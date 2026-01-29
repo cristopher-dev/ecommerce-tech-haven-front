@@ -32,52 +32,60 @@ const CartPage: React.FC = () => {
           <p>Your cart is empty.</p>
         ) : (
           <>
-            <div className="row">
-              <div className="col-12">
-                {cart.items.map((item) => (
-                  <div key={item.product.id} className="card mb-3">
-                    <div className="card-body">
-                      <div className="row align-items-center">
-                        <div className="col-md-2">
-                          <img
-                            src={item.product.image}
-                            alt={item.product.name}
-                            className="img-fluid"
-                          />
-                        </div>
-                        <div className="col-md-4">
-                          <h5>{item.product.name}</h5>
-                        </div>
-                        <div className="col-md-2">
-                          <input
-                            type="number"
-                            className="form-control"
-                            value={item.quantity}
-                            onChange={(e) =>
-                              handleQuantityChange(
-                                item.product.id,
-                                parseInt(e.target.value) || 0,
-                              )
-                            }
-                            min="1"
-                          />
-                        </div>
-                        <div className="col-md-2">
-                          ${item.product.price.toFixed(2)}
-                        </div>
-                        <div className="col-md-2">
-                          <button
-                            className="btn btn-danger"
-                            onClick={() => removeFromCart(item.product.id)}
-                          >
-                            Remove
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+            <div className="table-responsive">
+              <table className="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Image</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {cart.items.map((item) => (
+                    <tr key={item.product.id}>
+                      <td>{item.product.name}</td>
+                      <td>
+                        <img
+                          src={item.product.image}
+                          alt={item.product.name}
+                          style={{ width: "50px", height: "50px" }}
+                        />
+                      </td>
+                      <td>
+                        <input
+                          type="number"
+                          className="form-control"
+                          value={item.quantity}
+                          onChange={(e) =>
+                            handleQuantityChange(
+                              item.product.id,
+                              parseInt(e.target.value) || 0,
+                            )
+                          }
+                          min="1"
+                          style={{ width: "80px" }}
+                        />
+                      </td>
+                      <td>${item.product.price.toFixed(2)}</td>
+                      <td>
+                        ${(item.product.price * item.quantity).toFixed(2)}
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-danger btn-sm"
+                          onClick={() => removeFromCart(item.product.id)}
+                        >
+                          Remove
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
             <div className="row">
               <div className="col-12 text-end">
