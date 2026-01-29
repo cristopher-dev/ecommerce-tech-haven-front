@@ -16,10 +16,14 @@ const CheckoutSummaryPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const checkout = useAppSelector((state) => state.checkout);
+  const cart = useAppSelector((state) => state.cart);
   const [isProcessing, setIsProcessing] = useState(false);
 
+  // Use cart items from cartSlice, fallback to checkoutSlice
+  const cartItems = cart.items.length > 0 ? cart.items : checkout.cartItems;
+
   // Calculate totals
-  const subtotal = checkout.cartItems.reduce(
+  const subtotal = cartItems.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
     0,
   );
@@ -31,7 +35,7 @@ const CheckoutSummaryPage: React.FC = () => {
     if (
       !checkout.paymentData ||
       !checkout.deliveryData ||
-      checkout.cartItems.length === 0
+      cartItems.length === 0
     ) {
       dispatch(setError("Missing payment or delivery information"));
       return;
@@ -52,8 +56,8 @@ const CheckoutSummaryPage: React.FC = () => {
         customerName,
         customerEmail,
         customerAddress: checkout.deliveryData.address,
-        productId: checkout.cartItems[0]?.product.id || "1",
-        quantity: checkout.cartItems[0]?.quantity || 1,
+        productId: String(cartItems[0]?.product.id || "1"),
+        quantity: cartItems[0]?.quantity || 1,
         cardData: {
           cardNumber: checkout.paymentData.cardNumber,
           cardholderName: checkout.paymentData.cardholderName,
@@ -89,7 +93,7 @@ const CheckoutSummaryPage: React.FC = () => {
     }
   };
 
-  if (checkout.cartItems.length === 0) {
+  if (cartItems.length === 0) {
     return (
       <div>
         <Header />
@@ -166,7 +170,7 @@ const CheckoutSummaryPage: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {checkout.cartItems.map((item) => (
+                {cartItems.map((item) => (
                   <tr key={item.product.id}>
                     <td>{item.product.name}</td>
                     <td>{item.quantity}</td>
