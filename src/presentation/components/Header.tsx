@@ -13,12 +13,12 @@ const Header: React.FC = () => {
   };
   return (
     <header className="header">
-      {/* Top Bar */}
-      <div className="header-top bg-dark text-white py-2">
+      {/* Top Bar (collapsible on small screens) */}
+      <div className="header-top bg-dark text-white py-2 navbar-collapse collapse">
         <div className="container">
           <div className="row align-items-center">
-            <div className="col-md-6">
-              <div className="header-top-left">
+            <div className="col-12 col-md-6">
+              <div className="header-top-left d-flex flex-column flex-md-row align-items-center gap-2">
                 <span className="me-3">
                   <i className="bi bi-telephone me-1"></i>
                   Call us: +1 234 567 890
@@ -29,8 +29,8 @@ const Header: React.FC = () => {
                 </span>
               </div>
             </div>
-            <div className="col-md-6">
-              <div className="header-top-right d-flex justify-content-end align-items-center">
+            <div className="col-12 col-md-6">
+              <div className="header-top-right d-flex justify-content-center justify-content-md-end align-items-center gap-2">
                 <div className="dropdown me-3">
                   <button
                     className="btn btn-link text-white p-0 dropdown-toggle"
@@ -92,12 +92,12 @@ const Header: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Header */}
-      <div className="header-main bg-white border-bottom">
+      {/* Main Header (collapsible on small screens) */}
+      <div className="header-main bg-white border-bottom navbar-collapse collapse">
         <div className="container">
-          <div className="row align-items-center py-3">
+          <div className="row align-items-center py-2 py-md-3">
             {/* Logo */}
-            <div className="col-lg-2 col-md-3">
+            <div className="col-6 col-md-3 col-lg-2">
               <Link className="navbar-brand d-block" to="/">
                 <img
                   src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&h=50&q=80"
@@ -109,7 +109,7 @@ const Header: React.FC = () => {
             </div>
 
             {/* Search Bar */}
-            <div className="col-lg-5 col-md-6">
+            <div className="col-12 col-md-6 col-lg-5">
               <form className="search-form">
                 <div className="input-group">
                   <div className="dropdown">
@@ -161,9 +161,9 @@ const Header: React.FC = () => {
             </div>
 
             {/* User Actions */}
-            <div className="col-lg-5 col-md-3">
+            <div className="col-6 col-md-3 col-lg-5">
               <div className="header-actions d-flex justify-content-end align-items-center gap-3">
-                <div className="header-action">
+                <div className="header-action p-1 p-md-2">
                   <Link
                     to="/account"
                     className="text-decoration-none d-flex align-items-center"
@@ -178,7 +178,7 @@ const Header: React.FC = () => {
                   </Link>
                 </div>
 
-                <div className="header-action">
+                <div className="header-action p-1 p-md-2">
                   <Link
                     to="/wishlist"
                     className="text-decoration-none d-flex align-items-center"
@@ -196,7 +196,7 @@ const Header: React.FC = () => {
                   </Link>
                 </div>
 
-                <div className="header-action">
+                <div className="header-action p-1 p-md-2">
                   <div className="dropdown">
                     <button
                       className="btn btn-link text-decoration-none d-flex align-items-center p-0"
@@ -299,7 +299,7 @@ const Header: React.FC = () => {
             className="navbar-toggler"
             type="button"
             data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
+            data-bs-target=".navbar-collapse"
             aria-controls="navbarNav"
             aria-expanded="false"
             aria-label="Toggle navigation"
