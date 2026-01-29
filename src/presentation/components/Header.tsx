@@ -5,7 +5,7 @@ import { useCart } from "../../infrastructure/hooks/useCart";
 const Header: React.FC = () => {
   const { getTotalItems, cart } = useCart();
   return (
-    <header>
+    <header className="sticky-top">
       {/* Top Bar */}
       <div className="bg-dark text-white py-1">
         <div className="container d-flex justify-content-between align-items-center">
