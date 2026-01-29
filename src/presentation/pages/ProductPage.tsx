@@ -23,7 +23,7 @@ const ProductPage: React.FC = () => {
     setIsAdding(true);
     addToCart(product, 1);
     setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000);
+    setTimeout(() => setShowToast(false), 4000); // Increased to 4 seconds
     // Simulate delay for UX
     setTimeout(() => {
       setIsAdding(false);
@@ -77,17 +77,29 @@ const ProductPage: React.FC = () => {
         </div>
       </main>
       {showToast && (
-        <div className="toast-container position-fixed top-0 end-0 p-3">
-          <div className="toast show" role="alert">
-            <div className="toast-header">
-              <strong className="me-auto">Success</strong>
+        <div
+          className="toast-container position-fixed bottom-0 end-0 p-3"
+          style={{ zIndex: 1050 }}
+        >
+          <div
+            className="toast show bg-success text-white"
+            role="alert"
+            style={{ animation: "slideInRight 0.5s ease-out" }}
+          >
+            <div className="toast-header bg-success text-white">
+              <i className="bi bi-check-circle-fill me-2"></i>
+              <strong className="me-auto">Added to Cart</strong>
               <button
                 type="button"
-                className="btn-close"
+                className="btn-close btn-close-white"
                 onClick={() => setShowToast(false)}
               ></button>
             </div>
-            <div className="toast-body">Product added to cart!</div>
+            <div className="toast-body">
+              <strong>{product.name}</strong> has been added to your cart!
+              <br />
+              <small>Redirecting to cart...</small>
+            </div>
           </div>
         </div>
       )}
