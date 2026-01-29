@@ -6,6 +6,7 @@ import {
   moveToCart,
 } from "@/application/store/slices/wishlistSlice";
 import { addToCart } from "@/application/store/slices/checkoutSlice";
+import { Product } from "@/domain/entities/Product";
 import Header from "@/presentation/components/Header";
 import Footer from "@/presentation/components/Footer";
 
@@ -17,7 +18,7 @@ const WishlistPage: React.FC = () => {
     dispatch(removeFromWishlist(productId));
   };
 
-  const handleMoveToCart = (product: any) => {
+  const handleMoveToCart = (product: Product) => {
     dispatch(
       addToCart({
         product,

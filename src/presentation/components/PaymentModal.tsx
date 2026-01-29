@@ -7,16 +7,14 @@ import {
   getCardType,
   formatCardNumber,
   validateCardInfo,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   type CardType,
 } from "@/shared/utils/cardValidation";
 import "./PaymentModal.scss";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface PaymentModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (paymentData: PaymentFormData) => void;
+  onSubmit: (_paymentData: PaymentFormData) => void;
   loading?: boolean;
 }
 
@@ -31,7 +29,7 @@ export interface PaymentFormData {
 const PaymentModal: React.FC<PaymentModalProps> = ({
   isOpen,
   onClose,
-  onSubmit,
+  onSubmit: handleSubmitPayment,
   loading = false,
 }: PaymentModalProps) => {
   const [formData, setFormData] = useState<PaymentFormData>({
@@ -172,7 +170,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
     });
 
     if (validation.isValid) {
-      onSubmit(formData);
+      handleSubmitPayment(formData);
     }
   };
 
