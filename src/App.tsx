@@ -1,8 +1,23 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./presentation/pages/HomePage";
+import ProductPage from "./presentation/pages/ProductPage";
+import CheckoutDeliveryPage from "./presentation/pages/CheckoutDeliveryPage";
+import CheckoutSummaryPage from "./presentation/pages/CheckoutSummaryPage";
+import CheckoutFinalStatusPage from "./presentation/pages/CheckoutFinalStatusPage";
 import "./App.scss";
 
 function App() {
-  return <HomePage />;
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/product" element={<ProductPage />} />
+        <Route path="/checkout/delivery" element={<CheckoutDeliveryPage />} />
+        <Route path="/checkout/summary" element={<CheckoutSummaryPage />} />
+        <Route path="/checkout/final" element={<CheckoutFinalStatusPage />} />
+      </Routes>
+    </Router>
+  );
 }
 
 export default App;
