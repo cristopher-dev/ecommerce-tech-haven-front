@@ -3,22 +3,26 @@ import React from "react";
 const Features: React.FC = () => {
   const features = [
     {
-      image: "https://picsum.photos/100/100?random=shipping",
+      image:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80",
       title: "Free Shipping",
       desc: "On orders over $50",
     },
     {
-      image: "https://picsum.photos/100/100?random=guarantee",
+      image:
+        "https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80",
       title: "Money Back Guarantee",
       desc: "30 days return policy",
     },
     {
-      image: "https://picsum.photos/100/100?random=support",
+      image:
+        "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80",
       title: "Online Support",
       desc: "24/7 customer service",
     },
     {
-      image: "https://picsum.photos/100/100?random=payment",
+      image:
+        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100&q=80",
       title: "Secure Payment",
       desc: "100% secure transactions",
     },

@@ -12,28 +12,32 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title }) => {
       id: 1,
       name: "Wireless Headphones",
       price: 99.99,
-      image: "https://picsum.photos/300/300?random=headphones",
+      image:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300&q=80",
       discount: 10,
     },
     {
       id: 2,
       name: "Smartphone",
       price: 699.99,
-      image: "https://picsum.photos/300/300?random=smartphone",
+      image:
+        "https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300&q=80",
       discount: 0,
     },
     {
       id: 3,
       name: "Laptop",
       price: 1299.99,
-      image: "https://picsum.photos/300/300?random=laptop",
+      image:
+        "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300&q=80",
       discount: 15,
     },
     {
       id: 4,
       name: "Tablet",
       price: 399.99,
-      image: "https://picsum.photos/300/300?random=tablet",
+      image:
+        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300&q=80",
       discount: 5,
     },
   ];

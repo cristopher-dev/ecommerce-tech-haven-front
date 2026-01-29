@@ -1,6 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { useCart } from "../../infrastructure/hooks/useCart";
 
 const Header: React.FC = () => {
+  const { getTotalItems, cart } = useCart();
   return (
     <header>
       {/* Top Bar */}
@@ -22,7 +25,7 @@ const Header: React.FC = () => {
         <div className="container">
           <a className="navbar-brand" href="#">
             <img
-              src="https://picsum.photos/100/40?random=technology"
+              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=40&q=80"
               alt="TechHaven"
               height="40"
             />
@@ -103,19 +106,50 @@ const Header: React.FC = () => {
                 </a>
               </li>
               <li className="nav-item dropdown">
-                <a
+                <Link
                   className="nav-link dropdown-toggle"
-                  href="#"
+                  to="/cart"
                   id="cartDropdown"
                   role="button"
                   data-bs-toggle="dropdown"
                 >
-                  <i className="bi bi-cart"></i> Cart (0)
-                </a>
+                  <i className="bi bi-cart"></i> Cart ({getTotalItems()})
+                </Link>
                 <ul className="dropdown-menu dropdown-menu-end">
-                  <li>
-                    <div className="p-3">Your cart is empty</div>
-                  </li>
+                  {cart.items.length === 0 ? (
+                    <li>
+                      <div className="p-3">Your cart is empty</div>
+                    </li>
+                  ) : (
+                    <>
+                      {cart.items.slice(0, 3).map((item) => (
+                        <li key={item.product.id}>
+                          <div className="p-2 d-flex align-items-center">
+                            <img
+                              src={item.product.image}
+                              alt={item.product.name}
+                              className="me-2"
+                              style={{ width: "40px", height: "40px" }}
+                            />
+                            <div>
+                              <div>{item.product.name}</div>
+                              <div>
+                                ${item.product.price} x {item.quantity}
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                      ))}
+                      <li>
+                        <hr className="dropdown-divider" />
+                      </li>
+                      <li>
+                        <Link className="dropdown-item text-center" to="/cart">
+                          View Cart
+                        </Link>
+                      </li>
+                    </>
+                  )}
                 </ul>
               </li>
             </ul>

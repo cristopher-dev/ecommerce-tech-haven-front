@@ -9,19 +9,23 @@ const CategoryCarousel: React.FC = () => {
     },
     {
       name: "Gadgets",
-      image: "https://picsum.photos/200/200?random=gadgets",
+      image:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80",
     },
     {
       name: "Smart Home",
-      image: "https://picsum.photos/200/200?random=smarthome",
+      image:
+        "https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80",
     },
     {
       name: "Wearables",
-      image: "https://picsum.photos/200/200?random=wearables",
+      image:
+        "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80",
     },
     {
       name: "Accessories",
-      image: "https://picsum.photos/200/200?random=accessories",
+      image:
+        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80",
     },
   ];
 

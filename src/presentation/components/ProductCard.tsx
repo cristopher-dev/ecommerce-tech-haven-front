@@ -1,18 +1,18 @@
 import React from "react";
-
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  discount: number;
-}
+import { Product } from "../../domain/entities/Product";
+import { useCart } from "../../infrastructure/hooks/useCart";
 
 interface ProductCardProps {
   product: Product;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const { addToCart } = useCart();
+
+  const handleAddToCart = () => {
+    addToCart(product);
+  };
+
   const discountedPrice =
     product.discount > 0
       ? product.price * (1 - product.discount / 100)
@@ -55,7 +55,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </div>
       </div>
       <div className="card-footer bg-white border-0">
-        <button className="btn btn-primary w-100">Add to Cart</button>
+        <button className="btn btn-primary w-100" onClick={handleAddToCart}>
+          Add to Cart
+        </button>
       </div>
     </div>
   );
