@@ -25,3 +25,4 @@ dist-ssr
 leer.txt
 .github/
 *.md
+coverage/
