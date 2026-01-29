@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { useCart } from "../../infrastructure/hooks/useCart";
 
 const CartPage: React.FC = () => {
@@ -67,7 +68,9 @@ const CartPage: React.FC = () => {
           <div className="row">
             <div className="col-12 text-end">
               <h4>Total: ${getTotalPrice().toFixed(2)}</h4>
-              <button className="btn btn-success">Proceed to Checkout</button>
+              <Link to="/checkout/delivery" className="btn btn-success">
+                Proceed to Checkout
+              </Link>
             </div>
           </div>
         </>

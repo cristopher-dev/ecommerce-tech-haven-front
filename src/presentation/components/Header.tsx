@@ -23,13 +23,13 @@ const Header: React.FC = () => {
       {/* Main Navbar */}
       <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div className="container">
-          <a className="navbar-brand" href="#">
+          <Link className="navbar-brand" to="/">
             <img
               src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=40&q=80"
               alt="TechHaven"
               height="40"
             />
-          </a>
+          </Link>
           <button
             className="navbar-toggler"
             type="button"
@@ -69,9 +69,9 @@ const Header: React.FC = () => {
                 </ul>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">
+                <Link className="nav-link" to="/product">
                   Products
-                </a>
+                </Link>
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="#">
