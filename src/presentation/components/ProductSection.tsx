@@ -130,3 +130,4 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title }) => {
     </section>
   );
 };
+export default ProductSection;
