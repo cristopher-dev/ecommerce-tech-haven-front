@@ -1,9 +1,20 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "@/application/store/hooks";
+import {
+  setDeliveryData,
+  setPaymentData,
+  setStep,
+} from "@/application/store/slices/checkoutSlice";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import PaymentModal, { type PaymentFormData } from "../components/PaymentModal";
 
 const CheckoutDeliveryPage: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const checkout = useAppSelector((state) => state.checkout);
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -12,8 +23,29 @@ const CheckoutDeliveryPage: React.FC = () => {
     zipCode: "",
     email: "",
     phone: "",
+    state: "",
   });
+
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    // Restore form from Redux if available
+    if (checkout.deliveryData) {
+      setFormData({
+        firstName: checkout.deliveryData.address.split(" ")[0] || "",
+        lastName:
+          checkout.deliveryData.address.split(" ").slice(1).join(" ") || "",
+        address: checkout.deliveryData.address || "",
+        city: checkout.deliveryData.city || "",
+        zipCode: checkout.deliveryData.postalCode || "",
+        email: "",
+        phone: checkout.deliveryData.phone || "",
+        state: checkout.deliveryData.state || "",
+      });
+    }
+  }, [checkout.deliveryData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -24,7 +56,7 @@ const CheckoutDeliveryPage: React.FC = () => {
     }
   };
 
-  const validateForm = () => {
+  const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
     if (!formData.firstName.trim())
       newErrors.firstName = "First name is required";
@@ -36,16 +68,62 @@ const CheckoutDeliveryPage: React.FC = () => {
     else if (!/\S+@\S+\.\S+/.test(formData.email))
       newErrors.email = "Email is invalid";
     if (!formData.phone.trim()) newErrors.phone = "Phone is required";
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleContinue = (e: React.FormEvent) => {
+  const handleDeliverySubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Mark all fields as touched
+    setTouched({
+      firstName: true,
+      lastName: true,
+      address: true,
+      city: true,
+      zipCode: true,
+      email: true,
+      phone: true,
+      state: true,
+    });
+
     if (validateForm()) {
-      // Proceed to summary
-      window.location.href = "/checkout/summary";
+      // Save delivery data to Redux
+      dispatch(
+        setDeliveryData({
+          address: `${formData.firstName} ${formData.lastName}, ${formData.address}`,
+          city: formData.city,
+          state: formData.state,
+          postalCode: formData.zipCode,
+          phone: formData.phone,
+        }),
+      );
+
+      // Show payment modal
+      setShowPaymentModal(true);
     }
+  };
+
+  const handlePaymentSubmit = (paymentData: PaymentFormData) => {
+    // Save payment data to Redux (without CVV for security)
+    dispatch(
+      setPaymentData({
+        cardNumber: paymentData.cardNumber
+          .slice(-4)
+          .padStart(paymentData.cardNumber.length, "*"),
+        cardholderName: paymentData.cardholderName,
+        expirationMonth: paymentData.expirationMonth,
+        expirationYear: paymentData.expirationYear,
+        cvv: "", // Never store CVV
+      }),
+    );
+
+    setShowPaymentModal(false);
+
+    // Move to summary page
+    dispatch(setStep("summary"));
+    navigate("/checkout/summary");
   };
   return (
     <div>
@@ -78,8 +156,8 @@ const CheckoutDeliveryPage: React.FC = () => {
             </div>
           </div>
         </div>
-        <h2>Billing Details</h2>
-        <form onSubmit={handleContinue}>
+        <h2>Delivery Information</h2>
+        <form onSubmit={handleDeliverySubmit}>
           <div className="row">
             <div className="col-md-6 mb-3">
               <label htmlFor="firstName" className="form-label">
@@ -87,14 +165,15 @@ const CheckoutDeliveryPage: React.FC = () => {
               </label>
               <input
                 type="text"
-                className={`form-control ${errors.firstName ? "is-invalid" : ""}`}
+                className={`form-control ${touched.firstName && errors.firstName ? "is-invalid" : ""}`}
                 id="firstName"
                 name="firstName"
                 value={formData.firstName}
                 onChange={handleChange}
-                required
+                onBlur={() => setTouched({ ...touched, firstName: true })}
+                disabled={checkout.loading}
               />
-              {errors.firstName && (
+              {touched.firstName && errors.firstName && (
                 <div className="invalid-feedback">{errors.firstName}</div>
               )}
             </div>
@@ -104,14 +183,15 @@ const CheckoutDeliveryPage: React.FC = () => {
               </label>
               <input
                 type="text"
-                className={`form-control ${errors.lastName ? "is-invalid" : ""}`}
+                className={`form-control ${touched.lastName && errors.lastName ? "is-invalid" : ""}`}
                 id="lastName"
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
-                required
+                onBlur={() => setTouched({ ...touched, lastName: true })}
+                disabled={checkout.loading}
               />
-              {errors.lastName && (
+              {touched.lastName && errors.lastName && (
                 <div className="invalid-feedback">{errors.lastName}</div>
               )}
             </div>
@@ -122,14 +202,15 @@ const CheckoutDeliveryPage: React.FC = () => {
             </label>
             <input
               type="text"
-              className={`form-control ${errors.address ? "is-invalid" : ""}`}
+              className={`form-control ${touched.address && errors.address ? "is-invalid" : ""}`}
               id="address"
               name="address"
               value={formData.address}
               onChange={handleChange}
-              required
+              onBlur={() => setTouched({ ...touched, address: true })}
+              disabled={checkout.loading}
             />
-            {errors.address && (
+            {touched.address && errors.address && (
               <div className="invalid-feedback">{errors.address}</div>
             )}
           </div>
@@ -140,14 +221,15 @@ const CheckoutDeliveryPage: React.FC = () => {
               </label>
               <input
                 type="text"
-                className={`form-control ${errors.city ? "is-invalid" : ""}`}
+                className={`form-control ${touched.city && errors.city ? "is-invalid" : ""}`}
                 id="city"
                 name="city"
                 value={formData.city}
                 onChange={handleChange}
-                required
+                onBlur={() => setTouched({ ...touched, city: true })}
+                disabled={checkout.loading}
               />
-              {errors.city && (
+              {touched.city && errors.city && (
                 <div className="invalid-feedback">{errors.city}</div>
               )}
             </div>
@@ -157,14 +239,15 @@ const CheckoutDeliveryPage: React.FC = () => {
               </label>
               <input
                 type="text"
-                className={`form-control ${errors.zipCode ? "is-invalid" : ""}`}
+                className={`form-control ${touched.zipCode && errors.zipCode ? "is-invalid" : ""}`}
                 id="zipCode"
                 name="zipCode"
                 value={formData.zipCode}
                 onChange={handleChange}
-                required
+                onBlur={() => setTouched({ ...touched, zipCode: true })}
+                disabled={checkout.loading}
               />
-              {errors.zipCode && (
+              {touched.zipCode && errors.zipCode && (
                 <div className="invalid-feedback">{errors.zipCode}</div>
               )}
             </div>
@@ -175,14 +258,15 @@ const CheckoutDeliveryPage: React.FC = () => {
             </label>
             <input
               type="email"
-              className={`form-control ${errors.email ? "is-invalid" : ""}`}
+              className={`form-control ${touched.email && errors.email ? "is-invalid" : ""}`}
               id="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              required
+              onBlur={() => setTouched({ ...touched, email: true })}
+              disabled={checkout.loading}
             />
-            {errors.email && (
+            {touched.email && errors.email && (
               <div className="invalid-feedback">{errors.email}</div>
             )}
           </div>
@@ -192,21 +276,48 @@ const CheckoutDeliveryPage: React.FC = () => {
             </label>
             <input
               type="tel"
-              className={`form-control ${errors.phone ? "is-invalid" : ""}`}
+              className={`form-control ${touched.phone && errors.phone ? "is-invalid" : ""}`}
               id="phone"
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              required
+              onBlur={() => setTouched({ ...touched, phone: true })}
+              disabled={checkout.loading}
             />
-            {errors.phone && (
+            {touched.phone && errors.phone && (
               <div className="invalid-feedback">{errors.phone}</div>
             )}
           </div>
-          <button type="submit" className="btn btn-primary">
-            Continue to Payment
-          </button>
+          <div className="d-flex gap-2 justify-content-between mt-4">
+            <Link to="/cart" className="btn btn-secondary">
+              Back to Cart
+            </Link>
+            <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={checkout.loading}
+            >
+              {checkout.loading ? (
+                <>
+                  <span
+                    className="spinner-border spinner-border-sm me-2"
+                    role="status"
+                  />
+                  Processing...
+                </>
+              ) : (
+                "Continue to Payment"
+              )}
+            </button>
+          </div>
         </form>
+
+        <PaymentModal
+          isOpen={showPaymentModal}
+          onClose={() => setShowPaymentModal(false)}
+          onSubmit={handlePaymentSubmit}
+          loading={checkout.loading}
+        />
       </main>
       <Footer />
     </div>

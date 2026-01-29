@@ -1,0 +1,207 @@
+.payment-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  padding: 20px;
+
+  @media (max-width: 576px) {
+    padding: 10px;
+  }
+}
+
+.payment-modal {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 450px;
+  animation: slideUp 0.3s ease-out;
+
+  @media (max-width: 576px) {
+    max-width: 100%;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.payment-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  border-bottom: 1px solid #e9ecef;
+
+  h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #212529;
+  }
+
+  .btn-close {
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #6c757d;
+    padding: 0;
+    width: auto;
+    height: auto;
+
+    &:hover:not(:disabled) {
+      color: #212529;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.payment-modal-body {
+  padding: 20px;
+
+  @media (max-width: 576px) {
+    padding: 15px;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+
+    .form-label {
+      font-weight: 600;
+      color: #212529;
+      margin-bottom: 0.5rem;
+    }
+
+    .form-control,
+    .form-select {
+      border: 2px solid #e9ecef;
+      border-radius: 4px;
+      padding: 0.75rem;
+      font-size: 0.95rem;
+
+      &:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+      }
+
+      &.is-invalid {
+        border-color: #dc3545;
+
+        &:focus {
+          box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+        }
+      }
+
+      &:disabled {
+        background-color: #f8f9fa;
+        cursor: not-allowed;
+        opacity: 0.65;
+      }
+    }
+  }
+}
+
+.card-input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  input {
+    letter-spacing: 0.1em;
+  }
+
+  .card-type-badge {
+    position: absolute;
+    right: 12px;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+
+    &.visa {
+      background-color: #1a1f71;
+      color: white;
+    }
+
+    &.mastercard {
+      background-color: #eb001b;
+      color: white;
+    }
+
+    &.amex {
+      background-color: #006fcf;
+      color: white;
+    }
+  }
+}
+
+.invalid-feedback {
+  font-size: 0.85rem;
+  color: #dc3545;
+  margin-top: 0.25rem;
+}
+
+.payment-modal-footer {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  padding: 20px;
+  border-top: 1px solid #e9ecef;
+
+  @media (max-width: 576px) {
+    flex-direction: column;
+    padding: 15px;
+
+    .btn {
+      width: 100%;
+    }
+  }
+
+  .btn {
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+
+    &:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .spinner-border {
+      display: inline-block;
+    }
+  }
+}
+
+// Responsive improvements
+@media (max-width: 576px) {
+  .payment-modal {
+    max-width: 100%;
+    border-radius: 0;
+  }
+
+  .payment-modal-header,
+  .payment-modal-body,
+  .payment-modal-footer {
+    padding: 15px;
+  }
+}
