@@ -1,35 +1,104 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useCart } from "../../infrastructure/hooks/useCart";
+import { TechHavenApiProductRepository } from "@/infrastructure/adapters/TechHavenApiRepositories";
+import type { ProductDTO } from "@/infrastructure/api/techHavenApiClient";
 
 const ProductPage: React.FC = () => {
   const { addToCart } = useCart();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [showToast, setShowToast] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
+  const [product, setProduct] = useState<ProductDTO | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const product = {
-    id: 1,
-    name: "Product Name",
-    price: 99.0,
-    image:
-      "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    discount: 0,
-  };
+  const productId = searchParams.get("id") || "1";
+
+  useEffect(() => {
+    const loadProduct = async () => {
+      try {
+        setLoading(true);
+        const repo = new TechHavenApiProductRepository();
+        const data = await repo.getById(productId);
+        setProduct(data);
+        setError(null);
+      } catch (err) {
+        console.error("Error loading product:", err);
+        setError("Failed to load product");
+        // Fallback product
+        setProduct({
+          id: "1",
+          name: "Wireless Headphones",
+          price: 9999,
+          stock: 50,
+          description: "High-quality wireless headphones with noise cancellation",
+          imageUrl:
+            "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProduct();
+  }, [productId]);
 
   const handleAddToCart = async () => {
+    if (!product) return;
+    
     setIsAdding(true);
-    addToCart(product, 1);
+    addToCart(
+      {
+        id: parseInt(product.id),
+        name: product.name,
+        price: product.price / 100, // Convert cents to dollars
+        image: product.imageUrl,
+        discount: 0,
+      },
+      1
+    );
     setShowToast(true);
-    setTimeout(() => setShowToast(false), 4000); // Increased to 4 seconds
-    // Simulate delay for UX
+    setTimeout(() => setShowToast(false), 4000);
     setTimeout(() => {
       setIsAdding(false);
       navigate("/cart");
     }, 500);
   };
+
+  if (loading) {
+    return (
+      <div>
+        <Header />
+        <main className="container my-4">
+          <div className="text-center">
+            <div className="spinner-border" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div>
+        <Header />
+        <main className="container my-4">
+          <div className="alert alert-danger">
+            Product not found. <Link to="/">Back to Home</Link>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div>
       <Header />
@@ -47,19 +116,20 @@ const ProductPage: React.FC = () => {
         <div className="row">
           <div className="col-md-6">
             <img
-              src="https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+              src={product.imageUrl}
               alt="Product"
               className="img-fluid"
             />
           </div>
           <div className="col-md-6">
-            <h1>Product Name</h1>
-            <p className="text-muted">$99.00</p>
-            <p>Description of the product.</p>
+            <h1>{product.name}</h1>
+            <p className="text-muted">${(product.price / 100).toFixed(2)}</p>
+            <p className="text-success">Stock: {product.stock} units available</p>
+            <p>{product.description}</p>
             <button
               className="btn btn-primary"
               onClick={handleAddToCart}
-              disabled={isAdding}
+              disabled={isAdding || product.stock === 0}
             >
               {isAdding ? (
                 <>
@@ -69,6 +139,8 @@ const ProductPage: React.FC = () => {
                   ></span>
                   Adding...
                 </>
+              ) : product.stock === 0 ? (
+                "Out of Stock"
               ) : (
                 "Add to Cart"
               )}
