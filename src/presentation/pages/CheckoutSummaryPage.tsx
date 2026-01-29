@@ -6,7 +6,6 @@ import {
   setLoading,
   setError,
   setLastTransactionId,
-  clearCheckout,
 } from "@/application/store/slices/checkoutSlice";
 import Header from "../components/Header";
 import Footer from "../components/Footer";

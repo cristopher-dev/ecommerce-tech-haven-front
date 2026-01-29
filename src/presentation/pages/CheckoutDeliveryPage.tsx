@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/application/store/hooks";
 import {
@@ -29,23 +29,6 @@ const CheckoutDeliveryPage: React.FC = () => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
-
-  useEffect(() => {
-    // Restore form from Redux if available
-    if (checkout.deliveryData) {
-      setFormData({
-        firstName: checkout.deliveryData.address.split(" ")[0] || "",
-        lastName:
-          checkout.deliveryData.address.split(" ").slice(1).join(" ") || "",
-        address: checkout.deliveryData.address || "",
-        city: checkout.deliveryData.city || "",
-        zipCode: checkout.deliveryData.postalCode || "",
-        email: "",
-        phone: checkout.deliveryData.phone || "",
-        state: checkout.deliveryData.state || "",
-      });
-    }
-  }, [checkout.deliveryData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

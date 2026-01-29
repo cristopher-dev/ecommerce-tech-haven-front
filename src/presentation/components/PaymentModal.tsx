@@ -7,10 +7,12 @@ import {
   getCardType,
   formatCardNumber,
   validateCardInfo,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   type CardType,
 } from "@/shared/utils/cardValidation";
 import "./PaymentModal.scss";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface PaymentModalProps {
   isOpen: boolean;
   onClose: () => void;
