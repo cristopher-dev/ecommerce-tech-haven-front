@@ -6,7 +6,7 @@ const HeroCarousel: React.FC = () => {
       <div className="carousel-inner">
         <div className="carousel-item active">
           <img
-            src="https://picsum.photos/1200/400?random=technology"
+            src="https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=400&q=80"
             className="d-block w-100"
             alt="Hero 1"
           />
@@ -18,7 +18,7 @@ const HeroCarousel: React.FC = () => {
         </div>
         <div className="carousel-item">
           <img
-            src="https://picsum.photos/1200/400?random=gadgets"
+            src="https://images.unsplash.com/XJXWbfSo2f0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=400&q=80"
             className="d-block w-100"
             alt="Hero 2"
           />

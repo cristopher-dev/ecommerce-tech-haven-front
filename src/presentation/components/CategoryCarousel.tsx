@@ -4,7 +4,8 @@ const CategoryCarousel: React.FC = () => {
   const categories = [
     {
       name: "Electronics",
-      image: "https://picsum.photos/200/200?random=electronics",
+      image:
+        "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80",
     },
     {
       name: "Gadgets",

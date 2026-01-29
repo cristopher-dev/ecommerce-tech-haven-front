@@ -8,7 +8,7 @@ const PromoBanners: React.FC = () => {
           <div className="col-md-6">
             <div className="card border-0">
               <img
-                src="https://picsum.photos/600/300?random=technology"
+                src="https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=300&q=80"
                 className="card-img"
                 alt="Promo 1"
               />
