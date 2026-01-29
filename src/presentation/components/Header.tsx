@@ -16,7 +16,7 @@ const Header: React.FC = () => {
     <header className="header">
       {/* Main Navigation Bar with Collapsible Header */}
       <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom">
-        <div className="container">
+        <div className="container-fluid">
           {/* Toggler button for mobile */}
           <button
             className="navbar-toggler"
