@@ -1,2 +1,239 @@
 @import 'bootstrap/dist/css/bootstrap.min.css';
- 
+
+/* ======================= */
+/* GLOBAL STYLES MEJORADOS */
+/* ======================= */
+
+:root {
+  --primary-color: #0066ff;
+  --primary-dark: #0052cc;
+  --secondary-color: #ff6b35;
+  --secondary-dark: #e64c00;
+  --text-color: #1a1a2e;
+  --text-light: #666666;
+  --bg-light: #f8f9fa;
+  --bg-white: #ffffff;
+  --border-color: #e8e8e8;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 12px 36px rgba(0, 0, 0, 0.15);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+/* Botones mejorados */
+.btn {
+  font-weight: 600;
+  border-radius: 8px;
+  transition: var(--transition);
+  border: none;
+  padding: 0.6rem 1.5rem;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 102, 255, 0.3);
+  background: linear-gradient(135deg, #0052cc 0%, #003d99 100%);
+  color: white;
+}
+
+.btn-outline-secondary {
+  border-color: var(--border-color);
+  color: var(--text-color);
+}
+
+.btn-outline-secondary:hover {
+  background: var(--bg-light);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+/* Tarjetas mejoradas */
+.card {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition);
+  background: var(--bg-white);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+}
+
+.card-title {
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.card-body {
+  padding: 1.25rem;
+}
+
+/* Badges mejorados */
+.badge {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.badge-primary {
+  background: linear-gradient(135deg, #0066ff 0%, #0052cc 100%);
+}
+
+.badge-success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.badge-warning {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+/* Inputs mejorados */
+.form-control {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  transition: var(--transition);
+  font-size: 0.95rem;
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+  outline: none;
+}
+
+.form-select {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  transition: var(--transition);
+}
+
+.form-select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+}
+
+/* Secciones con fondo alternado */
+.section-light {
+  background: var(--bg-white);
+}
+
+.section-alt {
+  background: var(--bg-light);
+}
+
+/* Títulos y headings */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-color);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+h1 {
+  font-size: 2.5rem;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+/* Enlaces mejorados */
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+a:hover {
+  color: var(--primary-dark);
+  text-decoration: none;
+}
+
+/* Bordes y separadores */
+hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+  margin: 2rem 0;
+}
+
+/* Sombras */
+.shadow-custom {
+  box-shadow: var(--shadow-md);
+}
+
+.shadow-custom:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+/* Bordes redondeados */
+.rounded-custom {
+  border-radius: 12px;
+}
+
+/* Efectos de scroll */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-light);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-dark);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+}

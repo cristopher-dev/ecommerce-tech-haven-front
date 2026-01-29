@@ -1,97 +1,243 @@
-import React from "react";
+import React, { useState } from "react";
 
 const Footer: React.FC = () => {
+  const [hoveredLink, setHoveredLink] = useState<string | null>(null);
+
+  const linkStyle = (key: string) => ({
+    color: hoveredLink === key ? "#0066ff" : "#b0b0b0",
+    transition: "all 0.3s ease",
+    display: "block",
+    marginBottom: "0.75rem",
+    textDecoration: "none",
+    cursor: "pointer",
+  });
+
   return (
-    <footer className="bg-dark text-white py-5">
+    <footer
+      style={{
+        background: "linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%)",
+        color: "white",
+        padding: "3rem 0 1rem",
+        borderTop: "1px solid rgba(255, 255, 255, 0.1)",
+      }}
+    >
       <div className="container">
-        <div className="row">
-          <div className="col-md-3">
-            <h5>TechHaven</h5>
-            <p>Your one-stop shop for all tech needs.</p>
-            <div>
-              <i className="bi bi-facebook me-2"></i>
-              <i className="bi bi-twitter me-2"></i>
-              <i className="bi bi-instagram me-2"></i>
-              <i className="bi bi-youtube"></i>
+        <div className="row mb-4">
+          {/* Brand Section */}
+          <div className="col-md-3 col-sm-6 mb-4">
+            <div
+              style={{
+                fontSize: "1.8rem",
+                fontWeight: "800",
+                background: "linear-gradient(135deg, #0066ff, #00d4ff)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                marginBottom: "1rem",
+              }}
+            >
+              🏪 TechHaven
+            </div>
+            <p style={{ color: "#b0b0b0", lineHeight: "1.6" }}>
+              Your one-stop shop for all tech needs and innovations.
+            </p>
+            <div style={{ display: "flex", gap: "0.75rem" }}>
+              {[
+                { icon: "facebook", color: "#0A66C2" },
+                { icon: "twitter", color: "#1DA1F2" },
+                { icon: "instagram", color: "#E4405F" },
+                { icon: "youtube", color: "#FF0000" },
+              ].map((social) => (
+                <a
+                  key={social.icon}
+                  href="#"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "50%",
+                    background: "rgba(255, 255, 255, 0.08)",
+                    color: social.color,
+                    transition: "all 0.3s ease",
+                    textDecoration: "none",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = social.color;
+                    e.currentTarget.style.color = "white";
+                    e.currentTarget.style.transform = "translateY(-4px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background =
+                      "rgba(255, 255, 255, 0.08)";
+                    e.currentTarget.style.color = social.color;
+                    e.currentTarget.style.transform = "translateY(0)";
+                  }}
+                >
+                  <i className={`bi bi-${social.icon}`}></i>
+                </a>
+              ))}
             </div>
           </div>
-          <div className="col-md-3">
-            <h6>Customer Service</h6>
-            <ul className="list-unstyled">
-              <li>
-                <a href="#" className="text-white text-decoration-none">
-                  Contact Us
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-white text-decoration-none">
-                  Shipping Info
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-white text-decoration-none">
-                  Returns
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-white text-decoration-none">
-                  FAQ
-                </a>
-              </li>
+
+          {/* Customer Service */}
+          <div className="col-md-3 col-sm-6 mb-4">
+            <h6
+              style={{
+                fontWeight: "700",
+                fontSize: "1rem",
+                marginBottom: "1.5rem",
+                color: "white",
+              }}
+            >
+              📞 Customer Service
+            </h6>
+            <ul style={{ listStyle: "none", padding: 0 }}>
+              {[
+                { label: "Contact Us", icon: "✉️" },
+                { label: "Shipping Info", icon: "🚚" },
+                { label: "Returns", icon: "↩️" },
+                { label: "FAQ", icon: "❓" },
+              ].map((item) => (
+                <li key={item.label}>
+                  <a
+                    href="#"
+                    style={linkStyle(item.label)}
+                    onMouseEnter={() => setHoveredLink(item.label)}
+                    onMouseLeave={() => setHoveredLink(null)}
+                  >
+                    {item.icon} {item.label}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
-          <div className="col-md-3">
-            <h6>My Account</h6>
-            <ul className="list-unstyled">
-              <li>
-                <a href="#" className="text-white text-decoration-none">
-                  Sign In
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-white text-decoration-none">
-                  View Cart
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-white text-decoration-none">
-                  My Wishlist
-                </a>
-              </li>
-              <li>
-                <a href="#" className="text-white text-decoration-none">
-                  Track Order
-                </a>
-              </li>
+
+          {/* My Account */}
+          <div className="col-md-3 col-sm-6 mb-4">
+            <h6
+              style={{
+                fontWeight: "700",
+                fontSize: "1rem",
+                marginBottom: "1.5rem",
+                color: "white",
+              }}
+            >
+              👤 My Account
+            </h6>
+            <ul style={{ listStyle: "none", padding: 0 }}>
+              {[
+                { label: "Sign In", icon: "🔐" },
+                { label: "View Cart", icon: "🛒" },
+                { label: "My Wishlist", icon: "❤️" },
+                { label: "Track Order", icon: "📦" },
+              ].map((item) => (
+                <li key={item.label}>
+                  <a
+                    href="#"
+                    style={linkStyle(item.label)}
+                    onMouseEnter={() => setHoveredLink(item.label)}
+                    onMouseLeave={() => setHoveredLink(null)}
+                  >
+                    {item.icon} {item.label}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
-          <div className="col-md-3">
-            <h6>Payment Methods</h6>
-            <div>
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Visa_Inc._logo.svg/100px-Visa_Inc._logo.svg.png"
-                alt="Visa"
-                className="me-2"
-                style={{ height: "30px" }}
-              />
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/MasterCard_Logo.svg/100px-MasterCard_Logo.svg.png"
-                alt="Mastercard"
-                className="me-2"
-                style={{ height: "30px" }}
-              />
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/PayPal.svg/100px-PayPal.svg.png"
-                alt="PayPal"
-                className="me-2"
-                style={{ height: "30px" }}
-              />
+
+          {/* Payment Methods */}
+          <div className="col-md-3 col-sm-6 mb-4">
+            <h6
+              style={{
+                fontWeight: "700",
+                fontSize: "1rem",
+                marginBottom: "1.5rem",
+                color: "white",
+              }}
+            >
+              💳 Payment Methods
+            </h6>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>
+              {[
+                { name: "Visa", emoji: "🏦" },
+                { name: "Mastercard", emoji: "💳" },
+                { name: "PayPal", emoji: "📱" },
+                { name: "Apple Pay", emoji: "🍎" },
+              ].map((payment) => (
+                <div
+                  key={payment.name}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                    padding: "0.5rem 1rem",
+                    background: "rgba(255, 255, 255, 0.08)",
+                    borderRadius: "8px",
+                    fontSize: "0.9rem",
+                    transition: "all 0.3s ease",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "rgba(0, 102, 255, 0.2)";
+                    e.currentTarget.style.borderColor = "#0066ff";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background =
+                      "rgba(255, 255, 255, 0.08)";
+                  }}
+                >
+                  <span>{payment.emoji}</span>
+                  {payment.name}
+                </div>
+              ))}
             </div>
           </div>
         </div>
-        <hr />
-        <div className="text-center">
-          <p>&copy; 2024 TechHaven. All rights reserved.</p>
+
+        {/* Divider */}
+        <div
+          style={{
+            height: "1px",
+            background:
+              "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)",
+            margin: "2rem 0",
+          }}
+        ></div>
+
+        {/* Bottom Section */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: "1rem",
+            color: "#b0b0b0",
+            fontSize: "0.9rem",
+          }}
+        >
+          <p style={{ margin: 0 }}>
+            &copy; 2024 TechHaven. All rights reserved. | Built with ❤️
+          </p>
+          <div style={{ display: "flex", gap: "2rem" }}>
+            <a
+              href="#"
+              style={{ color: "#b0b0b0", textDecoration: "none" }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "#0066ff")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "#b0b0b0")}
+            >
+              Privacy Policy
+            </a>
+            <a
+              href="#"
+              style={{ color: "#b0b0b0", textDecoration: "none" }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "#0066ff")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "#b0b0b0")}
+            >
+              Terms of Service
+            </a>
+          </div>
         </div>
       </div>
     </footer>

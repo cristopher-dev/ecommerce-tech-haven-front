@@ -40,27 +40,80 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   return (
     <div
-      className="card h-100 border-0 shadow-sm"
-      style={{ transition: "transform 0.2s" }}
-      onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-      onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+      className="card h-100 border-0 product-card-modern"
+      style={{
+        transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+        borderRadius: "12px",
+        overflow: "hidden",
+        boxShadow: "0 8px 24px rgba(0, 0, 0, 0.12)",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = "translateY(-8px) scale(1.02)";
+        e.currentTarget.style.boxShadow = "0 16px 40px rgba(0, 102, 255, 0.2)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = "translateY(0) scale(1)";
+        e.currentTarget.style.boxShadow = "0 8px 24px rgba(0, 0, 0, 0.12)";
+      }}
     >
-      <div className="position-relative">
-        <img src={product.image} className="card-img-top" alt={product.name} />
+      <div
+        className="position-relative"
+        style={{
+          overflow: "hidden",
+          borderRadius: "12px 12px 0 0",
+          backgroundColor: "#f8f9fa",
+        }}
+      >
+        <img
+          src={product.image}
+          className="card-img-top"
+          alt={product.name}
+          style={{
+            transition: "transform 0.3s ease",
+            objectFit: "cover",
+            aspectRatio: "1/1",
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+        />
         {product.discount > 0 && (
-          <span className="badge bg-danger position-absolute top-0 start-0 m-2">
-            -{product.discount}%
+          <span
+            className="badge position-absolute top-0 start-0 m-3"
+            style={{
+              background: "linear-gradient(135deg, #ff6b35 0%, #e64c00 100%)",
+              fontSize: "0.85rem",
+              fontWeight: "700",
+              padding: "0.5rem 1rem",
+              borderRadius: "8px",
+            }}
+          >
+            🔥 -{product.discount}%
           </span>
         )}
-        <div className="card-img-overlay d-flex justify-content-end align-items-start p-2">
+        <div
+          className="card-img-overlay d-flex justify-content-end align-items-start p-3"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(0,0,0,0.3) 0%, transparent 100%)",
+          }}
+        >
           <button
-            className={`btn btn-sm rounded-circle ${isInWishlist ? "btn-danger" : "btn-light"}`}
+            className="btn btn-sm rounded-circle"
             onClick={handleToggleWishlist}
             onMouseEnter={() => setIsHeartHovered(true)}
             onMouseLeave={() => setIsHeartHovered(false)}
             style={{
-              transition: "all 0.2s ease",
-              transform: isHeartHovered ? "scale(1.2)" : "scale(1)",
+              transition: "all 0.3s ease",
+              transform: isHeartHovered
+                ? "scale(1.2) rotate(10deg)"
+                : "scale(1)",
+              background: isInWishlist
+                ? "linear-gradient(135deg, #ff6b35 0%, #e64c00 100%)"
+                : "rgba(255, 255, 255, 0.95)",
+              color: isInWishlist ? "white" : "#ff6b35",
+              border: "none",
+              backdropFilter: "blur(4px)",
+              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
             }}
             title={isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
           >
@@ -69,29 +122,79 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </div>
       </div>
       <div className="card-body">
-        <h6 className="card-title">{product.name}</h6>
+        <h6
+          className="card-title"
+          style={{
+            color: "#1a1a2e",
+            fontWeight: "600",
+            fontSize: "0.95rem",
+            lineHeight: "1.3",
+            minHeight: "2.6em",
+            marginBottom: "0.75rem",
+          }}
+        >
+          {product.name}
+        </h6>
         <div className="d-flex align-items-center mb-2">
           <span className="text-muted me-2">
-            <i className="bi bi-star-fill text-warning"></i>
-            <i className="bi bi-star-fill text-warning"></i>
-            <i className="bi bi-star-fill text-warning"></i>
-            <i className="bi bi-star-fill text-warning"></i>
-            <i className="bi bi-star-half text-warning"></i>
+            <i className="bi bi-star-fill" style={{ color: "#ffc107" }}></i>
+            <i className="bi bi-star-fill" style={{ color: "#ffc107" }}></i>
+            <i className="bi bi-star-fill" style={{ color: "#ffc107" }}></i>
+            <i className="bi bi-star-fill" style={{ color: "#ffc107" }}></i>
+            <i className="bi bi-star-half" style={{ color: "#ffc107" }}></i>
           </span>
-          <small className="text-muted">(4.5)</small>
+          <small className="text-muted" style={{ fontSize: "0.8rem" }}>
+            (4.5)
+          </small>
         </div>
-        <div className="d-flex align-items-center">
+        <div className="d-flex align-items-center gap-2">
           {product.discount > 0 && (
-            <span className="text-muted text-decoration-line-through me-2">
-              ${product.price}
+            <span
+              className="text-muted text-decoration-line-through"
+              style={{ fontSize: "0.85rem" }}
+            >
+              ${product.price.toFixed(2)}
             </span>
           )}
-          <span className="fw-bold">${discountedPrice.toFixed(2)}</span>
+          <span
+            className="fw-bold"
+            style={{
+              fontSize: "1.1rem",
+              background: "linear-gradient(135deg, #0066ff, #00d4ff)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
+            ${discountedPrice.toFixed(2)}
+          </span>
         </div>
       </div>
-      <div className="card-footer bg-white border-0">
-        <button className="btn btn-primary w-100" onClick={handleAddToCart}>
-          Add to Cart
+      <div className="card-footer bg-white border-0 pt-0">
+        <button
+          className="btn w-100"
+          onClick={handleAddToCart}
+          style={{
+            background: "linear-gradient(135deg, #0066ff 0%, #0052cc 100%)",
+            color: "white",
+            fontWeight: "600",
+            border: "none",
+            padding: "0.75rem",
+            borderRadius: "8px",
+            transition: "all 0.3s ease",
+            cursor: "pointer",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = "translateY(-2px)";
+            e.currentTarget.style.boxShadow =
+              "0 8px 20px rgba(0, 102, 255, 0.3)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = "translateY(0)";
+            e.currentTarget.style.boxShadow = "none";
+          }}
+        >
+          <i className="bi bi-bag-plus me-2"></i>Add to Cart
         </button>
       </div>
     </div>
