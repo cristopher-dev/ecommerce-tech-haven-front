@@ -22,7 +22,7 @@ const Header: React.FC = () => {
         <div className="container">
           <a className="navbar-brand" href="#">
             <img
-              src="https://picsum.photos/100/40?random=logo"
+              src="https://picsum.photos/100/40?random=technology"
               alt="TechHaven"
               height="40"
             />

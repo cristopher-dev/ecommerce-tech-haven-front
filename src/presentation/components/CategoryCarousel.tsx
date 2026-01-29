@@ -7,20 +7,20 @@ const CategoryCarousel: React.FC = () => {
       image: "https://picsum.photos/200/200?random=electronics",
     },
     {
-      name: "Clothing",
-      image: "https://picsum.photos/200/200?random=clothing",
+      name: "Gadgets",
+      image: "https://picsum.photos/200/200?random=gadgets",
     },
     {
-      name: "Home & Garden",
-      image: "https://picsum.photos/200/200?random=home",
+      name: "Smart Home",
+      image: "https://picsum.photos/200/200?random=smarthome",
     },
     {
-      name: "Sports",
-      image: "https://picsum.photos/200/200?random=sports",
+      name: "Wearables",
+      image: "https://picsum.photos/200/200?random=wearables",
     },
     {
-      name: "Books",
-      image: "https://picsum.photos/200/200?random=books",
+      name: "Accessories",
+      image: "https://picsum.photos/200/200?random=accessories",
     },
   ];
 
