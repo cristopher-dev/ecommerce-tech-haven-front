@@ -1,18 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useCart } from "@/infrastructure/hooks/useCart";
-import { useWishlist } from "@/application/store/hooks";
+import {
+  useWishlist,
+  useCartItems,
+  useAppDispatch,
+} from "@/application/store/hooks";
+import { removeFromCart } from "@/application/store/slices/cartSlice";
 import "@/presentation/components/Header.scss";
 
 const Header: React.FC = () => {
-  const { getTotalItems, cart } = useCart();
+  const { totalItems, total, items } = useCartItems();
   const { count: wishlistCount } = useWishlist();
-
-  const getCartTotal = () => {
-    return cart.items
-      .reduce((total, item) => total + item.product.price * item.quantity, 0)
-      .toFixed(2);
-  };
+  const dispatch = useAppDispatch();
 
   return (
     <header className="header">
@@ -231,7 +230,7 @@ const Header: React.FC = () => {
                                 padding: "0",
                               }}
                             >
-                              {getTotalItems()}
+                              {totalItems}
                             </span>
                           </div>
                           <div className="ms-2 d-none d-lg-block">
@@ -245,7 +244,7 @@ const Header: React.FC = () => {
                               className="fw-600 d-block lh-1 text-success"
                               style={{ fontSize: "0.85rem" }}
                             >
-                              ${getCartTotal()}
+                              ${total.toFixed(2)}
                             </span>
                           </div>
                         </button>
@@ -267,7 +266,7 @@ const Header: React.FC = () => {
                             </h6>
                           </li>
 
-                          {cart.items.length === 0 ? (
+                          {items.length === 0 ? (
                             <li>
                               <div className="p-4 text-center">
                                 <i className="bi bi-bag-x fs-1 text-muted mb-3 d-block"></i>
@@ -278,7 +277,7 @@ const Header: React.FC = () => {
                             </li>
                           ) : (
                             <>
-                              {cart.items.slice(0, 3).map((item) => (
+                              {items.slice(0, 3).map((item) => (
                                 <li
                                   key={item.product.id}
                                   className="border-bottom"
@@ -308,7 +307,14 @@ const Header: React.FC = () => {
                                         ${item.product.price} × {item.quantity}
                                       </p>
                                     </div>
-                                    <button className="btn btn-sm btn-outline-danger">
+                                    <button
+                                      className="btn btn-sm btn-outline-danger"
+                                      onClick={() =>
+                                        dispatch(
+                                          removeFromCart(item.product.id),
+                                        )
+                                      }
+                                    >
                                       <i className="bi bi-x"></i>
                                     </button>
                                   </div>
@@ -319,7 +325,7 @@ const Header: React.FC = () => {
                                 <div className="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
                                   <strong>Subtotal:</strong>
                                   <span className="text-success fw-bold">
-                                    ${getCartTotal()}
+                                    ${total.toFixed(2)}
                                   </span>
                                 </div>
                                 <div className="d-flex gap-2">

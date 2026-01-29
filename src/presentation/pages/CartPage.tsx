@@ -1,15 +1,21 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useCart } from "@/infrastructure/hooks/useCart";
+import { useAppDispatch } from "@/application/store/hooks";
+import {
+  removeFromCart,
+  updateQuantity,
+} from "@/application/store/slices/cartSlice";
+import { useCartItems } from "@/application/store/hooks";
 import Header from "@/presentation/components/Header";
 import Footer from "@/presentation/components/Footer";
 
 const CartPage: React.FC = () => {
-  const { cart, removeFromCart, updateQuantity, getTotalPrice } = useCart();
+  const { items, total } = useCartItems();
+  const dispatch = useAppDispatch();
 
   const handleQuantityChange = (productId: number, quantity: number) => {
     if (quantity > 0) {
-      updateQuantity(productId, quantity);
+      dispatch(updateQuantity({ productId, quantity }));
     }
   };
 
@@ -28,7 +34,7 @@ const CartPage: React.FC = () => {
           </ol>
         </nav>
         <h1 className="mb-4">Shopping Cart</h1>
-        {cart.items.length === 0 ? (
+        {items.length === 0 ? (
           <p>Your cart is empty.</p>
         ) : (
           <>
@@ -45,7 +51,7 @@ const CartPage: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {cart.items.map((item) => (
+                  {items.map((item) => (
                     <tr key={item.product.id}>
                       <td>{item.product.name}</td>
                       <td>
@@ -77,7 +83,9 @@ const CartPage: React.FC = () => {
                       <td>
                         <button
                           className="btn btn-danger btn-sm"
-                          onClick={() => removeFromCart(item.product.id)}
+                          onClick={() =>
+                            dispatch(removeFromCart(item.product.id))
+                          }
                         >
                           Remove
                         </button>
@@ -89,7 +97,7 @@ const CartPage: React.FC = () => {
             </div>
             <div className="row">
               <div className="col-12 text-end">
-                <h4>Total: ${getTotalPrice().toFixed(2)}</h4>
+                <h4>Total: ${total.toFixed(2)}</h4>
                 <Link to="/checkout/delivery" className="btn btn-success">
                   Proceed to Checkout
                 </Link>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Product } from "@/domain/entities/Product";
-import { useCart } from "@/infrastructure/hooks/useCart";
 import { useAppDispatch } from "@/application/store/hooks";
+import { addToCart } from "@/application/store/slices/cartSlice";
 import {
   addToWishlist,
   removeFromWishlist,
@@ -13,7 +13,6 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const { addToCart } = useCart();
   const dispatch = useAppDispatch();
   const { items: wishlistItems } = useWishlist();
   const isInWishlist = wishlistItems.some(
@@ -22,7 +21,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [isHeartHovered, setIsHeartHovered] = useState(false);
 
   const handleAddToCart = () => {
-    addToCart(product);
+    dispatch(addToCart({ product, quantity: 1 }));
   };
 
   const handleToggleWishlist = (e: React.MouseEvent) => {

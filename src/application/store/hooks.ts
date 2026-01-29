@@ -58,24 +58,18 @@ export const useWishlist = () => {
 };
 
 /**
- * Hook para calcular el total del carrito
+ * Hook para acceder al estado del carrito (Redux)
  */
-export const useCartTotal = () => {
-  const { cartItems, baseFee, deliveryFee } = useAppSelector(
-    (state) => state.checkout,
-  );
+export const useCartState = () => useAppSelector((state) => state.cart);
 
-  const subtotal = cartItems.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0,
-  );
-
-  const total = subtotal + baseFee + deliveryFee;
-
+/**
+ * Hook para acceder a los items del carrito con total y cantidad
+ */
+export const useCartItems = () => {
+  const { items, total, totalItems } = useAppSelector((state) => state.cart);
   return {
-    subtotal,
-    baseFee,
-    deliveryFee,
-    total,
+    items,
+    total: Number(total.toFixed(2)),
+    totalItems,
   };
 };
