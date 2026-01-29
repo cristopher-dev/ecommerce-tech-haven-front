@@ -8,7 +8,7 @@ const PromoBanners: React.FC = () => {
           <div className="col-md-6">
             <div className="card border-0">
               <img
-                src="https://source.unsplash.com/featured/?discount,sale/600x300"
+                src="https://picsum.photos/600/300?random=discount"
                 className="card-img"
                 alt="Promo 1"
               />
@@ -24,7 +24,7 @@ const PromoBanners: React.FC = () => {
           <div className="col-md-6">
             <div className="card border-0">
               <img
-                src="https://source.unsplash.com/featured/?exclusive,deals/600x300"
+                src="https://picsum.photos/600/300?random=deals"
                 className="card-img"
                 alt="Promo 2"
               />

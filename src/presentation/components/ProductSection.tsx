@@ -12,29 +12,28 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title }) => {
       id: 1,
       name: "Wireless Headphones",
       price: 99.99,
-      image:
-        "https://source.unsplash.com/featured/?headphones,wireless/300x300",
+      image: "https://picsum.photos/300/300?random=headphones",
       discount: 10,
     },
     {
       id: 2,
       name: "Smartphone",
       price: 699.99,
-      image: "https://source.unsplash.com/featured/?smartphone,mobile/300x300",
+      image: "https://picsum.photos/300/300?random=smartphone",
       discount: 0,
     },
     {
       id: 3,
       name: "Laptop",
       price: 1299.99,
-      image: "https://source.unsplash.com/featured/?laptop,computer/300x300",
+      image: "https://picsum.photos/300/300?random=laptop",
       discount: 15,
     },
     {
       id: 4,
       name: "Tablet",
       price: 399.99,
-      image: "https://source.unsplash.com/featured/?tablet,device/300x300",
+      image: "https://picsum.photos/300/300?random=tablet",
       discount: 5,
     },
   ];

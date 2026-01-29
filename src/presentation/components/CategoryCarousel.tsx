@@ -4,24 +4,23 @@ const CategoryCarousel: React.FC = () => {
   const categories = [
     {
       name: "Electronics",
-      image:
-        "https://source.unsplash.com/featured/?electronics,gadgets/200x200",
+      image: "https://picsum.photos/200/200?random=electronics",
     },
     {
       name: "Clothing",
-      image: "https://source.unsplash.com/featured/?clothing,fashion/200x200",
+      image: "https://picsum.photos/200/200?random=clothing",
     },
     {
       name: "Home & Garden",
-      image: "https://source.unsplash.com/featured/?home,garden/200x200",
+      image: "https://picsum.photos/200/200?random=home",
     },
     {
       name: "Sports",
-      image: "https://source.unsplash.com/featured/?sports,fitness/200x200",
+      image: "https://picsum.photos/200/200?random=sports",
     },
     {
       name: "Books",
-      image: "https://source.unsplash.com/featured/?books,library/200x200",
+      image: "https://picsum.photos/200/200?random=books",
     },
   ];
 
