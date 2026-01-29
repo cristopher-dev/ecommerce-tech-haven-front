@@ -6,7 +6,9 @@ import {
   setLoading,
   setError,
   setLastTransactionId,
+  clearCart,
 } from "@/application/store/slices/checkoutSlice";
+import { transactionsApi } from "@/infrastructure/api/techHavenApiClient";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
@@ -38,23 +40,38 @@ const CheckoutSummaryPage: React.FC = () => {
     try {
       setIsProcessing(true);
       dispatch(setLoading(true));
+      dispatch(setError(null));
 
-      // TODO: Call backend API to process payment
-      // const response = await fetch('/api/checkout/process', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({
-      //     items: checkout.cartItems,
-      //     deliveryData: checkout.deliveryData,
-      //     paymentData: checkout.paymentData,
-      //     total
-      //   })
-      // });
+      // Extract customer name from delivery data
+      const customerName = checkout.deliveryData.address.split(",")[0].trim();
+      const customerEmail =
+        localStorage.getItem("customer_email") || "customer@techHaven.com";
 
-      // For now, simulate successful transaction
-      const transactionId = `TXN-${Date.now()}`;
-      dispatch(setLastTransactionId(transactionId));
+      // Create transaction in backend
+      const transactionResponse = await transactionsApi.create({
+        customerName,
+        customerEmail,
+        customerAddress: checkout.deliveryData.address,
+        productId: checkout.cartItems[0]?.product.id || "1",
+        quantity: checkout.cartItems[0]?.quantity || 1,
+        cardData: {
+          cardNumber: checkout.paymentData.cardNumber,
+          cardholderName: checkout.paymentData.cardholderName,
+          expirationMonth: checkout.paymentData.expirationMonth,
+          expirationYear: checkout.paymentData.expirationYear,
+          cvv: "", // Never send CVV to backend
+        },
+      });
+
+      // Process payment
+      await transactionsApi.processPayment(transactionResponse.id, {
+        status: "COMPLETED",
+      });
+
+      // Success - save transaction ID and navigate
+      dispatch(setLastTransactionId(transactionResponse.transactionNumber));
       dispatch(setStep("status"));
+      dispatch(clearCart());
 
       setTimeout(() => {
         setIsProcessing(false);
