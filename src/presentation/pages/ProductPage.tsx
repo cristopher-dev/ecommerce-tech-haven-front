@@ -1,9 +1,26 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { useCart } from "../../infrastructure/hooks/useCart";
 
 const ProductPage: React.FC = () => {
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
+
+  const product = {
+    id: 1,
+    name: "Product Name",
+    price: 99.0,
+    image:
+      "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    discount: 0,
+  };
+
+  const handleAddToCart = () => {
+    addToCart(product, 1);
+    navigate("/cart");
+  };
   return (
     <div>
       <Header />
@@ -30,7 +47,9 @@ const ProductPage: React.FC = () => {
             <h1>Product Name</h1>
             <p className="text-muted">$99.00</p>
             <p>Description of the product.</p>
-            <button className="btn btn-primary">Add to Cart</button>
+            <button className="btn btn-primary" onClick={handleAddToCart}>
+              Add to Cart
+            </button>
           </div>
         </div>
       </main>
