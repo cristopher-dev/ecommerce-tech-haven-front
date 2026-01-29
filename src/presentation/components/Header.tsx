@@ -295,157 +295,170 @@ const Header: React.FC = () => {
       {/* Navigation Bar */}
       <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom">
         <div className="container">
-          <div className="d-flex align-items-center w-100">
-            {/* Shop by Category */}
-            <div className="dropdown me-4">
-              <button
-                className="btn btn-primary dropdown-toggle d-flex align-items-center"
-                type="button"
-                data-bs-toggle="dropdown"
-              >
-                <i className="bi bi-list me-2"></i>
-                Shop by Category
-              </button>
-              <ul className="dropdown-menu category-dropdown">
-                <li>
-                  <a
-                    className="dropdown-item d-flex align-items-center"
-                    href="#"
-                  >
-                    <i className="bi bi-house me-3 fs-5 text-primary"></i>
-                    <span>Home & Garden</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="dropdown-item d-flex align-items-center"
-                    href="#"
-                  >
-                    <i className="bi bi-shirt me-3 fs-5 text-success"></i>
-                    <span>Fashion</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="dropdown-item d-flex align-items-center"
-                    href="#"
-                  >
-                    <i className="bi bi-laptop me-3 fs-5 text-info"></i>
-                    <span>Electronics</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="dropdown-item d-flex align-items-center"
-                    href="#"
-                  >
-                    <i className="bi bi-gift me-3 fs-5 text-warning"></i>
-                    <span>Gifts</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="dropdown-item d-flex align-items-center"
-                    href="#"
-                  >
-                    <i className="bi bi-tree me-3 fs-5 text-success"></i>
-                    <span>Garden</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="dropdown-item d-flex align-items-center"
-                    href="#"
-                  >
-                    <i className="bi bi-music-note me-3 fs-5 text-danger"></i>
-                    <span>Music</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="dropdown-item d-flex align-items-center"
-                    href="#"
-                  >
-                    <i className="bi bi-car-front me-3 fs-5 text-secondary"></i>
-                    <span>Motors</span>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="dropdown-item d-flex align-items-center"
-                    href="#"
-                  >
-                    <i className="bi bi-house-gear me-3 fs-5 text-dark"></i>
-                    <span>Furniture</span>
-                  </a>
-                </li>
-                <li>
-                  <hr className="dropdown-divider" />
-                </li>
-                <li>
-                  <a className="dropdown-item fw-bold text-primary" href="#">
-                    VIEW ALL CATEGORIES{" "}
-                    <i className="bi bi-chevron-right ms-2"></i>
-                  </a>
-                </li>
-              </ul>
-            </div>
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarNav">
+            <div className="d-flex align-items-center w-100">
+              {/* Shop by Category */}
+              <div className="dropdown me-4">
+                <button
+                  className="btn btn-primary dropdown-toggle d-flex align-items-center"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                >
+                  <i className="bi bi-list me-2"></i>
+                  Shop by Category
+                </button>
+                <ul className="dropdown-menu category-dropdown">
+                  <li>
+                    <a
+                      className="dropdown-item d-flex align-items-center"
+                      href="#"
+                    >
+                      <i className="bi bi-house me-3 fs-5 text-primary"></i>
+                      <span>Home & Garden</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      className="dropdown-item d-flex align-items-center"
+                      href="#"
+                    >
+                      <i className="bi bi-shirt me-3 fs-5 text-success"></i>
+                      <span>Fashion</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      className="dropdown-item d-flex align-items-center"
+                      href="#"
+                    >
+                      <i className="bi bi-laptop me-3 fs-5 text-info"></i>
+                      <span>Electronics</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      className="dropdown-item d-flex align-items-center"
+                      href="#"
+                    >
+                      <i className="bi bi-gift me-3 fs-5 text-warning"></i>
+                      <span>Gifts</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      className="dropdown-item d-flex align-items-center"
+                      href="#"
+                    >
+                      <i className="bi bi-tree me-3 fs-5 text-success"></i>
+                      <span>Garden</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      className="dropdown-item d-flex align-items-center"
+                      href="#"
+                    >
+                      <i className="bi bi-music-note me-3 fs-5 text-danger"></i>
+                      <span>Music</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      className="dropdown-item d-flex align-items-center"
+                      href="#"
+                    >
+                      <i className="bi bi-car-front me-3 fs-5 text-secondary"></i>
+                      <span>Motors</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      className="dropdown-item d-flex align-items-center"
+                      href="#"
+                    >
+                      <i className="bi bi-house-gear me-3 fs-5 text-dark"></i>
+                      <span>Furniture</span>
+                    </a>
+                  </li>
+                  <li>
+                    <hr className="dropdown-divider" />
+                  </li>
+                  <li>
+                    <a className="dropdown-item fw-bold text-primary" href="#">
+                      VIEW ALL CATEGORIES{" "}
+                      <i className="bi bi-chevron-right ms-2"></i>
+                    </a>
+                  </li>
+                </ul>
+              </div>
 
-            {/* Main Navigation */}
-            <div className="navbar-nav flex-row">
-              <Link className="nav-link me-3" to="/">
-                Home
-              </Link>
-              <a className="nav-link me-3" href="#">
-                Vendor
-              </a>
-              <a className="nav-link me-3" href="#">
-                Categories
-              </a>
-              <Link className="nav-link me-3" to="/product">
-                Products
-              </Link>
-              <a className="nav-link me-3" href="#">
-                Blog
-              </a>
-              <a className="nav-link" href="#">
-                Pages
-              </a>
-            </div>
+              {/* Main Navigation */}
+              <div className="navbar-nav flex-row">
+                <Link className="nav-link me-3" to="/">
+                  Home
+                </Link>
+                <a className="nav-link me-3" href="#">
+                  Vendor
+                </a>
+                <a className="nav-link me-3" href="#">
+                  Categories
+                </a>
+                <Link className="nav-link me-3" to="/product">
+                  Products
+                </Link>
+                <a className="nav-link me-3" href="#">
+                  Blog
+                </a>
+                <a className="nav-link" href="#">
+                  Pages
+                </a>
+              </div>
 
-            {/* Quick Search Tags */}
-            <div className="ms-auto d-none d-lg-flex align-items-center">
-              <span className="text-muted me-3">Popular:</span>
-              <a
-                href="#"
-                className="badge bg-light text-dark text-decoration-none me-2"
-              >
-                electronics
-              </a>
-              <a
-                href="#"
-                className="badge bg-light text-dark text-decoration-none me-2"
-              >
-                fashion
-              </a>
-              <a
-                href="#"
-                className="badge bg-light text-dark text-decoration-none me-2"
-              >
-                hub
-              </a>
-              <a
-                href="#"
-                className="badge bg-light text-dark text-decoration-none me-2"
-              >
-                shirt
-              </a>
-              <a
-                href="#"
-                className="badge bg-light text-dark text-decoration-none me-2"
-              >
-                skirt
-              </a>
+              {/* Quick Search Tags */}
+              <div className="ms-auto d-none d-lg-flex align-items-center">
+                <span className="text-muted me-3">Popular:</span>
+                <a
+                  href="#"
+                  className="badge bg-light text-dark text-decoration-none me-2"
+                >
+                  electronics
+                </a>
+                <a
+                  href="#"
+                  className="badge bg-light text-dark text-decoration-none me-2"
+                >
+                  fashion
+                </a>
+                <a
+                  href="#"
+                  className="badge bg-light text-dark text-decoration-none me-2"
+                >
+                  hub
+                </a>
+                <a
+                  href="#"
+                  className="badge bg-light text-dark text-decoration-none me-2"
+                >
+                  shirt
+                </a>
+                <a
+                  href="#"
+                  className="badge bg-light text-dark text-decoration-none me-2"
+                >
+                  skirt
+                </a>
+              </div>
             </div>
           </div>
         </div>
