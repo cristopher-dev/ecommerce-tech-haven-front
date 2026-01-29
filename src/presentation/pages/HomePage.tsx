@@ -8,6 +8,8 @@ import BrandCarousel from "../components/BrandCarousel";
 import Features from "../components/Features";
 import Newsletter from "../components/Newsletter";
 import Footer from "../components/Footer";
+import RecentProducts from "../components/RecentProducts";
+import TopRatedProducts from "../components/TopRatedProducts";
 
 const HomePage: React.FC = () => {
   return (
@@ -17,7 +19,7 @@ const HomePage: React.FC = () => {
         <HeroCarousel />
       </div>
       <div className="fade show">
-        <PromoBanners />
+        <Features />
       </div>
       <div className="fade show">
         <ProductSection title="Flash Deals" />
@@ -26,16 +28,22 @@ const HomePage: React.FC = () => {
         <ProductSection title="Most Viewed Products" />
       </div>
       <div className="fade show">
+        <PromoBanners />
+      </div>
+      <div className="fade show">
         <CategoryCarousel />
       </div>
       <div className="fade show">
         <ProductSection title="Best Sellers on Electronics" />
       </div>
       <div className="fade show">
-        <BrandCarousel />
+        <RecentProducts />
       </div>
       <div className="fade show">
-        <Features />
+        <TopRatedProducts />
+      </div>
+      <div className="fade show">
+        <BrandCarousel />
       </div>
       <div className="fade show">
         <Newsletter />
