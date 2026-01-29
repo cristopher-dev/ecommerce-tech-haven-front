@@ -19,7 +19,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       : product.price;
 
   return (
-    <div className="card h-100 border-0 shadow-sm">
+    <div
+      className="card h-100 border-0 shadow-sm"
+      style={{ transition: "transform 0.2s" }}
+      onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+      onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+    >
       <div className="position-relative">
         <img src={product.image} className="card-img-top" alt={product.name} />
         {product.discount > 0 && (

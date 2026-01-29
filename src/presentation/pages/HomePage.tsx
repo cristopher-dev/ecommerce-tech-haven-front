@@ -13,15 +13,33 @@ const HomePage: React.FC = () => {
   return (
     <div>
       <Header />
-      <HeroCarousel />
-      <PromoBanners />
-      <ProductSection title="Flash Deals" />
-      <ProductSection title="Most Viewed Products" />
-      <CategoryCarousel />
-      <ProductSection title="Best Sellers on Electronics" />
-      <BrandCarousel />
-      <Features />
-      <Newsletter />
+      <div className="fade show">
+        <HeroCarousel />
+      </div>
+      <div className="fade show">
+        <PromoBanners />
+      </div>
+      <div className="fade show">
+        <ProductSection title="Flash Deals" />
+      </div>
+      <div className="fade show">
+        <ProductSection title="Most Viewed Products" />
+      </div>
+      <div className="fade show">
+        <CategoryCarousel />
+      </div>
+      <div className="fade show">
+        <ProductSection title="Best Sellers on Electronics" />
+      </div>
+      <div className="fade show">
+        <BrandCarousel />
+      </div>
+      <div className="fade show">
+        <Features />
+      </div>
+      <div className="fade show">
+        <Newsletter />
+      </div>
       <Footer />
     </div>
   );

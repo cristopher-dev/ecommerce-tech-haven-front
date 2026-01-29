@@ -40,6 +40,22 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title }) => {
         "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300&q=80",
       discount: 5,
     },
+    {
+      id: 5,
+      name: "Smart Watch",
+      price: 249.99,
+      image:
+        "https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300&q=80",
+      discount: 20,
+    },
+    {
+      id: 6,
+      name: "Bluetooth Speaker",
+      price: 79.99,
+      image:
+        "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300&q=80",
+      discount: 0,
+    },
   ];
 
   return (
