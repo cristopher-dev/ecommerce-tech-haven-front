@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useCart } from "../../infrastructure/hooks/useCart";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import { useCart } from "@/infrastructure/hooks/useCart";
+import Header from "@/presentation/components/Header";
+import Footer from "@/presentation/components/Footer";
 
 const CartPage: React.FC = () => {
   const { cart, removeFromCart, updateQuantity, getTotalPrice } = useCart();

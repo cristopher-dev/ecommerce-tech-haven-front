@@ -1,6 +1,6 @@
-import { CartRepository } from "../../domain/ports/CartRepository";
-import { Cart } from "../../domain/entities/Cart";
-import { CartItem } from "../../domain/entities/CartItem";
+import { CartRepository } from "@/domain/ports/CartRepository";
+import { Cart } from "@/domain/entities/Cart";
+import { CartItem } from "@/domain/entities/CartItem";
 
 const CART_STORAGE_KEY = "techhaven_cart";
 

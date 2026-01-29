@@ -1,5 +1,5 @@
 import React from "react";
-import ProductCard from "./ProductCard";
+import ProductCard from "@/presentation/components/ProductCard";
 
 const RecentProducts: React.FC = () => {
   // Mock recent products with discounts

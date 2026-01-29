@@ -1,5 +1,5 @@
 import React from "react";
-import ProductCard from "./ProductCard";
+import ProductCard from "@/presentation/components/ProductCard";
 
 const TopRatedProducts: React.FC = () => {
   // Mock top rated products

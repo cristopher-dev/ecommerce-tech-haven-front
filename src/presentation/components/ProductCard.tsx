@@ -1,6 +1,12 @@
-import React from "react";
-import { Product } from "../../domain/entities/Product";
-import { useCart } from "../../infrastructure/hooks/useCart";
+import React, { useState } from "react";
+import { Product } from "@/domain/entities/Product";
+import { useCart } from "@/infrastructure/hooks/useCart";
+import { useAppDispatch } from "@/application/store/hooks";
+import {
+  addToWishlist,
+  removeFromWishlist,
+} from "@/application/store/slices/wishlistSlice";
+import { useWishlist } from "@/application/store/hooks";
 
 interface ProductCardProps {
   product: Product;
@@ -8,9 +14,24 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart } = useCart();
+  const dispatch = useAppDispatch();
+  const { items: wishlistItems } = useWishlist();
+  const isInWishlist = wishlistItems.some(
+    (item) => item.product.id === product.id,
+  );
+  const [isHeartHovered, setIsHeartHovered] = useState(false);
 
   const handleAddToCart = () => {
     addToCart(product);
+  };
+
+  const handleToggleWishlist = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (isInWishlist) {
+      dispatch(removeFromWishlist(product.id));
+    } else {
+      dispatch(addToWishlist(product));
+    }
   };
 
   const discountedPrice =
@@ -33,8 +54,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </span>
         )}
         <div className="card-img-overlay d-flex justify-content-end align-items-start p-2">
-          <button className="btn btn-light btn-sm rounded-circle">
-            <i className="bi bi-heart"></i>
+          <button
+            className={`btn btn-sm rounded-circle ${isInWishlist ? "btn-danger" : "btn-light"}`}
+            onClick={handleToggleWishlist}
+            onMouseEnter={() => setIsHeartHovered(true)}
+            onMouseLeave={() => setIsHeartHovered(false)}
+            style={{
+              transition: "all 0.2s ease",
+              transform: isHeartHovered ? "scale(1.2)" : "scale(1)",
+            }}
+            title={isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
+          >
+            <i className={`bi bi-heart${isInWishlist ? "-fill" : ""}`}></i>
           </button>
         </div>
       </div>

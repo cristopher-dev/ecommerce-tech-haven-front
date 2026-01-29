@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
-import { Cart } from "../entities/Cart";
-import { CartItem } from "../entities/CartItem";
+import { Cart } from "@/domain/entities/Cart";
+import { CartItem } from "@/domain/entities/CartItem";
 
 export interface CartRepository {
   getCart(): Cart;

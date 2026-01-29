@@ -1,10 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useCart } from "../../infrastructure/hooks/useCart";
-import "./Header.scss";
+import { useCart } from "@/infrastructure/hooks/useCart";
+import { useWishlist } from "@/application/store/hooks";
+import "@/presentation/components/Header.scss";
 
 const Header: React.FC = () => {
   const { getTotalItems, cart } = useCart();
+  const { count: wishlistCount } = useWishlist();
 
   const getCartTotal = () => {
     return cart.items
@@ -14,10 +16,8 @@ const Header: React.FC = () => {
 
   return (
     <header className="header">
-      {/* Main Navigation Bar with Collapsible Header */}
       <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom">
         <div className="container-fluid">
-          {/* Toggler button for mobile */}
           <button
             className="navbar-toggler"
             type="button"
@@ -30,87 +30,8 @@ const Header: React.FC = () => {
             <span className="navbar-toggler-icon"></span>
           </button>
 
-          {/* Collapsible header content (top bar + main header + nav) */}
           <div className="collapse navbar-collapse" id="headerCollapse">
             <div className="w-100">
-              {/* Top Bar */}
-              <div className="header-top bg-dark text-white py-2">
-                <div className="row align-items-center">
-                  <div className="col-12 col-md-6">
-                    <div className="header-top-left d-flex flex-column flex-md-row align-items-center gap-2">
-                      <span className="me-3">
-                        <i className="bi bi-telephone me-1"></i>
-                        Call us: +1 234 567 890
-                      </span>
-                      <span>
-                        <i className="bi bi-envelope me-1"></i>
-                        support@techhaven.com
-                      </span>
-                    </div>
-                  </div>
-                  <div className="col-12 col-md-6">
-                    <div className="header-top-right d-flex justify-content-center justify-content-md-end align-items-center gap-2">
-                      <div className="dropdown me-3">
-                        <button
-                          className="btn btn-link text-white p-0 dropdown-toggle"
-                          type="button"
-                          data-bs-toggle="dropdown"
-                        >
-                          <i className="bi bi-translate me-1"></i> ENG
-                        </button>
-                        <ul className="dropdown-menu">
-                          <li>
-                            <a className="dropdown-item" href="#">
-                              English
-                            </a>
-                          </li>
-                          <li>
-                            <a className="dropdown-item" href="#">
-                              Español
-                            </a>
-                          </li>
-                          <li>
-                            <a className="dropdown-item" href="#">
-                              Français
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                      <div className="dropdown me-3">
-                        <button
-                          className="btn btn-link text-white p-0 dropdown-toggle"
-                          type="button"
-                          data-bs-toggle="dropdown"
-                        >
-                          <i className="bi bi-currency-dollar me-1"></i> USD
-                        </button>
-                        <ul className="dropdown-menu">
-                          <li>
-                            <a className="dropdown-item" href="#">
-                              USD
-                            </a>
-                          </li>
-                          <li>
-                            <a className="dropdown-item" href="#">
-                              EUR
-                            </a>
-                          </li>
-                          <li>
-                            <a className="dropdown-item" href="#">
-                              GBP
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                      <a href="#" className="text-white text-decoration-none">
-                        <i className="bi bi-shop me-1"></i> Become a Seller
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Main Header Section */}
               <div className="header-main bg-white border-bottom">
                 <div className="row align-items-center py-2 py-md-3">
                   {/* Logo */}
@@ -120,7 +41,7 @@ const Header: React.FC = () => {
                         src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&h=50&q=80"
                         alt="TechHaven"
                         className="img-fluid"
-                        style={{ maxBlockSize: "50px" }}
+                        style={{ maxHeight: "50px" }}
                       />
                     </Link>
                   </div>
@@ -177,291 +98,251 @@ const Header: React.FC = () => {
                     </form>
                   </div>
 
-                  {/* User Actions */}
+                  {/* User Actions - Better UI */}
                   <div className="col-6 col-md-3 col-lg-5">
-                    <div className="header-actions d-flex justify-content-end align-items-center gap-3">
-                      <div className="header-action p-1 p-md-2">
-                        <Link
-                          to="/account"
-                          className="text-decoration-none d-flex align-items-center"
-                        >
-                          <div className="action-icon me-2">
-                            <i className="bi bi-person-circle fs-4 text-primary"></i>
-                          </div>
-                          <div className="action-text d-none d-lg-block">
-                            <div className="fw-bold">My Account</div>
-                            <small className="text-muted">Login/Register</small>
-                          </div>
-                        </Link>
-                      </div>
+                    <div className="header-actions d-flex justify-content-end align-items-center gap-1 gap-md-2">
+                      {/* My Account */}
+                      <Link
+                        to="/account"
+                        className="header-action d-flex align-items-center justify-content-center justify-content-lg-start py-2 px-2 px-lg-3"
+                        style={{
+                          minHeight: "44px",
+                          borderRadius: "8px",
+                          textDecoration: "none",
+                          transition: "background-color 0.3s",
+                          color: "inherit",
+                        }}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.backgroundColor = "#f5f5f5")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.backgroundColor =
+                            "transparent")
+                        }
+                      >
+                        <i className="bi bi-person-circle fs-5 text-primary"></i>
+                        <div className="ms-2 d-none d-lg-block">
+                          <small
+                            className="text-muted d-block lh-1"
+                            style={{ fontSize: "0.7rem" }}
+                          >
+                            Account
+                          </small>
+                          <span
+                            className="fw-600 d-block lh-1"
+                            style={{ fontSize: "0.85rem" }}
+                          >
+                            Login
+                          </span>
+                        </div>
+                      </Link>
 
-                      <div className="header-action p-1 p-md-2">
-                        <Link
-                          to="/wishlist"
-                          className="text-decoration-none d-flex align-items-center"
+                      {/* Wishlist */}
+                      <Link
+                        to="/wishlist"
+                        className="header-action d-flex align-items-center justify-content-center justify-content-lg-start py-2 px-2 px-lg-3 position-relative"
+                        style={{
+                          minHeight: "44px",
+                          borderRadius: "8px",
+                          textDecoration: "none",
+                          transition: "background-color 0.3s",
+                          color: "inherit",
+                        }}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.backgroundColor = "#f5f5f5")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.backgroundColor =
+                            "transparent")
+                        }
+                      >
+                        <div className="position-relative">
+                          <i className="bi bi-heart fs-5 text-danger"></i>
+                          {wishlistCount > 0 && (
+                            <span
+                              className="badge bg-danger rounded-circle d-flex align-items-center justify-content-center"
+                              style={{
+                                position: "absolute",
+                                top: "-6px",
+                                right: "-6px",
+                                width: "18px",
+                                height: "18px",
+                                fontSize: "0.6rem",
+                                padding: "0",
+                              }}
+                            >
+                              {wishlistCount}
+                            </span>
+                          )}
+                        </div>
+                        <div className="ms-2 d-none d-lg-block">
+                          <small
+                            className="text-muted d-block lh-1"
+                            style={{ fontSize: "0.7rem" }}
+                          >
+                            Favorites
+                          </small>
+                          <span
+                            className="fw-600 d-block lh-1"
+                            style={{ fontSize: "0.85rem" }}
+                          >
+                            Wishlist
+                          </span>
+                        </div>
+                      </Link>
+
+                      {/* Shopping Cart */}
+                      <div
+                        className="header-action dropdown d-flex align-items-center"
+                        style={{ minHeight: "44px" }}
+                      >
+                        <button
+                          className="btn d-flex align-items-center justify-content-center justify-content-lg-start py-2 px-2 px-lg-3 position-relative"
+                          type="button"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                          style={{
+                            minHeight: "44px",
+                            borderRadius: "8px",
+                            border: "none",
+                            backgroundColor: "transparent",
+                            cursor: "pointer",
+                            transition: "background-color 0.3s",
+                          }}
+                          onMouseEnter={(e) =>
+                            (e.currentTarget.style.backgroundColor = "#f5f5f5")
+                          }
+                          onMouseLeave={(e) =>
+                            (e.currentTarget.style.backgroundColor =
+                              "transparent")
+                          }
                         >
-                          <div className="action-icon me-2 position-relative">
-                            <i className="bi bi-heart fs-4 text-danger"></i>
-                            <span className="badge bg-danger position-absolute top-0 start-100 translate-middle badge-sm">
-                              3
+                          <div className="position-relative">
+                            <i className="bi bi-bag fs-5 text-success"></i>
+                            <span
+                              className="badge bg-success rounded-circle d-flex align-items-center justify-content-center"
+                              style={{
+                                position: "absolute",
+                                top: "-6px",
+                                right: "-6px",
+                                width: "18px",
+                                height: "18px",
+                                fontSize: "0.6rem",
+                                padding: "0",
+                              }}
+                            >
+                              {getTotalItems()}
                             </span>
                           </div>
-                          <div className="action-text d-none d-lg-block">
-                            <div className="fw-bold">Wishlist</div>
-                            <small className="text-muted">Your favorites</small>
+                          <div className="ms-2 d-none d-lg-block">
+                            <small
+                              className="text-muted d-block lh-1"
+                              style={{ fontSize: "0.7rem" }}
+                            >
+                              Cart Total
+                            </small>
+                            <span
+                              className="fw-600 d-block lh-1 text-success"
+                              style={{ fontSize: "0.85rem" }}
+                            >
+                              ${getCartTotal()}
+                            </span>
                           </div>
-                        </Link>
-                      </div>
+                        </button>
 
-                      <div className="header-action p-1 p-md-2">
-                        <div className="dropdown">
-                          <button
-                            className="btn btn-link text-decoration-none d-flex align-items-center p-0"
-                            type="button"
-                            data-bs-toggle="dropdown"
-                          >
-                            <div className="action-icon me-2 position-relative">
-                              <i className="bi bi-cart3 fs-4 text-success"></i>
-                              <span className="badge bg-success position-absolute top-0 start-100 translate-middle badge-sm">
-                                {getTotalItems()}
-                              </span>
-                            </div>
-                            <div className="action-text d-none d-lg-block">
-                              <div className="fw-bold">${getCartTotal()}</div>
-                              <small className="text-muted">Your cart</small>
-                            </div>
-                          </button>
-                          <ul
-                            className="dropdown-menu dropdown-menu-end cart-dropdown"
-                            style={{ minInlineSize: "350px" }}
-                          >
-                            {cart.items.length === 0 ? (
-                              <li>
-                                <div className="p-4 text-center">
-                                  <i className="bi bi-cart-x fs-1 text-muted mb-3"></i>
-                                  <p className="text-muted mb-0">
-                                    Your cart is empty
-                                  </p>
-                                </div>
-                              </li>
-                            ) : (
-                              <>
-                                {cart.items.slice(0, 3).map((item) => (
-                                  <li key={item.product.id}>
-                                    <div className="p-3 d-flex align-items-center">
-                                      <img
-                                        src={item.product.image}
-                                        alt={item.product.name}
-                                        className="me-3 rounded"
-                                        style={{
-                                          inlineSize: "50px",
-                                          blockSize: "50px",
-                                          objectFit: "cover",
-                                        }}
-                                      />
-                                      <div className="flex-grow-1">
-                                        <h6 className="mb-1">
-                                          {item.product.name}
-                                        </h6>
-                                        <p className="mb-1 text-primary fw-bold">
-                                          ${item.product.price} ×{" "}
-                                          {item.quantity}
-                                        </p>
-                                      </div>
-                                      <button className="btn btn-sm btn-outline-danger">
-                                        <i className="bi bi-x"></i>
-                                      </button>
-                                    </div>
-                                  </li>
-                                ))}
-                                <li>
-                                  <hr className="dropdown-divider" />
-                                </li>
-                                <li>
-                                  <div className="p-3">
-                                    <div className="d-flex justify-content-between align-items-center mb-3">
-                                      <strong>SUBTOTAL:</strong>
-                                      <span className="text-primary fw-bold">
-                                        ${getCartTotal()}
-                                      </span>
-                                    </div>
-                                    <div className="d-flex gap-2">
-                                      <Link
-                                        className="btn btn-outline-primary flex-fill"
-                                        to="/cart"
+                        {/* Cart Dropdown Menu */}
+                        <ul
+                          className="dropdown-menu dropdown-menu-end shadow-lg border-0"
+                          style={{
+                            minWidth: "350px",
+                            maxHeight: "500px",
+                            overflowY: "auto",
+                            borderRadius: "8px",
+                          }}
+                        >
+                          <li className="p-3 border-bottom bg-light rounded-top-3">
+                            <h6 className="mb-0 fw-bold">
+                              <i className="bi bi-bag me-2 text-success"></i>
+                              Shopping Cart
+                            </h6>
+                          </li>
+
+                          {cart.items.length === 0 ? (
+                            <li>
+                              <div className="p-4 text-center">
+                                <i className="bi bi-bag-x fs-1 text-muted mb-3 d-block"></i>
+                                <p className="text-muted mb-0">
+                                  Your cart is empty
+                                </p>
+                              </div>
+                            </li>
+                          ) : (
+                            <>
+                              {cart.items.slice(0, 3).map((item) => (
+                                <li
+                                  key={item.product.id}
+                                  className="border-bottom"
+                                >
+                                  <div className="p-3 d-flex align-items-center gap-2">
+                                    <img
+                                      src={item.product.image}
+                                      alt={item.product.name}
+                                      className="rounded"
+                                      style={{
+                                        width: "50px",
+                                        height: "50px",
+                                        objectFit: "cover",
+                                      }}
+                                    />
+                                    <div
+                                      className="flex-grow-1"
+                                      style={{ minWidth: "0" }}
+                                    >
+                                      <h6 className="mb-1 text-truncate">
+                                        {item.product.name}
+                                      </h6>
+                                      <p
+                                        className="mb-0 text-success fw-bold"
+                                        style={{ fontSize: "0.9rem" }}
                                       >
-                                        View Cart
-                                      </Link>
-                                      <Link
-                                        className="btn btn-primary flex-fill"
-                                        to="/checkout"
-                                      >
-                                        Checkout
-                                      </Link>
+                                        ${item.product.price} × {item.quantity}
+                                      </p>
                                     </div>
+                                    <button className="btn btn-sm btn-outline-danger">
+                                      <i className="bi bi-x"></i>
+                                    </button>
                                   </div>
                                 </li>
-                              </>
-                            )}
-                          </ul>
-                        </div>
+                              ))}
+
+                              <li className="p-3">
+                                <div className="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                                  <strong>Subtotal:</strong>
+                                  <span className="text-success fw-bold">
+                                    ${getCartTotal()}
+                                  </span>
+                                </div>
+                                <div className="d-flex gap-2">
+                                  <Link
+                                    className="btn btn-sm btn-outline-primary flex-fill"
+                                    to="/cart"
+                                  >
+                                    View Cart
+                                  </Link>
+                                  <Link
+                                    className="btn btn-sm btn-success flex-fill"
+                                    to="/checkout"
+                                  >
+                                    Checkout
+                                  </Link>
+                                </div>
+                              </li>
+                            </>
+                          )}
+                        </ul>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
-
-              {/* Main Navigation Links */}
-              <div className="navbar-nav flex-column flex-lg-row">
-                <div className="dropdown me-4">
-                  <button
-                    className="btn btn-primary dropdown-toggle d-flex align-items-center"
-                    type="button"
-                    data-bs-toggle="dropdown"
-                  >
-                    <i className="bi bi-list me-2"></i>
-                    Shop by Category
-                  </button>
-                  <ul className="dropdown-menu category-dropdown">
-                    <li>
-                      <a
-                        className="dropdown-item d-flex align-items-center"
-                        href="#"
-                      >
-                        <i className="bi bi-house me-3 fs-5 text-primary"></i>
-                        <span>Home & Garden</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        className="dropdown-item d-flex align-items-center"
-                        href="#"
-                      >
-                        <i className="bi bi-shirt me-3 fs-5 text-success"></i>
-                        <span>Fashion</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        className="dropdown-item d-flex align-items-center"
-                        href="#"
-                      >
-                        <i className="bi bi-laptop me-3 fs-5 text-info"></i>
-                        <span>Electronics</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        className="dropdown-item d-flex align-items-center"
-                        href="#"
-                      >
-                        <i className="bi bi-gift me-3 fs-5 text-warning"></i>
-                        <span>Gifts</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        className="dropdown-item d-flex align-items-center"
-                        href="#"
-                      >
-                        <i className="bi bi-tree me-3 fs-5 text-success"></i>
-                        <span>Garden</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        className="dropdown-item d-flex align-items-center"
-                        href="#"
-                      >
-                        <i className="bi bi-music-note me-3 fs-5 text-danger"></i>
-                        <span>Music</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        className="dropdown-item d-flex align-items-center"
-                        href="#"
-                      >
-                        <i className="bi bi-car-front me-3 fs-5 text-secondary"></i>
-                        <span>Motors</span>
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        className="dropdown-item d-flex align-items-center"
-                        href="#"
-                      >
-                        <i className="bi bi-house-gear me-3 fs-5 text-dark"></i>
-                        <span>Furniture</span>
-                      </a>
-                    </li>
-                    <li>
-                      <hr className="dropdown-divider" />
-                    </li>
-                    <li>
-                      <a
-                        className="dropdown-item fw-bold text-primary"
-                        href="#"
-                      >
-                        VIEW ALL CATEGORIES{" "}
-                        <i className="bi bi-chevron-right ms-2"></i>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-
-                <Link className="nav-link me-3" to="/">
-                  Home
-                </Link>
-                <a className="nav-link me-3" href="#">
-                  Vendor
-                </a>
-                <a className="nav-link me-3" href="#">
-                  Categories
-                </a>
-                <Link className="nav-link me-3" to="/product">
-                  Products
-                </Link>
-                <a className="nav-link me-3" href="#">
-                  Blog
-                </a>
-                <a className="nav-link" href="#">
-                  Pages
-                </a>
-
-                {/* Quick search tags */}
-                <div className="ms-auto d-none d-lg-flex align-items-center">
-                  <span className="text-muted me-3">Popular:</span>
-                  <a
-                    href="#"
-                    className="badge bg-light text-dark text-decoration-none me-2"
-                  >
-                    electronics
-                  </a>
-                  <a
-                    href="#"
-                    className="badge bg-light text-dark text-decoration-none me-2"
-                  >
-                    fashion
-                  </a>
-                  <a
-                    href="#"
-                    className="badge bg-light text-dark text-decoration-none me-2"
-                  >
-                    hub
-                  </a>
-                  <a
-                    href="#"
-                    className="badge bg-light text-dark text-decoration-none me-2"
-                  >
-                    shirt
-                  </a>
-                  <a
-                    href="#"
-                    className="badge bg-light text-dark text-decoration-none me-2"
-                  >
-                    skirt
-                  </a>
                 </div>
               </div>
             </div>
