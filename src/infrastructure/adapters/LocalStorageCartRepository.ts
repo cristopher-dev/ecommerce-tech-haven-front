@@ -4,11 +4,25 @@ import { CartItem } from "@/domain/entities/CartItem";
 
 const CART_STORAGE_KEY = "techhaven_cart";
 
+// Generate a unique ID for a cart item if it doesn't have one
+const ensureCartItemId = (item: CartItem, index: number): CartItem => {
+  if (!item.id) {
+    return {
+      ...item,
+      id: `${item.product.id}-${index}-${Date.now()}`,
+    };
+  }
+  return item;
+};
+
 export class LocalStorageCartRepository implements CartRepository {
   getCart(): Cart {
     const stored = localStorage.getItem(CART_STORAGE_KEY);
     if (stored) {
-      return JSON.parse(stored);
+      const cart = JSON.parse(stored);
+      // Ensure all items have unique IDs
+      cart.items = cart.items.map(ensureCartItemId);
+      return cart;
     }
     return { items: [] };
   }

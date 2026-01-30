@@ -22,6 +22,11 @@ const initialState: CartState = {
   error: null,
 };
 
+// Generate a unique ID for a cart item
+const generateCartItemId = (productId: number, timestamp: number): string => {
+  return `${productId}-${timestamp}`;
+};
+
 // Calculate total price from items
 const calculateTotal = (items: CartItem[]): number => {
   return items.reduce(
@@ -58,7 +63,12 @@ const cartSlice = createSlice({
       if (existingItem) {
         existingItem.quantity += qty;
       } else {
-        state.items.push({ product, quantity: qty });
+        // Generate unique ID for new cart item
+        const uniqueId = generateCartItemId(
+          product.id,
+          Date.now() + Math.random(),
+        );
+        state.items.push({ id: uniqueId, product, quantity: qty });
       }
 
       // Update cart in localStorage
@@ -125,9 +135,14 @@ const cartSlice = createSlice({
 
     // Set cart from external source (e.g., when loading from localStorage)
     setCart: (state, action: PayloadAction<CartItem[]>) => {
-      state.items = action.payload;
-      state.total = calculateTotal(action.payload);
-      state.totalItems = calculateTotalItems(action.payload);
+      state.items = action.payload.map((item) => ({
+        ...item,
+        id:
+          item.id ||
+          generateCartItemId(item.product.id, Date.now() + Math.random()),
+      }));
+      state.total = calculateTotal(state.items);
+      state.totalItems = calculateTotalItems(state.items);
     },
 
     // Set loading state

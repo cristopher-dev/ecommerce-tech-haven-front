@@ -44,19 +44,31 @@ const initialState: CheckoutState = {
   lastTransactionId: null,
 };
 
+// Generate a unique ID for a cart item if it doesn't have one
+const ensureCartItemId = (item: CartItem): CartItem => {
+  if (!item.id) {
+    return {
+      ...item,
+      id: `${item.product.id}-${Date.now()}-${Math.random()}`,
+    };
+  }
+  return item;
+};
+
 export const checkoutSlice = createSlice({
   name: "checkout",
   initialState,
   reducers: {
     // Cart management
     addToCart: (state, action: PayloadAction<CartItem>) => {
+      const itemWithId = ensureCartItemId(action.payload);
       const existingItem = state.cartItems.find(
-        (item) => item.product.id === action.payload.product.id,
+        (item) => item.product.id === itemWithId.product.id,
       );
       if (existingItem) {
-        existingItem.quantity += action.payload.quantity;
+        existingItem.quantity += itemWithId.quantity;
       } else {
-        state.cartItems.push(action.payload);
+        state.cartItems.push(itemWithId);
       }
     },
     removeFromCart: (state, action: PayloadAction<number>) => {

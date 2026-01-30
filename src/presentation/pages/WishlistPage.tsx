@@ -85,7 +85,10 @@ const WishlistPage: React.FC = () => {
                   </thead>
                   <tbody>
                     {items.map((item) => (
-                      <tr key={item.product.id} className="border-bottom">
+                      <tr
+                        key={item.id || item.product.id}
+                        className="border-bottom"
+                      >
                         <td>
                           <div className="d-flex align-items-center gap-3">
                             <img

@@ -155,7 +155,7 @@ const CheckoutFinalStatusPage: React.FC = () => {
                     <div className="list-group list-group-flush">
                       {checkout.cartItems.map((item) => (
                         <div
-                          key={item.product.id}
+                          key={item.id || item.product.id}
                           className="list-group-item px-0"
                         >
                           <div className="row align-items-center">

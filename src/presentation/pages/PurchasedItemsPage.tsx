@@ -100,7 +100,7 @@ const PurchasedItemsPage: React.FC = () => {
                         </thead>
                         <tbody>
                           {transaction.items.map((item) => (
-                            <tr key={item.product.id}>
+                            <tr key={item.id || item.product.id}>
                               <td>
                                 <div className="d-flex align-items-center">
                                   {item.product.image && (
