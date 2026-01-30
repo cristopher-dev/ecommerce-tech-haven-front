@@ -327,7 +327,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                     disabled={loading}
                   >
                     {months.map((month) => (
-                      <option key={month} value={month}>
+                      <option key={`month-${month}`} value={month}>
                         {String(month).padStart(2, "0")}
                       </option>
                     ))}
@@ -342,7 +342,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                     disabled={loading}
                   >
                     {years.map((year) => (
-                      <option key={year} value={year}>
+                      <option key={`year-${year}`} value={year}>
                         {year}
                       </option>
                     ))}

@@ -132,40 +132,15 @@ const CheckoutSummaryPage: React.FC = () => {
 
         // Log the payload for debugging - including validation status
         console.log("=== TRANSACTION PAYLOAD ===");
-        console.log("customerName:", {
-          value: customerName,
-          type: typeof customerName,
-          isEmpty: customerName === "",
-          isString: typeof customerName === "string",
-          length: customerName.length,
-        });
-        console.log("customerEmail:", {
-          value: customerEmail,
-          type: typeof customerEmail,
-          isEmpty: customerEmail === "",
-          isString: typeof customerEmail === "string",
-          hasAt: customerEmail.includes("@"),
-        });
-        console.log("customerAddress:", {
-          value: customerAddress,
-          type: typeof customerAddress,
-          isEmpty: customerAddress === "",
-          isString: typeof customerAddress === "string",
-          length: customerAddress.length,
-        });
-        console.log("productId:", {
-          value: productId,
-          type: typeof productId,
-          isEmpty: productId === "",
-          isString: typeof productId === "string",
-        });
-        console.log("quantity:", {
-          value: quantity,
-          type: typeof quantity,
-          isInteger: Number.isInteger(quantity),
-          isValid: quantity >= 1 && quantity <= 10,
-        });
-        console.log("Full Payload:", transactionPayload);
+        console.log("customerName:", customerName);
+        console.log("customerEmail:", customerEmail);
+        console.log("customerAddress:", customerAddress);
+        console.log("productId:", productId);
+        console.log("quantity:", quantity);
+        console.log(
+          "Full Payload:",
+          JSON.stringify(transactionPayload, null, 2),
+        );
         console.log("=== END PAYLOAD ===");
 
         const transactionResponse =

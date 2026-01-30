@@ -128,15 +128,17 @@ async function apiRequest<T>(
   // Apply auth interceptor to automatically add token (skips for public endpoints)
   const enhancedOptions = withAuthInterceptor(options, endpoint);
 
+  // Ensure headers are properly merged with Content-Type always set to application/json
+  const { headers: enhancedHeaders = {}, ...otherOptions } = enhancedOptions;
+  const finalHeaders = {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+    ...(typeof enhancedHeaders === "object" ? enhancedHeaders : {}),
+  };
+
   const response = await fetch(url, {
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      ...(typeof enhancedOptions.headers === "object"
-        ? enhancedOptions.headers
-        : {}),
-    },
-    ...enhancedOptions,
+    headers: finalHeaders,
+    ...otherOptions,
   } as unknown as Record<string, unknown>);
 
   if (!response.ok) {
