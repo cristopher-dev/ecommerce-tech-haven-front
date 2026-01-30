@@ -56,6 +56,18 @@ const CheckoutSummaryPage: React.FC = () => {
       dispatch(setLoading(true));
       dispatch(setError(null));
 
+      // Debug: Log cart items structure
+      console.log("=== CART ITEMS DEBUG ===");
+      cartItems.forEach((item, index) => {
+        console.log(`Item ${index}:`, {
+          id: item.id,
+          product: item.product,
+          productId: item.product?.id,
+          quantity: item.quantity,
+        });
+      });
+      console.log("=== END CART ITEMS DEBUG ===");
+
       // Extract customer name and email from delivery data
       const firstName = String(checkout.deliveryData.firstName || "").trim();
       const lastName = String(checkout.deliveryData.lastName || "").trim();
@@ -95,10 +107,23 @@ const CheckoutSummaryPage: React.FC = () => {
       const transactionIds: string[] = [];
 
       for (const item of cartItems) {
-        // Extract and validate productId
-        const productIdValue = item.product?.id;
+        // Extract and validate productId - multiple fallback approaches
+        let productIdValue = item.product?.id;
+
+        // If product ID is missing, try alternative approaches
+        if (productIdValue === null || productIdValue === undefined) {
+          // Try to extract from item.id if it contains the product ID
+          if (item.id && typeof item.id === "string" && item.id.includes("-")) {
+            const parts = item.id.split("-");
+            const parsedId = parseInt(parts[0], 10);
+            if (!isNaN(parsedId)) {
+              productIdValue = parsedId;
+            }
+          }
+        }
 
         if (productIdValue === null || productIdValue === undefined) {
+          console.error("Cannot extract product ID from item:", item);
           throw new Error("productId should not be empty");
         }
 

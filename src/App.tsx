@@ -4,7 +4,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "@/application/store/store";
@@ -37,17 +37,26 @@ const PersistGateLoader = () => (
 function AuthRestorer({ children }: { children: React.ReactNode }) {
   const dispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.auth);
+  const [hasInitialized, setHasInitialized] = useState(false);
 
   useEffect(() => {
-    dispatch(restoreAuth());
-
-    // Check if there's a valid token
-    const token = localStorage.getItem("authToken");
-    if (!token && user) {
-      // No token but user exists - this is invalid state, clear it
-      dispatch(logout());
+    // Only run once on component mount
+    if (!hasInitialized) {
+      dispatch(restoreAuth());
+      setHasInitialized(true);
     }
-  }, [dispatch, user]);
+  }, [dispatch, hasInitialized]);
+
+  // Check if there's a valid token (separate effect to avoid loop)
+  useEffect(() => {
+    if (hasInitialized) {
+      const token = localStorage.getItem("authToken");
+      if (!token && user) {
+        // No token but user exists - this is invalid state, clear it
+        dispatch(logout());
+      }
+    }
+  }, [hasInitialized, user, dispatch]);
 
   return <>{children}</>;
 }

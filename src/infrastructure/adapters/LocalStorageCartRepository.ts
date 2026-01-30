@@ -15,13 +15,34 @@ const ensureCartItemId = (item: CartItem, index: number): CartItem => {
   return item;
 };
 
+// Ensure product has an ID (fallback from item.id if necessary)
+const ensureProductId = (item: CartItem, index: number): CartItem => {
+  // If product.id is missing, try to extract from item.id
+  if (!item.product?.id && item.id && typeof item.id === "string") {
+    const parts = item.id.split("-");
+    const extractedId = parseInt(parts[0], 10);
+    if (!isNaN(extractedId)) {
+      return {
+        ...item,
+        product: {
+          ...item.product,
+          id: extractedId,
+        },
+      };
+    }
+  }
+  return item;
+};
+
 export class LocalStorageCartRepository implements CartRepository {
   getCart(): Cart {
     const stored = localStorage.getItem(CART_STORAGE_KEY);
     if (stored) {
       const cart = JSON.parse(stored);
-      // Ensure all items have unique IDs
-      cart.items = cart.items.map(ensureCartItemId);
+      // Ensure all items have unique IDs and product IDs are present
+      cart.items = cart.items
+        .map((item: CartItem, index: number) => ensureProductId(item, index))
+        .map((item: CartItem, index: number) => ensureCartItemId(item, index));
       return cart;
     }
     return { items: [] };
