@@ -8,6 +8,8 @@ import WishlistPage from "@/presentation/pages/WishlistPage";
 import CheckoutDeliveryPage from "@/presentation/pages/CheckoutDeliveryPage";
 import CheckoutSummaryPage from "@/presentation/pages/CheckoutSummaryPage";
 import CheckoutFinalStatusPage from "@/presentation/pages/CheckoutFinalStatusPage";
+import RegisterPage from "@/presentation/pages/RegisterPage";
+import LoginPage from "@/presentation/pages/LoginPage";
 import "@/App.scss";
 
 function App() {
@@ -16,6 +18,8 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/product" element={<ProductPage />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/wishlist" element={<WishlistPage />} />

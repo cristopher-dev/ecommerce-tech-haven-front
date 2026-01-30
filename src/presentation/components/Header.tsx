@@ -1,17 +1,27 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import {
   useWishlist,
   useCartItems,
   useAppDispatch,
 } from "@/application/store/hooks";
 import { removeFromCart } from "@/application/store/slices/cartSlice";
+import { logout } from "@/application/store/slices/authSlice";
+import { RootState } from "@/application/store/store";
 import "@/presentation/components/Header.scss";
 
 const Header: React.FC = () => {
   const { totalItems, total, items } = useCartItems();
   const { count: wishlistCount } = useWishlist();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { user } = useSelector((state: RootState) => state.auth);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/");
+  };
 
   return (
     <header className="header">
@@ -100,41 +110,119 @@ const Header: React.FC = () => {
                   {/* User Actions - Better UI */}
                   <div className="col-6 col-md-3 col-lg-5">
                     <div className="header-actions d-flex justify-content-end align-items-center gap-1 gap-md-2">
-                      {/* My Account */}
-                      <Link
-                        to="/account"
-                        className="header-action d-flex align-items-center justify-content-center justify-content-lg-start py-2 px-2 px-lg-3"
-                        style={{
-                          minHeight: "44px",
-                          borderRadius: "8px",
-                          textDecoration: "none",
-                          transition: "background-color 0.3s",
-                          color: "inherit",
-                        }}
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.style.backgroundColor = "#f5f5f5")
-                        }
-                        onMouseLeave={(e) =>
-                          (e.currentTarget.style.backgroundColor =
-                            "transparent")
-                        }
-                      >
-                        <i className="bi bi-person-circle fs-5 text-primary"></i>
-                        <div className="ms-2 d-none d-lg-block">
-                          <small
-                            className="text-muted d-block lh-1"
-                            style={{ fontSize: "0.7rem" }}
+                      {/* My Account / Auth */}
+                      {user ? (
+                        <div className="dropdown">
+                          <button
+                            className="btn d-flex align-items-center justify-content-center justify-content-lg-start py-2 px-2 px-lg-3 position-relative"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            style={{
+                              minHeight: "44px",
+                              borderRadius: "8px",
+                              textDecoration: "none",
+                              transition: "background-color 0.3s",
+                              color: "inherit",
+                              background: "transparent",
+                              border: "none",
+                              cursor: "pointer",
+                            }}
                           >
-                            Account
-                          </small>
-                          <span
-                            className="fw-600 d-block lh-1"
-                            style={{ fontSize: "0.85rem" }}
-                          >
-                            Login
-                          </span>
+                            <i className="bi bi-person-circle fs-5 text-primary"></i>
+                            <div className="ms-2 d-none d-lg-block">
+                              <small
+                                className="text-muted d-block lh-1"
+                                style={{ fontSize: "0.7rem" }}
+                              >
+                                Account
+                              </small>
+                              <span
+                                className="fw-600 d-block lh-1"
+                                style={{ fontSize: "0.85rem" }}
+                              >
+                                {user.firstName}
+                              </span>
+                            </div>
+                          </button>
+                          <ul className="dropdown-menu dropdown-menu-end">
+                            <li>
+                              <span className="dropdown-item-text">
+                                <strong>{user.getFullName()}</strong>
+                                <br />
+                                <small className="text-muted">
+                                  {user.email}
+                                </small>
+                              </span>
+                            </li>
+                            <li>
+                              <hr className="dropdown-divider" />
+                            </li>
+                            <li>
+                              <Link
+                                className="dropdown-item"
+                                to="/account/profile"
+                              >
+                                <i className="bi bi-person me-2"></i>My Profile
+                              </Link>
+                            </li>
+                            <li>
+                              <Link
+                                className="dropdown-item"
+                                to="/account/orders"
+                              >
+                                <i className="bi bi-bag me-2"></i>My Orders
+                              </Link>
+                            </li>
+                            <li>
+                              <hr className="dropdown-divider" />
+                            </li>
+                            <li>
+                              <button
+                                className="dropdown-item"
+                                onClick={handleLogout}
+                              >
+                                <i className="bi bi-box-arrow-right me-2"></i>
+                                Logout
+                              </button>
+                            </li>
+                          </ul>
                         </div>
-                      </Link>
+                      ) : (
+                        <Link
+                          to="/login"
+                          className="header-action d-flex align-items-center justify-content-center justify-content-lg-start py-2 px-2 px-lg-3"
+                          style={{
+                            minHeight: "44px",
+                            borderRadius: "8px",
+                            textDecoration: "none",
+                            transition: "background-color 0.3s",
+                            color: "inherit",
+                          }}
+                          onMouseEnter={(e) =>
+                            (e.currentTarget.style.backgroundColor = "#f5f5f5")
+                          }
+                          onMouseLeave={(e) =>
+                            (e.currentTarget.style.backgroundColor =
+                              "transparent")
+                          }
+                        >
+                          <i className="bi bi-person-circle fs-5 text-primary"></i>
+                          <div className="ms-2 d-none d-lg-block">
+                            <small
+                              className="text-muted d-block lh-1"
+                              style={{ fontSize: "0.7rem" }}
+                            >
+                              Account
+                            </small>
+                            <span
+                              className="fw-600 d-block lh-1"
+                              style={{ fontSize: "0.85rem" }}
+                            >
+                              Login
+                            </span>
+                          </div>
+                        </Link>
+                      )}
 
                       {/* Wishlist */}
                       <Link

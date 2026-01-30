@@ -6,6 +6,7 @@ import deliveriesReducer from "./slices/deliveriesSlice";
 import checkoutReducer from "./slices/checkoutSlice";
 import wishlistReducer from "./slices/wishlistSlice";
 import cartReducer from "./slices/cartSlice";
+import authReducer from "./slices/authSlice";
 
 // Create a safe storage adapter that returns Promises (required by redux-persist v6+)
 const createSafeStorage = () => {
@@ -33,15 +34,13 @@ const createSafeStorage = () => {
   // Fallback to memory storage with Promise support
   const memoryStorage: Record<string, string> = {};
   return {
-    getItem: (key: string) =>
-      Promise.resolve(memoryStorage[key] || null),
+    getItem: (key: string) => Promise.resolve(memoryStorage[key] || null),
     setItem: (key: string, value: string) =>
       Promise.resolve((memoryStorage[key] = value)),
-    removeItem: (key: string) =>
-      Promise.resolve(delete memoryStorage[key]),
+    removeItem: (key: string) => Promise.resolve(delete memoryStorage[key]),
     clear: () =>
       Promise.resolve(
-        Object.keys(memoryStorage).forEach((key) => delete memoryStorage[key])
+        Object.keys(memoryStorage).forEach((key) => delete memoryStorage[key]),
       ),
   };
 };
@@ -64,6 +63,7 @@ export const store = configureStore({
     checkout: persistedCheckoutReducer,
     wishlist: wishlistReducer,
     cart: cartReducer,
+    auth: authReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

@@ -85,3 +85,76 @@ export class TechHavenApiDeliveryRepository {
     return deliveriesApi.getByTransactionId(transactionId);
   }
 }
+
+/**
+ * Tech Haven API Auth Repository Adapter
+ * Implements the AuthRepository port
+ */
+export class TechHavenApiAuthRepository {
+  async register(data: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    password: string;
+  }): Promise<{
+    user: {
+      id: string;
+      email: string;
+      firstName: string;
+      lastName: string;
+      createdAt: Date;
+      updatedAt: Date;
+    };
+    token: string;
+  }> {
+    const { authApi } = await import("@/infrastructure/api/techHavenApiClient");
+    const response = await authApi.register({
+      email: data.email,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      password: data.password,
+    });
+
+    return {
+      user: {
+        id: response.user.id,
+        email: response.user.email,
+        firstName: response.user.firstName,
+        lastName: response.user.lastName,
+        createdAt: new Date(response.user.createdAt),
+        updatedAt: new Date(response.user.updatedAt),
+      },
+      token: response.token,
+    };
+  }
+
+  async login(
+    email: string,
+    password: string,
+  ): Promise<{
+    user: {
+      id: string;
+      email: string;
+      firstName: string;
+      lastName: string;
+      createdAt: Date;
+      updatedAt: Date;
+    };
+    token: string;
+  }> {
+    const { authApi } = await import("@/infrastructure/api/techHavenApiClient");
+    const response = await authApi.login({ email, password });
+
+    return {
+      user: {
+        id: response.user.id,
+        email: response.user.email,
+        firstName: response.user.firstName,
+        lastName: response.user.lastName,
+        createdAt: new Date(response.user.createdAt),
+        updatedAt: new Date(response.user.updatedAt),
+      },
+      token: response.token,
+    };
+  }
+}

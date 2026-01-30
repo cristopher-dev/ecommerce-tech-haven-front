@@ -18,6 +18,39 @@ export interface ProductDTO {
   imageUrl?: string;
 }
 
+export interface UserDTO {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  phone?: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  zipCode?: string;
+  country?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface RegisterRequestDTO {
+  email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+}
+
+export interface LoginRequestDTO {
+  email: string;
+  password: string;
+}
+
+export interface AuthResponseDTO {
+  user: UserDTO;
+  token: string;
+  expiresIn: number;
+}
+
 export interface CustomerDTO {
   id: string;
   name: string;
@@ -218,9 +251,63 @@ export const deliveriesApi = {
   },
 };
 
+/**
+ * Auth API
+ */
+export const authApi = {
+  /**
+   * Register a new user
+   * @param data Registration data
+   */
+  async register(data: RegisterRequestDTO): Promise<AuthResponseDTO> {
+    return apiRequest<AuthResponseDTO>("/auth/register", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  },
+
+  /**
+   * Login user
+   * @param data Login credentials
+   */
+  async login(data: LoginRequestDTO): Promise<AuthResponseDTO> {
+    return apiRequest<AuthResponseDTO>("/auth/login", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  },
+
+  /**
+   * Verify token validity
+   * @param token JWT token
+   */
+  async verifyToken(token: string): Promise<{ valid: boolean }> {
+    return apiRequest<{ valid: boolean }>("/auth/verify", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  },
+
+  /**
+   * Get current user profile
+   * @param token JWT token
+   */
+  async getProfile(token: string): Promise<UserDTO> {
+    return apiRequest<UserDTO>("/auth/profile", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  },
+};
+
 export default {
   productsApi,
   transactionsApi,
   customersApi,
   deliveriesApi,
+  authApi,
 };
