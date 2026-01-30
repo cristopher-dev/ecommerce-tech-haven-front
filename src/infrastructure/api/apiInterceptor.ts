@@ -12,15 +12,22 @@ export function getAuthToken(): string | null {
 
 /**
  * Interceptor function to add authorization header to requests
+ * Excludes auth header for public endpoints like /auth/login and /auth/register
  * @param options Fetch options
- * @returns Enhanced options with Authorization header
+ * @param endpoint The API endpoint being called
+ * @returns Enhanced options with Authorization header (if applicable)
  */
 export function withAuthInterceptor(
   options: Record<string, unknown> = {},
+  endpoint: string = "",
 ): Record<string, unknown> {
   const token = getAuthToken();
 
-  if (!token) {
+  // Skip Authorization header for public auth endpoints
+  const publicEndpoints = ["/auth/login", "/auth/register"];
+  const isPublicEndpoint = publicEndpoints.some((ep) => endpoint.includes(ep));
+
+  if (!token || isPublicEndpoint) {
     return options;
   }
 

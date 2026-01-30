@@ -125,12 +125,13 @@ async function apiRequest<T>(
 ): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
 
-  // Apply auth interceptor to automatically add token
-  const enhancedOptions = withAuthInterceptor(options);
+  // Apply auth interceptor to automatically add token (skips for public endpoints)
+  const enhancedOptions = withAuthInterceptor(options, endpoint);
 
   const response = await fetch(url, {
     headers: {
       "Content-Type": "application/json",
+      Accept: "application/json",
       ...(typeof enhancedOptions.headers === "object"
         ? enhancedOptions.headers
         : {}),
