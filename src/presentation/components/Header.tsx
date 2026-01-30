@@ -230,14 +230,6 @@ const Header: React.FC = () => {
                               </Link>
                             </li>
                             <li>
-                              <Link
-                                className="dropdown-item"
-                                to="/account/orders"
-                              >
-                                <i className="bi bi-bag me-2"></i>My Orders
-                              </Link>
-                            </li>
-                            <li>
                               <hr className="dropdown-divider" />
                             </li>
                             <li>
