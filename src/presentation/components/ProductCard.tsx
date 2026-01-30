@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Product } from "@/domain/entities/Product";
 import { useAppDispatch } from "@/application/store/hooks";
 import { addToCart } from "@/application/store/slices/cartSlice";
@@ -14,6 +15,7 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { items: wishlistItems } = useWishlist();
   const isInWishlist = wishlistItems.some(
     (item) => item.product.id === product.id,
@@ -22,6 +24,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   const handleAddToCart = () => {
     dispatch(addToCart({ product, quantity: 1 }));
+  };
+
+  const handleBuyNow = () => {
+    dispatch(addToCart({ product, quantity: 1 }));
+    setTimeout(() => {
+      navigate("/checkout/delivery");
+    }, 300);
   };
 
   const handleToggleWishlist = (e: React.MouseEvent) => {
@@ -187,7 +196,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       </div>
       <div className="card-footer bg-white border-0 pt-0">
         <button
-          className="btn w-100"
+          className="btn w-100 mb-2"
           onClick={handleAddToCart}
           style={{
             background: "linear-gradient(135deg, #0066ff 0%, #0052cc 100%)",
@@ -210,6 +219,30 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           }}
         >
           <i className="bi bi-bag-plus me-2"></i>Add to Cart
+        </button>
+        <button
+          className="btn btn-success w-100"
+          onClick={handleBuyNow}
+          style={{
+            fontWeight: "600",
+            border: "none",
+            padding: "0.75rem",
+            borderRadius: "8px",
+            transition: "all 0.3s ease",
+            cursor: "pointer",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = "translateY(-2px)";
+            e.currentTarget.style.boxShadow =
+              "0 8px 20px rgba(40, 167, 69, 0.3)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = "translateY(0)";
+            e.currentTarget.style.boxShadow = "none";
+          }}
+        >
+          <i className="bi bi-cart-check me-1"></i>
+          Buy Now
         </button>
       </div>
     </div>

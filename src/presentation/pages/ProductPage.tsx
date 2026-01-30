@@ -89,6 +89,26 @@ const ProductPage: React.FC = () => {
     }, 500);
   };
 
+  const handleBuyNow = async () => {
+    if (!product) return;
+
+    setIsAdding(true);
+    addToCart(
+      {
+        id: parseInt(product.id),
+        name: product.name,
+        price: product.price / 100, // Convert cents to dollars
+        image: product.imageUrl,
+        discount: 0,
+      },
+      1,
+    );
+    setTimeout(() => {
+      setIsAdding(false);
+      navigate("/checkout/delivery");
+    }, 300);
+  };
+
   if (loading) {
     return (
       <div>
@@ -215,6 +235,28 @@ const ProductPage: React.FC = () => {
                       >
                         {p.stock === 0 ? "Out of Stock" : "Add to Cart"}
                       </button>
+                      <button
+                        className="btn btn-sm btn-success"
+                        onClick={() => {
+                          addToCart(
+                            {
+                              id: parseInt(p.id),
+                              name: p.name,
+                              price: p.price / 100,
+                              image: p.imageUrl,
+                              discount: 0,
+                            },
+                            1,
+                          );
+                          setTimeout(() => {
+                            navigate("/checkout/delivery");
+                          }, 300);
+                        }}
+                        disabled={p.stock === 0}
+                      >
+                        <i className="bi bi-cart-check me-1"></i>
+                        Buy Now
+                      </button>
                       <Link
                         to={`/product?id=${p.id}`}
                         className="btn btn-sm btn-outline-secondary"
@@ -295,11 +337,25 @@ const ProductPage: React.FC = () => {
               </button>
               <button
                 className="btn btn-success"
-                onClick={() => navigate("/checkout/delivery")}
-                disabled={product.stock === 0}
+                onClick={handleBuyNow}
+                disabled={isAdding || product.stock === 0}
               >
-                <i className="bi bi-credit-card me-2"></i>
-                Pay with Credit Card
+                {isAdding ? (
+                  <>
+                    <span
+                      className="spinner-border spinner-border-sm me-2"
+                      role="status"
+                    ></span>
+                    Loading...
+                  </>
+                ) : product.stock === 0 ? (
+                  "Out of Stock"
+                ) : (
+                  <>
+                    <i className="bi bi-cart-check me-2"></i>
+                    Buy Now
+                  </>
+                )}
               </button>
             </div>
           </div>
