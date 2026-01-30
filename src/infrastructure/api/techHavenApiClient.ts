@@ -81,25 +81,80 @@ export interface CardDataDto {
   cvv: string;
 }
 
+export interface TransactionItemInputDto {
+  productId: string;
+  quantity: number;
+}
+
+export interface DeliveryInfoInputDto {
+  firstName: string;
+  lastName: string;
+  address: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  phone: string;
+}
+
 export interface CreateTransactionInputDto {
   customerName: string;
   customerEmail: string;
   customerAddress: string;
-  productId: string;
-  quantity: number;
+  items: TransactionItemInputDto[];
+  deliveryInfo: DeliveryInfoInputDto;
   cardData?: CardDataDto;
 }
 
-export interface TransactionDTO {
-  id: string;
-  customerId: string;
+export interface TransactionItemResponseDto {
   productId: string;
+  name: string;
+  price: number;
   quantity: number;
+  total: number;
+}
+
+export interface DeliveryInfoResponseDto {
+  firstName: string;
+  lastName: string;
+  address: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  phone: string;
+}
+
+export interface GetTransactionResponseDto {
+  id: string;
+  transactionId: string;
+  orderId: string;
+  status: "PENDING" | "APPROVED" | "FAILED";
   amount: number;
-  status: "PENDING" | "COMPLETED" | "FAILED";
-  transactionNumber: string;
-  createdAt: string;
-  updatedAt: string;
+  baseFee: number;
+  deliveryFee: number;
+  subtotal: number;
+  items: TransactionItemResponseDto[];
+  customer: {
+    id: string;
+    name: string;
+    email: string;
+    address: string;
+  };
+  deliveryInfo: DeliveryInfoResponseDto;
+  delivery: {
+    id: string;
+    status: "PENDING" | "IN_TRANSIT" | "DELIVERED";
+    estimatedDays: number;
+    carrier: string;
+  };
+  timeline: {
+    createdAt: string;
+    approvedAt?: string;
+    deliveryAssignedAt?: string;
+  };
+}
+
+export interface TransactionDTO extends GetTransactionResponseDto {
+  // TransactionDTO now extends GetTransactionResponseDto with all necessary fields
 }
 
 export interface ProcessPaymentDto {

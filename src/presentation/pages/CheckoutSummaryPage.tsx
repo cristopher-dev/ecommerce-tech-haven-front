@@ -91,10 +91,8 @@ const CheckoutSummaryPage: React.FC = () => {
         throw new Error("customerAddress should not be empty");
       }
 
-      // Create transactions for each product in the cart
-      const transactionIds: string[] = [];
-
-      for (const item of cartItems) {
+      // Build items array for the new multi-product transaction endpoint
+      const items = cartItems.map((item) => {
         // Extract and validate productId - defensive extraction
         let productIdValue = item.product?.id;
 
@@ -168,45 +166,56 @@ const CheckoutSummaryPage: React.FC = () => {
           throw new Error("quantity must not be greater than 10");
         }
 
-        const transactionPayload = {
-          customerName: customerName,
-          customerEmail: customerEmail,
-          customerAddress: customerAddress,
-          productId: productId,
-          quantity: quantity,
-          cardData: {
-            cardNumber: checkout.paymentData.cardNumber.replace(/\s/g, ""),
-            cardholderName: checkout.paymentData.cardholderName,
-            expirationMonth: checkout.paymentData.expirationMonth,
-            expirationYear: checkout.paymentData.expirationYear,
-            cvv: "", // Never send CVV to backend
-          },
-        };
+        return { productId, quantity };
+      });
 
-        // Log the payload for debugging - including validation status
-        console.log("=== TRANSACTION PAYLOAD ===");
-        console.log("customerName:", customerName);
-        console.log("customerEmail:", customerEmail);
-        console.log("customerAddress:", customerAddress);
-        console.log("productId:", productId);
-        console.log("quantity:", quantity);
-        console.log(
-          "Full Payload:",
-          JSON.stringify(transactionPayload, null, 2),
-        );
-        console.log("=== END PAYLOAD ===");
+      // Build deliveryInfo object from checkout delivery data
+      const deliveryInfo = {
+        firstName: String(checkout.deliveryData.firstName || "").trim(),
+        lastName: String(checkout.deliveryData.lastName || "").trim(),
+        address: String(checkout.deliveryData.address || "").trim(),
+        city: String(checkout.deliveryData.city || "").trim(),
+        state: String(checkout.deliveryData.state || "").trim(),
+        postalCode: String(checkout.deliveryData.postalCode || "").trim(),
+        phone: String(checkout.deliveryData.phone || "").trim(),
+      };
 
-        const transactionResponse =
-          await transactionsApi.create(transactionPayload);
+      // Create single transaction with all items (new multi-product endpoint)
+      const transactionPayload = {
+        customerName: customerName,
+        customerEmail: customerEmail,
+        customerAddress: customerAddress,
+        items: items,
+        deliveryInfo: deliveryInfo,
+        cardData: {
+          cardNumber: checkout.paymentData.cardNumber.replace(/\s/g, ""),
+          cardholderName: checkout.paymentData.cardholderName,
+          expirationMonth: checkout.paymentData.expirationMonth,
+          expirationYear: checkout.paymentData.expirationYear,
+          cvv: "", // Never send CVV to backend
+        },
+      };
 
-        transactionIds.push(transactionResponse.id);
+      // Log the payload for debugging - including validation status
+      console.log("=== TRANSACTION PAYLOAD ===");
+      console.log("customerName:", customerName);
+      console.log("customerEmail:", customerEmail);
+      console.log("customerAddress:", customerAddress);
+      console.log("items:", items);
+      console.log("deliveryInfo:", deliveryInfo);
+      console.log("Full Payload:", JSON.stringify(transactionPayload, null, 2));
+      console.log("=== END PAYLOAD ===");
 
-        // Process payment for each transaction
-        await transactionsApi.processPayment(transactionResponse.id, {
-          status: "COMPLETED",
-        });
+      const transactionResponse =
+        await transactionsApi.create(transactionPayload);
 
-        // Update product stock after successful transaction
+      // Process payment for the transaction
+      await transactionsApi.processPayment(transactionResponse.id, {
+        status: "COMPLETED",
+      });
+
+      // Update product stock after successful transaction
+      for (const item of cartItems) {
         dispatch(
           updateProductStock({
             productId: String(item.product.id),
@@ -215,17 +224,18 @@ const CheckoutSummaryPage: React.FC = () => {
         );
       }
 
-      // Success - save first transaction ID (main transaction) and navigate
-      const firstTransactionId = transactionIds[0];
-      const transactionData = await transactionsApi.getById(firstTransactionId);
-      dispatch(setLastTransactionId(transactionData.transactionNumber));
+      // Success - save transaction ID and navigate
+      const transactionData = await transactionsApi.getById(
+        transactionResponse.id,
+      );
+      dispatch(setLastTransactionId(transactionData.transactionId));
       dispatch(setStep("status"));
 
       // Add items to purchased history
       dispatch(
         addToPurchasedItems({
           items: cartItems,
-          transactionId: transactionData.transactionNumber,
+          transactionId: transactionData.transactionId,
         }),
       );
 
