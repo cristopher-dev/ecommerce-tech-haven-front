@@ -24,10 +24,10 @@ const ProductPage: React.FC = () => {
         const repo = new TechHavenApiProductRepository();
         const data = await repo.getById(productId);
         setProduct(data);
-        setError(null);
+        // setError(null); // Error state not defined
       } catch (err) {
         console.error("Error loading product:", err);
-        setError("Failed to load product");
+        // setError("Failed to load product"); // Error state not defined
       } finally {
         setLoading(false);
       }

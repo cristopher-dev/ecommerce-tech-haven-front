@@ -4,9 +4,9 @@
  * Base URL: http://localhost:3001/api
  */
 
-const API_BASE_URL =
-  (import.meta as unknown as Record<string, Record<string, string>>).env
-    ?.VITE_TECH_HAVEN_API_URL || "http://localhost:3001/api";
+import { getApiBaseUrl } from "./getApiBaseUrl";
+
+const API_BASE_URL = getApiBaseUrl();
 
 // Types for API requests and responses
 export interface ProductDTO {
