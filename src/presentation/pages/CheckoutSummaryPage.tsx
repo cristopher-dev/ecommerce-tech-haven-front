@@ -9,6 +9,8 @@ import {
   clearCart,
 } from "@/application/store/slices/checkoutSlice";
 import { updateProductStock } from "@/application/store/slices/productsSlice";
+import { addToPurchasedItems } from "@/application/store/slices/purchasedItemsSlice";
+import { clearCart as clearCartState } from "@/application/store/slices/cartSlice";
 import { transactionsApi } from "@/infrastructure/api/techHavenApiClient";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -92,7 +94,18 @@ const CheckoutSummaryPage: React.FC = () => {
       const transactionData = await transactionsApi.getById(firstTransactionId);
       dispatch(setLastTransactionId(transactionData.transactionNumber));
       dispatch(setStep("status"));
+
+      // Add items to purchased history
+      dispatch(
+        addToPurchasedItems({
+          items: cartItems,
+          transactionId: transactionData.transactionNumber,
+        }),
+      );
+
+      // Clear cart from both checkout and cart slices
       dispatch(clearCart());
+      dispatch(clearCartState());
 
       setTimeout(() => {
         setIsProcessing(false);

@@ -7,6 +7,7 @@ import checkoutReducer from "./slices/checkoutSlice";
 import wishlistReducer from "./slices/wishlistSlice";
 import cartReducer from "./slices/cartSlice";
 import authReducer from "./slices/authSlice";
+import purchasedItemsReducer from "./slices/purchasedItemsSlice";
 
 // Create a safe storage adapter that returns Promises (required by redux-persist v6+)
 const createSafeStorage = () => {
@@ -47,25 +48,62 @@ const createSafeStorage = () => {
 
 const storage = createSafeStorage();
 
-const persistConfig = {
-  key: "root",
+// Create individual persist configs for slices that need persistence
+const checkoutPersistConfig = {
+  key: "checkout",
   storage,
-  whitelist: ["checkout", "cart", "wishlist", "auth"], // Persist these slices
 };
 
-const persistedCheckoutReducer = persistReducer(persistConfig, checkoutReducer);
-const persistedAuthReducer = persistReducer(persistConfig, authReducer);
+const cartPersistConfig = {
+  key: "cart",
+  storage,
+};
+
+const wishlistPersistConfig = {
+  key: "wishlist",
+  storage,
+};
+
+const authPersistConfig = {
+  key: "auth",
+  storage,
+};
+
+const purchasedItemsPersistConfig = {
+  key: "purchasedItems",
+  storage,
+};
+
+// Apply persistence to individual reducers
+const persistedCheckoutReducer = persistReducer(
+  checkoutPersistConfig,
+  checkoutReducer,
+);
+const persistedCartReducer = persistReducer(cartPersistConfig, cartReducer);
+const persistedWishlistReducer = persistReducer(
+  wishlistPersistConfig,
+  wishlistReducer,
+);
+const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
+const persistedPurchasedItemsReducer = persistReducer(
+  purchasedItemsPersistConfig,
+  purchasedItemsReducer,
+);
+
+// Combine all reducers
+const rootReducer = {
+  products: productsReducer,
+  transactions: transactionsReducer,
+  deliveries: deliveriesReducer,
+  checkout: persistedCheckoutReducer,
+  wishlist: persistedWishlistReducer,
+  cart: persistedCartReducer,
+  auth: persistedAuthReducer,
+  purchasedItems: persistedPurchasedItemsReducer,
+};
 
 export const store = configureStore({
-  reducer: {
-    products: productsReducer,
-    transactions: transactionsReducer,
-    deliveries: deliveriesReducer,
-    checkout: persistedCheckoutReducer,
-    wishlist: wishlistReducer,
-    cart: cartReducer,
-    auth: persistedAuthReducer,
-  },
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
@@ -75,6 +113,7 @@ export const store = configureStore({
     }),
 });
 
+// Create persistor from store
 export const persistor = persistStore(store);
 
 export type RootState = ReturnType<typeof store.getState>;

@@ -14,6 +14,7 @@ import HomePage from "@/presentation/pages/HomePage";
 import ProductPage from "@/presentation/pages/ProductPage";
 import CartPage from "@/presentation/pages/CartPage";
 import WishlistPage from "@/presentation/pages/WishlistPage";
+import PurchasedItemsPage from "@/presentation/pages/PurchasedItemsPage";
 import CheckoutDeliveryPage from "@/presentation/pages/CheckoutDeliveryPage";
 import CheckoutSummaryPage from "@/presentation/pages/CheckoutSummaryPage";
 import CheckoutFinalStatusPage from "@/presentation/pages/CheckoutFinalStatusPage";
@@ -21,6 +22,16 @@ import RegisterPage from "@/presentation/pages/RegisterPage";
 import LoginPage from "@/presentation/pages/LoginPage";
 import ProtectedRoute from "@/presentation/components/ProtectedRoute";
 import "@/styles/App.scss";
+
+// Loading component shown while persisting
+const PersistGateLoader = () => (
+  <div
+    className="d-flex justify-content-center align-items-center"
+    style={{ minHeight: "100vh" }}
+  >
+    <p>Cargando...</p>
+  </div>
+);
 
 // Component to restore auth on app load
 function AuthRestorer({ children }: { children: React.ReactNode }) {
@@ -56,7 +67,7 @@ function PublicPageGuard({ children }: { children: React.ReactNode }) {
 function App() {
   return (
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
+      <PersistGate loading={<PersistGateLoader />} persistor={persistor}>
         <AuthRestorer>
           <Router>
             <Routes>
@@ -96,6 +107,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <WishlistPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/purchases"
+                element={
+                  <ProtectedRoute>
+                    <PurchasedItemsPage />
                   </ProtectedRoute>
                 }
               />

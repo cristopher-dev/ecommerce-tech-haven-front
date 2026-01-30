@@ -14,6 +14,7 @@ import {
   setToken,
 } from "@/application/store/slices/authSlice";
 import { RootState } from "@/application/store/store";
+import TechHavenLogo from "@/assets/TechHavenLogo.svg";
 import "@/styles/components/Header.scss";
 
 const Header: React.FC = () => {
@@ -97,13 +98,10 @@ const Header: React.FC = () => {
                       <img
                         alt="TechHaven"
                         className="img-fluid"
-                        src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3"
+                        src={TechHavenLogo}
                         style={{
-                          maxHeight: "50px",
                           width: "50px",
                           height: "50px",
-                          objectFit: "contain",
-                          borderRadius: "12px",
                         }}
                       />
                     </Link>
@@ -311,6 +309,44 @@ const Header: React.FC = () => {
                             style={{ fontSize: "0.85rem" }}
                           >
                             {t("header.wishlist")}
+                          </span>
+                        </div>
+                      </Link>
+
+                      {/* Purchases */}
+                      <Link
+                        to="/purchases"
+                        className="header-action d-flex align-items-center justify-content-center justify-content-lg-start py-2 px-2 px-lg-3 position-relative"
+                        style={{
+                          minHeight: "44px",
+                          borderRadius: "8px",
+                          textDecoration: "none",
+                          transition: "background-color 0.3s",
+                          color: "inherit",
+                        }}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.backgroundColor = "#f5f5f5")
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.backgroundColor =
+                            "transparent")
+                        }
+                      >
+                        <div className="position-relative">
+                          <i className="bi bi-bag-check fs-5 text-success"></i>
+                        </div>
+                        <div className="ms-2 d-none d-lg-block">
+                          <small
+                            className="text-muted d-block lh-1"
+                            style={{ fontSize: "0.7rem" }}
+                          >
+                            {t("common.orders") || "Mis"}
+                          </small>
+                          <span
+                            className="fw-600 d-block lh-1"
+                            style={{ fontSize: "0.85rem" }}
+                          >
+                            {t("header.purchases") || "Compras"}
                           </span>
                         </div>
                       </Link>
