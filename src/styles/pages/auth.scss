@@ -41,12 +41,13 @@
 
 .register-container,
 .login-container {
-  width: 100%;
-  max-width: 500px;
+  width: 50%;
+  max-width: 100%;
 }
 
 .register-card,
 .login-card {
+  width: 30%;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border-radius: 20px;
