@@ -17,21 +17,41 @@ const ensureCartItemId = (item: CartItem, index: number): CartItem => {
 
 // Ensure product has an ID (fallback from item.id if necessary)
 const ensureProductId = (item: CartItem, index: number): CartItem => {
-  // If product.id is missing, try to extract from item.id
-  if (!item.product?.id && item.id && typeof item.id === "string") {
-    const parts = item.id.split("-");
-    const extractedId = parseInt(parts[0], 10);
-    if (!isNaN(extractedId)) {
-      return {
-        ...item,
-        product: {
-          ...item.product,
-          id: extractedId,
-        },
-      };
-    }
+  // Validate product exists and has an id
+  if (!item.product) {
+    console.warn(`Cart item ${index} has no product, skipping`);
+    return item;
   }
-  return item;
+
+  let productId = item.product.id;
+
+  // If product.id is missing or invalid, try to extract from item.id
+  if (!productId && item.id && typeof item.id === "string") {
+    const parts = item.id.split("-");
+    const extractedId = parts[0];
+
+    // Try to parse as number, but keep as string if needed
+    const numId = parseInt(extractedId, 10);
+    productId = !isNaN(numId) ? String(numId) : extractedId;
+  }
+
+  // If we still don't have a valid ID, return as-is (will trigger validation error downstream)
+  if (!productId) {
+    console.error(
+      `Could not determine product ID for cart item ${index}:`,
+      item,
+    );
+    return item;
+  }
+
+  // Ensure product.id is always a string for consistency
+  return {
+    ...item,
+    product: {
+      ...item.product,
+      id: String(productId), // Always convert to string for consistency
+    },
+  };
 };
 
 export class LocalStorageCartRepository implements CartRepository {

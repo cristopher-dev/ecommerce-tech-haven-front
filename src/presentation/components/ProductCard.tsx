@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Product } from "@/domain/entities/Product";
+import type { ProductDTO } from "@/infrastructure/api/techHavenApiClient";
 import { useAppDispatch } from "@/application/store/hooks";
 import { addToCart } from "@/application/store/slices/cartSlice";
 import {
@@ -11,7 +11,7 @@ import {
 import { useWishlist } from "@/application/store/hooks";
 
 interface ProductCardProps {
-  product: Product;
+  product: ProductDTO;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
@@ -76,7 +76,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         }}
       >
         <img
-          src={product.image}
+          src={product.imageUrl || product.image}
           className="card-img-top"
           alt={product.name}
           style={{

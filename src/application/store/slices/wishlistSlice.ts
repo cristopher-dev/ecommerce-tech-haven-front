@@ -30,7 +30,7 @@ export const wishlistSlice = createSlice({
       }
     },
 
-    removeFromWishlist: (state, action: PayloadAction<number>) => {
+    removeFromWishlist: (state, action: PayloadAction<string | number>) => {
       state.items = state.items.filter(
         (item) => item.product.id !== action.payload,
       );
@@ -53,7 +53,7 @@ export const wishlistSlice = createSlice({
       state.error = null;
     },
 
-    moveToCart: (state, action: PayloadAction<number>) => {
+    moveToCart: (state, action: PayloadAction<string | number>) => {
       state.items = state.items.filter(
         (item) => item.product.id !== action.payload,
       );

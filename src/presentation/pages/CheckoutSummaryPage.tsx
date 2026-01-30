@@ -56,18 +56,6 @@ const CheckoutSummaryPage: React.FC = () => {
       dispatch(setLoading(true));
       dispatch(setError(null));
 
-      // Debug: Log cart items structure
-      console.log("=== CART ITEMS DEBUG ===");
-      cartItems.forEach((item, index) => {
-        console.log(`Item ${index}:`, {
-          id: item.id,
-          product: item.product,
-          productId: item.product?.id,
-          quantity: item.quantity,
-        });
-      });
-      console.log("=== END CART ITEMS DEBUG ===");
-
       // Extract customer name and email from delivery data
       const firstName = String(checkout.deliveryData.firstName || "").trim();
       const lastName = String(checkout.deliveryData.lastName || "").trim();
@@ -107,27 +95,48 @@ const CheckoutSummaryPage: React.FC = () => {
       const transactionIds: string[] = [];
 
       for (const item of cartItems) {
-        // Extract and validate productId - multiple fallback approaches
+        // Extract and validate productId - defensive extraction
         let productIdValue = item.product?.id;
 
-        // If product ID is missing, try alternative approaches
-        if (productIdValue === null || productIdValue === undefined) {
-          // Try to extract from item.id if it contains the product ID
-          if (item.id && typeof item.id === "string" && item.id.includes("-")) {
+        // Log the raw values for debugging
+        console.log("Transaction item processing:", {
+          item_id: item.id,
+          product: item.product,
+          product_id: productIdValue,
+          product_id_type: typeof productIdValue,
+        });
+
+        // If product.id is missing, try alternative sources
+        if (
+          productIdValue === null ||
+          productIdValue === undefined ||
+          String(productIdValue).trim() === ""
+        ) {
+          // Try to extract from cart item id
+          if (item.id && typeof item.id === "string") {
             const parts = item.id.split("-");
-            const parsedId = parseInt(parts[0], 10);
-            if (!isNaN(parsedId)) {
-              productIdValue = parsedId;
-            }
+            productIdValue = parts[0]; // First part is usually the product ID
+            console.warn(
+              "Extracted productId from cart item id:",
+              productIdValue,
+            );
           }
         }
 
-        if (productIdValue === null || productIdValue === undefined) {
-          console.error("Cannot extract product ID from item:", item);
+        if (
+          productIdValue === null ||
+          productIdValue === undefined ||
+          String(productIdValue).trim() === ""
+        ) {
+          console.error("Cannot extract valid product ID from item:", {
+            item,
+            product_id: item.product?.id,
+            item_id: item.id,
+          });
           throw new Error("productId should not be empty");
         }
 
-        // Ensure productId is properly converted to string
+        // Convert to string and validate
         const productId = String(productIdValue).trim();
 
         // Validate productId - strict validation matching backend requirements
@@ -137,7 +146,8 @@ const CheckoutSummaryPage: React.FC = () => {
         if (
           productId === "" ||
           productId === "undefined" ||
-          productId === "null"
+          productId === "null" ||
+          productId === "NaN"
         ) {
           throw new Error("productId should not be empty");
         }

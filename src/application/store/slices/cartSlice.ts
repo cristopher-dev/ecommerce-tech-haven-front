@@ -23,8 +23,23 @@ const initialState: CartState = {
 };
 
 // Generate a unique ID for a cart item
-const generateCartItemId = (productId: number, timestamp: number): string => {
-  return `${productId}-${timestamp}`;
+const generateCartItemId = (
+  productId: string | number,
+  timestamp: number,
+): string => {
+  // Ensure productId is valid before generating ID
+  const validId = String(productId).trim();
+  if (
+    !validId ||
+    validId === "undefined" ||
+    validId === "null" ||
+    validId === "NaN"
+  ) {
+    throw new Error(
+      `Invalid productId for cart item ID generation: ${productId}`,
+    );
+  }
+  return `${validId}-${timestamp}`;
 };
 
 // Calculate total price from items
@@ -56,8 +71,38 @@ const cartSlice = createSlice({
       action: PayloadAction<{ product: Product; quantity?: number }>,
     ) => {
       const { product, quantity: qty = 1 } = action.payload;
+
+      // Validate product has valid ID - defensive checks
+      let productId = product?.id;
+
+      // Convert to string and validate
+      const productIdStr = String(productId || "").trim();
+
+      if (
+        !productIdStr ||
+        productIdStr === "undefined" ||
+        productIdStr === "null" ||
+        productIdStr === "NaN" ||
+        productIdStr === ""
+      ) {
+        console.error("Invalid product for cart:", {
+          product,
+          received_id: productId,
+          productIdStr,
+        });
+        throw new Error(
+          `Cannot add product to cart: invalid or missing product ID`,
+        );
+      }
+
+      // Ensure product object has a valid id
+      const normalizedProduct: Product = {
+        ...product,
+        id: productIdStr, // Always use string representation
+      };
+
       const existingItem = state.items.find(
-        (item) => item.product.id === product.id,
+        (item) => item.product.id === normalizedProduct.id,
       );
 
       if (existingItem) {
@@ -65,10 +110,14 @@ const cartSlice = createSlice({
       } else {
         // Generate unique ID for new cart item
         const uniqueId = generateCartItemId(
-          product.id,
+          normalizedProduct.id,
           Date.now() + Math.random(),
         );
-        state.items.push({ id: uniqueId, product, quantity: qty });
+        state.items.push({
+          id: uniqueId,
+          product: normalizedProduct,
+          quantity: qty,
+        });
       }
 
       // Update cart in localStorage
@@ -81,7 +130,7 @@ const cartSlice = createSlice({
     },
 
     // Remove product from cart
-    removeFromCart: (state, action: PayloadAction<number>) => {
+    removeFromCart: (state, action: PayloadAction<string | number>) => {
       state.items = state.items.filter(
         (item) => item.product.id !== action.payload,
       );
@@ -98,7 +147,7 @@ const cartSlice = createSlice({
     // Update item quantity
     updateQuantity: (
       state,
-      action: PayloadAction<{ productId: number; quantity: number }>,
+      action: PayloadAction<{ productId: string | number; quantity: number }>,
     ) => {
       const { productId, quantity } = action.payload;
       const item = state.items.find((item) => item.product.id === productId);
