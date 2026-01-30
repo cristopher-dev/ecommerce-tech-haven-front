@@ -50,26 +50,46 @@ const CheckoutSummaryPage: React.FC = () => {
       dispatch(setError(null));
 
       // Extract customer name and email from delivery data
-      const customerName = `${checkout.deliveryData.firstName} ${checkout.deliveryData.lastName}`;
-      const customerEmail = checkout.deliveryData.email;
-      const customerAddress = `${checkout.deliveryData.address}, ${checkout.deliveryData.city}, ${checkout.deliveryData.state} ${checkout.deliveryData.postalCode}`;
+      const customerName =
+        `${checkout.deliveryData.firstName} ${checkout.deliveryData.lastName}`.trim();
+      const customerEmail = String(checkout.deliveryData.email).trim();
+      const customerAddress =
+        `${checkout.deliveryData.address}, ${checkout.deliveryData.city}, ${checkout.deliveryData.state} ${checkout.deliveryData.postalCode}`.trim();
+
+      // Validate customer data
+      if (!customerName || customerName.length < 2) {
+        throw new Error("Invalid customer name");
+      }
+      if (!customerEmail || !customerEmail.includes("@")) {
+        throw new Error("Invalid customer email");
+      }
+      if (!customerAddress || customerAddress.length < 5) {
+        throw new Error("Invalid customer address");
+      }
 
       // Create transactions for each product in the cart
       const transactionIds: string[] = [];
 
       for (const item of cartItems) {
         // Ensure productId is properly converted to string
-        const productId = String(item.product.id);
+        const productId = String(item.product.id).trim();
+        const quantity = Math.max(1, Math.min(Math.floor(item.quantity), 10));
+
         if (!productId) {
           throw new Error("Invalid product ID");
         }
 
-        const transactionResponse = await transactionsApi.create({
-          customerName: customerName.trim(),
-          customerEmail: customerEmail.trim(),
-          customerAddress: customerAddress.trim(),
+        // Validate quantity
+        if (quantity < 1 || quantity > 10 || !Number.isInteger(quantity)) {
+          throw new Error(`Invalid quantity: ${quantity}`);
+        }
+
+        const transactionPayload = {
+          customerName: customerName,
+          customerEmail: customerEmail,
+          customerAddress: customerAddress,
           productId: productId,
-          quantity: Math.min(Math.max(item.quantity, 1), 10), // Ensure quantity is between 1 and 10
+          quantity: quantity,
           cardData: {
             cardNumber: checkout.paymentData.cardNumber.replace(/\s/g, ""),
             cardholderName: checkout.paymentData.cardholderName,
@@ -77,7 +97,13 @@ const CheckoutSummaryPage: React.FC = () => {
             expirationYear: checkout.paymentData.expirationYear,
             cvv: "", // Never send CVV to backend
           },
-        });
+        };
+
+        // Log the payload for debugging
+        console.log("Creating transaction with payload:", transactionPayload);
+
+        const transactionResponse =
+          await transactionsApi.create(transactionPayload);
 
         transactionIds.push(transactionResponse.id);
 
@@ -121,8 +147,19 @@ const CheckoutSummaryPage: React.FC = () => {
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Payment processing failed";
+
+      // Log full error details for debugging
+      console.error("Order processing error:", {
+        error: err,
+        message: errorMessage,
+        checkoutData: {
+          deliveryData: checkout.deliveryData,
+          paymentData: checkout.paymentData,
+          cartItems: cartItems,
+        },
+      });
+
       dispatch(setError(errorMessage));
-      console.error("Order processing error:", err);
       setIsProcessing(false);
       dispatch(setLoading(false));
     }
@@ -205,8 +242,8 @@ const CheckoutSummaryPage: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {cartItems.map((item) => (
-                  <tr key={item.product.id}>
+                {cartItems.map((item, index) => (
+                  <tr key={`${item.product.id}-${index}`}>
                     <td>{item.product.name}</td>
                     <td>{item.quantity}</td>
                     <td>${item.product.price.toFixed(2)}</td>

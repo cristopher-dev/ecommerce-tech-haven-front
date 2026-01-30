@@ -53,8 +53,8 @@ const CartPage: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {items.map((item) => (
-                    <tr key={item.product.id}>
+                  {items.map((item, index) => (
+                    <tr key={`${item.product.id}-${index}`}>
                       <td>{item.product.name}</td>
                       <td>
                         <img
@@ -102,7 +102,7 @@ const CartPage: React.FC = () => {
                 <h4>
                   {t("common.total")}: ${total.toFixed(2)}
                 </h4>
-                <Link to="/cart" className="btn btn-success">
+                <Link to="/checkout/delivery" className="btn btn-success">
                   {t("checkoutPage.title")}
                 </Link>
               </div>
