@@ -448,7 +448,7 @@ describe("TechHavenApiRepositories", () => {
 
       it("should pass transaction ID and payment data correctly", async () => {
         const paymentData = {
-          wompiTransactionId: "wompi-123",
+          paymentGatewayTransactionId: "paymentgateway-123",
           status: "COMPLETED" as const,
         };
 

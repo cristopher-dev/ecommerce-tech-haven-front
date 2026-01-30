@@ -158,7 +158,7 @@ export interface TransactionDTO extends GetTransactionResponseDto {
 }
 
 export interface ProcessPaymentDto {
-  wompiTransactionId?: string;
+  paymentGatewayTransactionId?: string;
   status: "COMPLETED" | "FAILED";
   errorMessage?: string;
 }
