@@ -15,7 +15,11 @@ const ProductPage: React.FC = () => {
   const [product, setProduct] = useState<ProductDTO | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const productId = searchParams.get("id") || "1";
+  // Get product ID from search params and convert numeric IDs to prod-X format
+  const rawProductId = searchParams.get("id") || "1";
+  const productId = /^\d+$/.test(rawProductId)
+    ? `prod-${rawProductId}`
+    : rawProductId;
 
   useEffect(() => {
     const loadProduct = async () => {
