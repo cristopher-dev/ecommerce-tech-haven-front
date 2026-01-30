@@ -1,13 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useAppSelector } from "@/application/store/hooks";
+import { useAppSelector, useAppDispatch } from "@/application/store/hooks";
+import { fetchUserTransactions } from "@/application/store/slices/purchasedItemsSlice";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 const PurchasedItemsPage: React.FC = () => {
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
   const purchasedItems = useAppSelector((state) => state.purchasedItems.items);
+  const loading = useAppSelector((state) => state.purchasedItems.loading);
+  const error = useAppSelector((state) => state.purchasedItems.error);
+  const user = useAppSelector((state) => state.auth.user);
+
+  useEffect(() => {
+    // Fetch user transactions when component mounts and user is available
+    if (user?.id) {
+      dispatch(fetchUserTransactions(user.id));
+    }
+  }, [user?.id, dispatch]);
 
   const groupedByTransaction = purchasedItems.reduce(
     (acc, item) => {
@@ -43,7 +55,25 @@ const PurchasedItemsPage: React.FC = () => {
           </div>
         </div>
 
-        {purchasedItems.length === 0 ? (
+        {loading && (
+          <div className="alert alert-info">
+            <div
+              className="spinner-border spinner-border-sm me-2"
+              role="status"
+            >
+              <span className="visually-hidden">Loading...</span>
+            </div>
+            Loading your purchases...
+          </div>
+        )}
+
+        {error && (
+          <div className="alert alert-danger">
+            <strong>Error:</strong> {error}
+          </div>
+        )}
+
+        {!loading && purchasedItems.length === 0 ? (
           <div className="alert alert-info">
             <p>{t("purchasedItemsPage.emptyMessage")}</p>
             <Link to="/" className="btn btn-primary">

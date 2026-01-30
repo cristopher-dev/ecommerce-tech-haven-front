@@ -63,7 +63,7 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title }) => {
             <div key={product.id} className="col-lg-3 col-md-4 col-sm-6 mb-4">
               <ProductCard
                 product={{
-                  id: parseInt(product.id),
+                  id: product.id,
                   name: product.name,
                   price: product.price / 100, // Convert cents to dollars
                   image: product.imageUrl,

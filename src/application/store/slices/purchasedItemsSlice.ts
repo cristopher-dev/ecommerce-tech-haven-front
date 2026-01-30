@@ -1,5 +1,10 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { CartItem } from "@/domain/entities/CartItem";
+import {
+  transactionsApi,
+  productsApi,
+  TransactionDTO,
+} from "@/infrastructure/api/techHavenApiClient";
 
 interface PurchasedItem extends CartItem {
   purchaseDate: string;
@@ -19,6 +24,59 @@ const initialState: PurchasedItemsState = {
   loading: false,
   error: null,
 };
+
+/**
+ * Async thunk to fetch user transactions from API
+ */
+export const fetchUserTransactions = createAsyncThunk(
+  "purchasedItems/fetchUserTransactions",
+  async (userId: string, { rejectWithValue }) => {
+    try {
+      // Fetch all transactions and products in parallel
+      const [transactions, products] = await Promise.all([
+        transactionsApi.getAll(),
+        productsApi.getAll(),
+      ]);
+
+      // Filter transactions for the current user
+      const userTransactions = transactions.filter(
+        (txn) => txn.customerId === userId,
+      );
+
+      // Map transactions to PurchasedItems format
+      const purchasedItems: PurchasedItem[] = userTransactions
+        .map((txn: TransactionDTO) => {
+          const product = products.find((p) => p.id === txn.productId);
+          if (!product) {
+            console.warn(`Product not found for transaction ${txn.id}`);
+            return null;
+          }
+
+          return {
+            id: txn.id,
+            product: {
+              id: product.id,
+              name: product.name,
+              price: product.price,
+              description: product.description,
+              image: product.image,
+              stock: product.stock,
+            },
+            quantity: txn.quantity,
+            purchaseDate: txn.createdAt,
+            transactionId: txn.id,
+          } as PurchasedItem;
+        })
+        .filter((item): item is PurchasedItem => item !== null);
+
+      return purchasedItems;
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof Error ? error.message : "Failed to fetch transactions",
+      );
+    }
+  },
+);
 
 const purchasedItemsSlice = createSlice({
   name: "purchasedItems",
@@ -76,6 +134,25 @@ const purchasedItemsSlice = createSlice({
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchUserTransactions.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchUserTransactions.fulfilled, (state, action) => {
+        state.loading = false;
+        state.items = action.payload;
+        state.totalPurchases = action.payload.reduce(
+          (sum, item) => sum + item.quantity,
+          0,
+        );
+      })
+      .addCase(fetchUserTransactions.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
   },
 });
 
