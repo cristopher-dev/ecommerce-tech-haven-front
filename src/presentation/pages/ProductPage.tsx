@@ -107,7 +107,7 @@ const ProductPage: React.FC = () => {
     );
     setTimeout(() => {
       setIsAdding(false);
-      navigate("/checkout/delivery");
+      navigate("/cart");
     }, 300);
   };
 
@@ -258,7 +258,7 @@ const ProductPage: React.FC = () => {
                             1,
                           );
                           setTimeout(() => {
-                            navigate("/checkout/delivery");
+                            navigate("/cart");
                           }, 300);
                         }}
                         disabled={p.stock === 0}
