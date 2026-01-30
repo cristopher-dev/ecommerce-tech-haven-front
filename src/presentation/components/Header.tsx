@@ -469,7 +469,7 @@ const Header: React.FC = () => {
                                       </p>
                                     </div>
                                     <button
-                                      className="btn btn-sm btn-outline-danger"
+                                      className="btn btn-sm btn-outline-secondary"
                                       onClick={() =>
                                         dispatch(
                                           removeFromCart(item.product.id),
@@ -491,7 +491,7 @@ const Header: React.FC = () => {
                                 </div>
                                 <div className="d-flex gap-2">
                                   <Link
-                                    className="btn btn-sm btn-outline-primary flex-fill"
+                                    className="btn btn-sm btn-primary flex-fill"
                                     to="/cart"
                                   >
                                     {t("cartPage.title")}
