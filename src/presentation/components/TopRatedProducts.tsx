@@ -19,8 +19,13 @@ const TopRatedProducts: React.FC = () => {
         setProducts(data);
         setError(null);
       } catch (err) {
-        console.error("Error loading top rated products:", err);
-        setError("Failed to load products");
+        // Silently handle 401 Unauthorized errors - products require authentication
+        if (err instanceof Error && err.message.includes("401")) {
+          setError(null); // Don't show error, allow fallback rendering
+        } else {
+          console.error("Error loading top rated products:", err);
+          setError("Failed to load products");
+        }
         // Fallback mock data
         const mockProducts: ProductDTO[] = [
           {
@@ -89,7 +94,7 @@ const TopRatedProducts: React.FC = () => {
 
   // Transform products to match ProductCard expectations
   const topRatedProducts = products.map((product, index) => ({
-    id: parseInt(product.id.replace(/\D/g, "")) || index + 1,
+    id: `toprated-${parseInt(product.id.replace(/\D/g, "")) || index + 1}`,
     name: product.name,
     price: product.price / 100,
     image:

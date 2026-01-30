@@ -144,19 +144,27 @@ async function apiRequest<T>(
       .json()
       .catch(() => ({ message: "Unknown error" }));
 
-    // Handle 401 Unauthorized - redirect to login
+    // Handle 401 Unauthorized - redirect to login only for protected endpoints
     if (response.status === 401) {
-      // Clear auth token and user data from localStorage
-      localStorage.removeItem("authToken");
-      localStorage.removeItem("authUser");
+      // Don't redirect for public endpoints like /products
+      const publicEndpoints = ["/products"];
+      const isPublicEndpoint = publicEndpoints.some((ep) =>
+        endpoint.includes(ep),
+      );
 
-      // Only redirect once to avoid infinite loops
-      const lastRedirectTime = localStorage.getItem("lastLoginRedirect");
-      const now = Date.now();
+      if (!isPublicEndpoint) {
+        // Clear auth token and user data from localStorage
+        localStorage.removeItem("authToken");
+        localStorage.removeItem("authUser");
 
-      if (!lastRedirectTime || now - parseInt(lastRedirectTime) > 5000) {
-        localStorage.setItem("lastLoginRedirect", now.toString());
-        window.location.href = "/";
+        // Only redirect once to avoid infinite loops
+        const lastRedirectTime = localStorage.getItem("lastLoginRedirect");
+        const now = Date.now();
+
+        if (!lastRedirectTime || now - parseInt(lastRedirectTime) > 5000) {
+          localStorage.setItem("lastLoginRedirect", now.toString());
+          window.location.href = "/login";
+        }
       }
     }
 

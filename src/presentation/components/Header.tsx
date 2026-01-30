@@ -26,7 +26,10 @@ const Header: React.FC = () => {
 
   const handleLogout = () => {
     dispatch(logout());
-    navigate("/");
+    // Use setTimeout to ensure logout action is processed before navigation
+    setTimeout(() => {
+      navigate("/");
+    }, 100);
   };
 
   const handleMockLogin = async () => {
@@ -226,18 +229,6 @@ const Header: React.FC = () => {
                               <hr className="dropdown-divider" />
                             </li>
                             <li>
-                              <Link
-                                className="dropdown-item"
-                                to="/account/profile"
-                              >
-                                <i className="bi bi-person me-2"></i>
-                                {t("header.myProfile")}
-                              </Link>
-                            </li>
-                            <li>
-                              <hr className="dropdown-divider" />
-                            </li>
-                            <li>
                               <button
                                 className="dropdown-item"
                                 onClick={handleLogout}
@@ -260,12 +251,6 @@ const Header: React.FC = () => {
                         >
                           <i className="bi bi-person-circle fs-5 text-primary"></i>
                           <div className="ms-2 d-none d-lg-block">
-                            <small
-                              className="text-muted d-block lh-1"
-                              style={{ fontSize: "0.7rem" }}
-                            >
-                              {t("common.account")}
-                            </small>
                             <span
                               className="fw-600 d-block lh-1"
                               style={{ fontSize: "0.85rem" }}

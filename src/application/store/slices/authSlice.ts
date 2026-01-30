@@ -52,6 +52,20 @@ const initialState: AuthState = {
   isAuthenticated: false,
 };
 
+// Helper function to restore user from token
+const restoreUserFromToken = (): UserProfile | null => {
+  try {
+    const token = localStorage.getItem("authToken");
+    const savedUser = localStorage.getItem("authUser");
+    if (token && savedUser) {
+      return JSON.parse(savedUser);
+    }
+  } catch (error) {
+    console.error("Error restoring user:", error);
+  }
+  return null;
+};
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -62,17 +76,25 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.error = null;
       localStorage.removeItem("authToken");
+      localStorage.removeItem("authUser");
     },
     setUser: (state, action: PayloadAction<UserProfile>) => {
       state.user = action.payload;
       state.isAuthenticated = true;
+      localStorage.setItem("authUser", JSON.stringify(action.payload));
     },
     setToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload;
       localStorage.setItem("authToken", action.payload);
     },
-    clearError: (state) => {
-      state.error = null;
+    restoreAuth: (state) => {
+      const user = restoreUserFromToken();
+      const token = localStorage.getItem("authToken");
+      if (user && token) {
+        state.user = user;
+        state.token = token;
+        state.isAuthenticated = true;
+      }
     },
   },
   extraReducers: (builder) => {
@@ -116,5 +138,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout, setUser, setToken, clearError } = authSlice.actions;
+export const { logout, setUser, setToken, clearError, restoreAuth } =
+  authSlice.actions;
 export default authSlice.reducer;

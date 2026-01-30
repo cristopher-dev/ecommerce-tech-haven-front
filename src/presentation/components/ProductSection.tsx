@@ -21,7 +21,12 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title }) => {
         setProducts(data);
         setError(null);
       } catch (err) {
-        console.error("Error loading products:", err);
+        // Silently handle 401 Unauthorized errors - products require authentication
+        if (err instanceof Error && err.message.includes("401")) {
+          setError(null); // Don't show error, allow fallback rendering
+        } else {
+          console.error("Error loading products:", err);
+        }
       } finally {
         setLoading(false);
       }

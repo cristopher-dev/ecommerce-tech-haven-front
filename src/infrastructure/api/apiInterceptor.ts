@@ -12,10 +12,10 @@ export function getAuthToken(): string | null {
 
 /**
  * Interceptor function to add authorization header to requests
- * Excludes auth header for public endpoints like /auth/login and /auth/register
+ * Automatically adds JWT token if available, for all endpoints
  * @param options Fetch options
  * @param endpoint The API endpoint being called
- * @returns Enhanced options with Authorization header (if applicable)
+ * @returns Enhanced options with Authorization header (if token available)
  */
 export function withAuthInterceptor(
   options: Record<string, unknown> = {},
@@ -23,11 +23,19 @@ export function withAuthInterceptor(
 ): Record<string, unknown> {
   const token = getAuthToken();
 
-  // Skip Authorization header for public auth endpoints
-  const publicEndpoints = ["/auth/login", "/auth/register"];
-  const isPublicEndpoint = publicEndpoints.some((ep) => endpoint.includes(ep));
+  // Skip Authorization header only for auth endpoints and if no token available
+  const authOnlyEndpoints = ["/auth/login", "/auth/register"];
+  const isAuthOnlyEndpoint = authOnlyEndpoints.some((ep) =>
+    endpoint.includes(ep),
+  );
 
-  if (!token || isPublicEndpoint) {
+  // If no token, skip adding authorization header
+  if (!token) {
+    return options;
+  }
+
+  // If it's an auth-only endpoint (login/register), don't add token
+  if (isAuthOnlyEndpoint) {
     return options;
   }
 

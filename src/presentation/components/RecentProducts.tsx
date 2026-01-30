@@ -20,8 +20,13 @@ const RecentProducts: React.FC = () => {
         setProducts(data.slice(0, 5));
         setError(null);
       } catch (err) {
-        console.error("Error loading recent products:", err);
-        setError("Failed to load recent products");
+        // Silently handle 401 Unauthorized errors - products require authentication
+        if (err instanceof Error && err.message.includes("401")) {
+          setError(null); // Don't show error, allow fallback rendering
+        } else {
+          console.error("Error loading recent products:", err);
+          setError("Failed to load recent products");
+        }
       } finally {
         setLoading(false);
       }
@@ -32,7 +37,7 @@ const RecentProducts: React.FC = () => {
 
   // Transform products to match ProductCard expectations
   const recentProducts = products.map((product, index) => ({
-    id: parseInt(product.id.replace(/\D/g, "")) || index + 1,
+    id: `recent-${parseInt(product.id.replace(/\D/g, "")) || index + 1}`,
     name: product.name,
     price: product.price / 100,
     image:
