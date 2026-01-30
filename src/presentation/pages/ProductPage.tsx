@@ -45,15 +45,10 @@ const ProductPage: React.FC = () => {
         const repo = new TechHavenApiProductRepository();
 
         if (searchQuery) {
-          // Search mode: load all products and filter
+          // Search mode: send search to backend API
           setIsSearchMode(true);
-          const allProducts = await repo.getAll();
-          const filtered = allProducts.filter(
-            (p) =>
-              p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              p.description?.toLowerCase().includes(searchQuery.toLowerCase()),
-          );
-          setProducts(filtered);
+          const searchResults = await repo.search(searchQuery);
+          setProducts(searchResults);
           setProduct(null);
         } else {
           // Single product mode

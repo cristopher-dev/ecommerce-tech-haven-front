@@ -142,6 +142,23 @@ async function apiRequest<T>(
     const error = await response
       .json()
       .catch(() => ({ message: "Unknown error" }));
+
+    // Handle 401 Unauthorized - redirect to login
+    if (response.status === 401) {
+      // Clear auth token and user data from localStorage
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("authUser");
+
+      // Only redirect once to avoid infinite loops
+      const lastRedirectTime = localStorage.getItem("lastLoginRedirect");
+      const now = Date.now();
+
+      if (!lastRedirectTime || now - parseInt(lastRedirectTime) > 5000) {
+        localStorage.setItem("lastLoginRedirect", now.toString());
+        window.location.href = "/";
+      }
+    }
+
     throw new Error(error.message || `API Error: ${response.status}`);
   }
 
@@ -164,6 +181,15 @@ export const productsApi = {
    */
   async getById(id: string): Promise<ProductDTO> {
     return apiRequest<ProductDTO>(`/products/${id}`);
+  },
+
+  /**
+   * Search products by query term
+   */
+  async search(query: string): Promise<ProductDTO[]> {
+    return apiRequest<ProductDTO[]>(
+      `/products/search?q=${encodeURIComponent(query)}`,
+    );
   },
 };
 

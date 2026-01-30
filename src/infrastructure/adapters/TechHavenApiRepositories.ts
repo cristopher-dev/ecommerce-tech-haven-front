@@ -24,6 +24,10 @@ export class TechHavenApiProductRepository {
   async getById(id: string): Promise<ProductDTO> {
     return productsApi.getById(id);
   }
+
+  async search(query: string): Promise<ProductDTO[]> {
+    return productsApi.search(query);
+  }
 }
 
 /**

@@ -44,6 +44,14 @@ function App() {
               }
             />
             <Route
+              path="/checkout"
+              element={
+                <ProtectedRoute>
+                  <CheckoutDeliveryPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/checkout/delivery"
               element={
                 <ProtectedRoute>
