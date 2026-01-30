@@ -5,6 +5,7 @@
  */
 
 import { getApiBaseUrl } from "./getApiBaseUrl";
+import { withAuthInterceptor } from "./apiInterceptor";
 
 const API_BASE_URL = getApiBaseUrl();
 
@@ -43,6 +44,12 @@ export interface RegisterRequestDTO {
 export interface LoginRequestDTO {
   email: string;
   password: string;
+}
+
+export interface LoginResponseDTO {
+  token: string;
+  email: string;
+  role: "ADMIN" | "CUSTOMER" | "USER";
 }
 
 export interface AuthResponseDTO {
@@ -110,7 +117,7 @@ export interface DeliveryDTO {
 }
 
 /**
- * Makes an API request with error handling
+ * Makes an API request with error handling and automatic auth token injection
  */
 async function apiRequest<T>(
   endpoint: string,
@@ -118,12 +125,17 @@ async function apiRequest<T>(
 ): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
 
+  // Apply auth interceptor to automatically add token
+  const enhancedOptions = withAuthInterceptor(options);
+
   const response = await fetch(url, {
     headers: {
       "Content-Type": "application/json",
-      ...(typeof options.headers === "object" ? options.headers : {}),
+      ...(typeof enhancedOptions.headers === "object"
+        ? enhancedOptions.headers
+        : {}),
     },
-    ...options,
+    ...enhancedOptions,
   } as unknown as Record<string, unknown>);
 
   if (!response.ok) {
@@ -269,9 +281,10 @@ export const authApi = {
   /**
    * Login user
    * @param data Login credentials
+   * Returns JWT token valid for 24h along with user info
    */
-  async login(data: LoginRequestDTO): Promise<AuthResponseDTO> {
-    return apiRequest<AuthResponseDTO>("/auth/login", {
+  async login(data: LoginRequestDTO): Promise<LoginResponseDTO> {
+    return apiRequest<LoginResponseDTO>("/auth/login", {
       method: "POST",
       body: JSON.stringify(data),
     });
@@ -279,27 +292,21 @@ export const authApi = {
 
   /**
    * Verify token validity
-   * @param token JWT token
+   * Token is automatically injected via interceptor
    */
-  async verifyToken(token: string): Promise<{ valid: boolean }> {
+  async verifyToken(): Promise<{ valid: boolean }> {
     return apiRequest<{ valid: boolean }>("/auth/verify", {
       method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
     });
   },
 
   /**
    * Get current user profile
-   * @param token JWT token
+   * Token is automatically injected via interceptor
    */
-  async getProfile(token: string): Promise<UserDTO> {
+  async getProfile(): Promise<UserDTO> {
     return apiRequest<UserDTO>("/auth/profile", {
       method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
     });
   },
 };

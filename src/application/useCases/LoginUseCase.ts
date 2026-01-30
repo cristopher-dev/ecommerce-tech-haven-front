@@ -16,7 +16,10 @@ export interface IAuthRepository {
 export class LoginUseCase {
   constructor(private readonly authRepository: IAuthRepository) {}
 
-  async execute(email: string, password: string): Promise<User> {
+  async execute(
+    email: string,
+    password: string,
+  ): Promise<{ user: User; token: string }> {
     // Validate inputs
     if (!email?.includes("@")) {
       throw new Error("Invalid email format");
@@ -25,10 +28,10 @@ export class LoginUseCase {
       throw new Error("Invalid email or password");
     }
 
-    const { user: userProfile } = await this.authRepository.login(
+    const { user: userProfile, token } = await this.authRepository.login(
       email,
       password,
     );
-    return new User(userProfile);
+    return { user: new User(userProfile), token };
   }
 }

@@ -3,6 +3,7 @@ export interface UserProfile {
   email: string;
   firstName: string;
   lastName: string;
+  role?: "ADMIN" | "CUSTOMER" | "USER";
   phone?: string;
   address?: string;
   city?: string;
@@ -18,6 +19,7 @@ export class User implements UserProfile {
   email: string;
   firstName: string;
   lastName: string;
+  role?: "ADMIN" | "CUSTOMER" | "USER";
   phone?: string;
   address?: string;
   city?: string;
@@ -32,6 +34,7 @@ export class User implements UserProfile {
     this.email = profile.email;
     this.firstName = profile.firstName;
     this.lastName = profile.lastName;
+    this.role = profile.role;
     this.phone = profile.phone;
     this.address = profile.address;
     this.city = profile.city;

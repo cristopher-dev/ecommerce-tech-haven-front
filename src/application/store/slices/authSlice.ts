@@ -34,8 +34,7 @@ export const login = createAsyncThunk(
     { rejectWithValue },
   ) => {
     try {
-      const user = await loginUseCase.execute(email, password);
-      const token = localStorage.getItem("authToken");
+      const { user, token } = await loginUseCase.execute(email, password);
       return { user, token };
     } catch (error) {
       return rejectWithValue(

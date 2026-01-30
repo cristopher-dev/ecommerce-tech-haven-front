@@ -3,11 +3,13 @@ import {
   transactionsApi,
   customersApi,
   deliveriesApi,
+  authApi,
   ProductDTO,
   TransactionDTO,
   CreateTransactionInputDto,
   ProcessPaymentDto,
   DeliveryDTO,
+  LoginResponseDTO,
 } from "@/infrastructure/api/techHavenApiClient";
 
 /**
@@ -137,22 +139,30 @@ export class TechHavenApiAuthRepository {
       email: string;
       firstName: string;
       lastName: string;
+      role?: "ADMIN" | "CUSTOMER" | "USER";
       createdAt: Date;
       updatedAt: Date;
     };
     token: string;
   }> {
-    const { authApi } = await import("@/infrastructure/api/techHavenApiClient");
     const response = await authApi.login({ email, password });
+
+    // Extract email name and role from the login response
+    // Format: "name@domain.com" -> firstName: "name", lastName: "domain.com"
+    const [firstName, lastName] =
+      email.split("@")[0].split(".").length > 1
+        ? email.split("@")[0].split(".")
+        : [email.split("@")[0], "User"];
 
     return {
       user: {
-        id: response.user.id,
-        email: response.user.email,
-        firstName: response.user.firstName,
-        lastName: response.user.lastName,
-        createdAt: new Date(response.user.createdAt),
-        updatedAt: new Date(response.user.updatedAt),
+        id: `user-${Date.now()}`, // Generate ID from response if available
+        email: response.email,
+        firstName: firstName || "User",
+        lastName: lastName || "",
+        role: response.role,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       token: response.token,
     };
