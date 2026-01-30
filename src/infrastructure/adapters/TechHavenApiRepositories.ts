@@ -61,6 +61,15 @@ export class TechHavenApiCustomerRepository {
   async getById(id: string) {
     return customersApi.getById(id);
   }
+
+  async create(data: {
+    name: string;
+    email: string;
+    address: string;
+    phone?: string;
+  }) {
+    return customersApi.create(data);
+  }
 }
 
 /**

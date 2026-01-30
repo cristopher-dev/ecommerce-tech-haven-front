@@ -1,12 +1,12 @@
 /**
  * Tech Haven API Client
  * Adapter for consuming the Tech Haven Payment API
- * Base URL: http://localhost:3000/api
+ * Base URL: http://localhost:3001/api
  */
 
 const API_BASE_URL =
   (import.meta as unknown as Record<string, Record<string, string>>).env
-    ?.VITE_TECH_HAVEN_API_URL || "http://localhost:3000/api";
+    ?.VITE_TECH_HAVEN_API_URL || "http://localhost:3001/api";
 
 // Types for API requests and responses
 export interface ProductDTO {
@@ -20,6 +20,13 @@ export interface ProductDTO {
 
 export interface CustomerDTO {
   id: string;
+  name: string;
+  email: string;
+  address: string;
+  phone?: string;
+}
+
+export interface CreateCustomerInputDto {
   name: string;
   email: string;
   address: string;
@@ -176,6 +183,17 @@ export const customersApi = {
    */
   async getById(id: string): Promise<CustomerDTO> {
     return apiRequest<CustomerDTO>(`/customers/${id}`);
+  },
+
+  /**
+   * Create a new customer
+   * @param data Customer data
+   */
+  async create(data: CreateCustomerInputDto): Promise<CustomerDTO> {
+    return apiRequest<CustomerDTO>("/customers", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
   },
 };
 
