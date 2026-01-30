@@ -14,7 +14,6 @@ const ProductPage: React.FC = () => {
   const [isAdding, setIsAdding] = useState(false);
   const [product, setProduct] = useState<ProductDTO | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   const productId = searchParams.get("id") || "1";
 
@@ -29,16 +28,6 @@ const ProductPage: React.FC = () => {
       } catch (err) {
         console.error("Error loading product:", err);
         setError("Failed to load product");
-        // Fallback product
-        setProduct({
-          id: "1",
-          name: "Wireless Headphones",
-          price: 9999,
-          stock: 50,
-          description: "High-quality wireless headphones with noise cancellation",
-          imageUrl:
-            "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-        });
       } finally {
         setLoading(false);
       }
@@ -49,7 +38,7 @@ const ProductPage: React.FC = () => {
 
   const handleAddToCart = async () => {
     if (!product) return;
-    
+
     setIsAdding(true);
     addToCart(
       {
@@ -59,7 +48,7 @@ const ProductPage: React.FC = () => {
         image: product.imageUrl,
         discount: 0,
       },
-      1
+      1,
     );
     setShowToast(true);
     setTimeout(() => setShowToast(false), 4000);
@@ -115,36 +104,44 @@ const ProductPage: React.FC = () => {
         </nav>
         <div className="row">
           <div className="col-md-6">
-            <img
-              src={product.imageUrl}
-              alt="Product"
-              className="img-fluid"
-            />
+            <img src={product.imageUrl} alt="Product" className="img-fluid" />
           </div>
           <div className="col-md-6">
             <h1>{product.name}</h1>
             <p className="text-muted">${(product.price / 100).toFixed(2)}</p>
-            <p className="text-success">Stock: {product.stock} units available</p>
+            <p className="text-success">
+              Stock: {product.stock} units available
+            </p>
             <p>{product.description}</p>
-            <button
-              className="btn btn-primary"
-              onClick={handleAddToCart}
-              disabled={isAdding || product.stock === 0}
-            >
-              {isAdding ? (
-                <>
-                  <span
-                    className="spinner-border spinner-border-sm me-2"
-                    role="status"
-                  ></span>
-                  Adding...
-                </>
-              ) : product.stock === 0 ? (
-                "Out of Stock"
-              ) : (
-                "Add to Cart"
-              )}
-            </button>
+            <div className="d-flex gap-2 flex-wrap">
+              <button
+                className="btn btn-primary"
+                onClick={handleAddToCart}
+                disabled={isAdding || product.stock === 0}
+              >
+                {isAdding ? (
+                  <>
+                    <span
+                      className="spinner-border spinner-border-sm me-2"
+                      role="status"
+                    ></span>
+                    Adding...
+                  </>
+                ) : product.stock === 0 ? (
+                  "Out of Stock"
+                ) : (
+                  "Add to Cart"
+                )}
+              </button>
+              <button
+                className="btn btn-success"
+                onClick={() => navigate("/checkout/delivery")}
+                disabled={product.stock === 0}
+              >
+                <i className="bi bi-credit-card me-2"></i>
+                Pay with Credit Card
+              </button>
+            </div>
           </div>
         </div>
       </main>

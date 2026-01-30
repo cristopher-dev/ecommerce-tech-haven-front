@@ -34,10 +34,25 @@ cp .env.example .env.local
 
 ### Environment Variables
 
+Copy `.env.example` to `.env.local` and configure:
+
 ```env
-VITE_TECH_HAVEN_API_URL=http://localhost:3000/api
-VITE_TECH_HAVEN_API_KEY=your_api_key_here
+# TechHaven Backend API
+VITE_TECH_HAVEN_API_URL=http://localhost:3001/api
+
+# Wompi Payment Gateway
+VITE_WOMPI_API_URL=https://api-sandbox.co.uat.wompi.dev/v1
+VITE_WOMPI_PUBLIC_KEY=your_wompi_public_key_here
+
+# Application Environment
+VITE_APP_ENV=development
 ```
+
+**⚠️ Security Notice:**
+- Never commit `.env` or `.env.local` files
+- Never hardcode API keys or credentials
+- Use `.env.example` to document required variables
+- See [SECURITY.md](./SECURITY.md) for security guidelines
 
 ## 📚 Development
 
