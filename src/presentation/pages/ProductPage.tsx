@@ -3,12 +3,20 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useCart } from "../../infrastructure/hooks/useCart";
+import { useAppDispatch } from "@/application/store/hooks";
+import {
+  addToWishlist,
+  removeFromWishlist,
+} from "@/application/store/slices/wishlistSlice";
+import { useSelector } from "react-redux";
+import { RootState } from "@/application/store/store";
 import { TechHavenApiProductRepository } from "@/infrastructure/adapters/TechHavenApiRepositories";
 import type { ProductDTO } from "@/infrastructure/api/techHavenApiClient";
 
 const ProductPage: React.FC = () => {
   const { addToCart } = useCart();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [searchParams] = useSearchParams();
   const [showToast, setShowToast] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
@@ -16,6 +24,7 @@ const ProductPage: React.FC = () => {
   const [products, setProducts] = useState<ProductDTO[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSearchMode, setIsSearchMode] = useState(false);
+  const wishlistItems = useSelector((state: RootState) => state.wishlist.items);
 
   // Get product ID from search params and convert numeric IDs to prod-X format
   const rawProductId = searchParams.get("id") || "1";
@@ -23,6 +32,11 @@ const ProductPage: React.FC = () => {
   const productId = /^\d+$/.test(rawProductId)
     ? `prod-${rawProductId}`
     : rawProductId;
+
+  // Check if a product is in wishlist
+  const isInWishlist = (productId: string) => {
+    return wishlistItems.some((item) => item.product.id === productId);
+  };
 
   useEffect(() => {
     const loadData = async () => {
@@ -128,12 +142,53 @@ const ProductPage: React.FC = () => {
               {products.map((p) => (
                 <div key={p.id} className="col-md-4 mb-4">
                   <div className="card h-100">
-                    <img
-                      src={p.imageUrl}
-                      className="card-img-top"
-                      alt={p.name}
-                      style={{ height: "200px", objectFit: "cover" }}
-                    />
+                    <div style={{ position: "relative", overflow: "hidden" }}>
+                      <img
+                        src={p.imageUrl}
+                        className="card-img-top"
+                        alt={p.name}
+                        style={{ height: "200px", objectFit: "cover" }}
+                      />
+                      <button
+                        className="btn btn-sm"
+                        style={{
+                          position: "absolute",
+                          top: "10px",
+                          right: "10px",
+                          background: isInWishlist(p.id)
+                            ? "#ff6b6b"
+                            : "rgba(255,255,255,0.9)",
+                          color: isInWishlist(p.id) ? "white" : "#333",
+                          border: "none",
+                          borderRadius: "50%",
+                          width: "40px",
+                          height: "40px",
+                          padding: "0",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                        onClick={() => {
+                          if (isInWishlist(p.id)) {
+                            dispatch(removeFromWishlist(parseInt(p.id)));
+                          } else {
+                            dispatch(addToWishlist(p as any));
+                          }
+                        }}
+                        title={
+                          isInWishlist(p.id)
+                            ? "Remove from wishlist"
+                            : "Add to wishlist"
+                        }
+                      >
+                        <i
+                          className={`bi ${
+                            isInWishlist(p.id) ? "bi-heart-fill" : "bi-heart"
+                          }`}
+                          style={{ fontSize: "18px" }}
+                        ></i>
+                      </button>
+                    </div>
                     <div className="card-body">
                       <h5 className="card-title">{p.name}</h5>
                       <p className="text-muted small">{p.description}</p>
