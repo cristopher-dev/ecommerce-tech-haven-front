@@ -203,8 +203,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             color: "white",
             fontWeight: "600",
             border: "none",
-            padding: "0.75rem",
-            borderRadius: "8px",
+            padding: "0.45rem 0.75rem",
+            fontSize: "0.85rem",
+            borderRadius: "6px",
             transition: "all 0.3s ease",
             cursor: "pointer",
           }}
@@ -218,7 +219,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             e.currentTarget.style.boxShadow = "none";
           }}
         >
-          <i className="bi bi-bag-plus me-2"></i>Add to Cart
+          <i
+            className="bi bi-bag-plus me-1"
+            style={{ fontSize: "0.75rem" }}
+          ></i>
+          Add to Cart
         </button>
         <button
           className="btn btn-success w-100"
@@ -226,8 +231,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           style={{
             fontWeight: "600",
             border: "none",
-            padding: "0.75rem",
-            borderRadius: "8px",
+            padding: "0.45rem 0.75rem",
+            fontSize: "0.85rem",
+            borderRadius: "6px",
             transition: "all 0.3s ease",
             cursor: "pointer",
           }}
@@ -241,7 +247,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             e.currentTarget.style.boxShadow = "none";
           }}
         >
-          <i className="bi bi-cart-check me-1"></i>
+          <i
+            className="bi bi-cart-check me-1"
+            style={{ fontSize: "0.75rem" }}
+          ></i>
           Buy Now
         </button>
       </div>
