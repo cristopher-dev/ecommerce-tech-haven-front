@@ -3,16 +3,16 @@
  */
 
 export const getApiBaseUrl = (): string => {
+  // In browser environment (Vite), use import.meta.env
+  if (import.meta.env.VITE_TECH_HAVEN_API_URL) {
+    return import.meta.env.VITE_TECH_HAVEN_API_URL;
+  }
+
   // In test environment (Jest), use process.env
   if (typeof process !== "undefined" && process.env.VITE_TECH_HAVEN_API_URL) {
     return process.env.VITE_TECH_HAVEN_API_URL;
   }
 
-  // In browser environment (Vite), import.meta will be available
-  // But we use process.env as fallback since both work in Vite
-  const url =
-    (typeof process !== "undefined" && process.env.VITE_TECH_HAVEN_API_URL) ||
-    "http://localhost:3001/api";
-
-  return url;
+  // Default fallback
+  return "http://localhost:3000/api";
 };
