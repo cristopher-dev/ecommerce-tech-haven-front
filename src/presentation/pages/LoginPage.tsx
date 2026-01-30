@@ -69,7 +69,7 @@ export default function LoginPage() {
     );
 
     if (result.meta.requestStatus === "fulfilled") {
-      navigate("/product");
+      navigate("/");
     }
   };
 
