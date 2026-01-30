@@ -9,7 +9,7 @@ import {
 import { removeFromCart } from "@/application/store/slices/cartSlice";
 import { logout } from "@/application/store/slices/authSlice";
 import { RootState } from "@/application/store/store";
-import "@/presentation/components/Header.scss";
+import "@/styles/components/Header.scss";
 
 const Header: React.FC = () => {
   const { totalItems, total, items } = useCartItems();

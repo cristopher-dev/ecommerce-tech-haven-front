@@ -10,7 +10,7 @@ import CheckoutSummaryPage from "@/presentation/pages/CheckoutSummaryPage";
 import CheckoutFinalStatusPage from "@/presentation/pages/CheckoutFinalStatusPage";
 import RegisterPage from "@/presentation/pages/RegisterPage";
 import LoginPage from "@/presentation/pages/LoginPage";
-import "@/App.scss";
+import "@/styles/App.scss";
 
 function App() {
   return (

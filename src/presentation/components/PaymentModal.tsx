@@ -9,7 +9,7 @@ import {
   validateCardInfo,
   type CardType,
 } from "@/shared/utils/cardValidation";
-import "./PaymentModal.scss";
+import "@/styles/components/PaymentModal.scss";
 
 interface PaymentModalProps {
   isOpen: boolean;

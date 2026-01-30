@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/application/store/store";
 import { login } from "@/application/store/slices/authSlice";
 import { ValidationErrors } from "@/shared/types/auth";
-import "@/presentation/pages/auth.scss";
+import "@/styles/pages/auth.scss";
 
 interface FormData {
   email: string;
