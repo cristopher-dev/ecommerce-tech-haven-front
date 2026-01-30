@@ -212,24 +212,11 @@ const Header: React.FC = () => {
                       ) : (
                         <button
                           onClick={handleMockLogin}
-                          className="btn d-flex align-items-center justify-content-center justify-content-lg-start py-2 px-2 px-lg-3"
+                          className="btn btn-outline-primary d-flex align-items-center justify-content-center justify-content-lg-start py-2 px-2 px-lg-3"
                           style={{
                             minHeight: "44px",
                             borderRadius: "8px",
-                            textDecoration: "none",
-                            transition: "background-color 0.3s",
-                            color: "inherit",
-                            background: "transparent",
-                            border: "1px solid #0d6efd",
-                            cursor: "pointer",
                           }}
-                          onMouseEnter={(e) =>
-                            (e.currentTarget.style.backgroundColor = "#f5f5f5")
-                          }
-                          onMouseLeave={(e) =>
-                            (e.currentTarget.style.backgroundColor =
-                              "transparent")
-                          }
                           title="Demo: Click to login as Admin"
                         >
                           <i className="bi bi-person-circle fs-5 text-primary"></i>
