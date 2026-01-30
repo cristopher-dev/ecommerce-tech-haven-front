@@ -202,8 +202,8 @@ src/
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/yourusername/tech-haven-front.git
-cd tech-haven-front
+git clone git@github.com:cristopher-dev/ecommerce-tech-haven-front.git
+cd ecommerce-tech-haven-front
 ```
 
 2. **Install dependencies**
@@ -737,17 +737,19 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👥 Authors
 
-- **Development Team** - TechHaven Project
-- **Wompi Integration** - Payment Processing
+- **Cristopher Martinez** - Lead Developer, Full Stack Implementation
+- **GitHub**: [@cristopher-dev](https://github.com/cristopher-dev)
+- **Twitter/X**: [@cristopher_devs](https://x.com/cristopher_devs)
+- **LinkedIn**: [Cristopher Dev](https://www.linkedin.com/in/cristopher-dev/)
 
 ---
 
 ## 📞 Support & Contact
 
 For issues, questions, or suggestions:
-- 📧 **Email**: support@techhaven.com
-- 🐛 **Issues**: [GitHub Issues](https://github.com/yourusername/tech-haven-front/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/yourusername/tech-haven-front/discussions)
+- � **GitHub Repository**: [github.com/cristopher-dev/ecommerce-tech-haven-front](https://github.com/cristopher-dev/ecommerce-tech-haven-front)
+- 🐦 **Twitter/X**: [@cristopher_devs](https://x.com/cristopher_devs)
+- 💼 **LinkedIn**: [linkedin.com/in/cristopher-dev](https://www.linkedin.com/in/cristopher-dev/)
 
 ---
 
@@ -760,7 +762,9 @@ For issues, questions, or suggestions:
 
 ---
 
-**Last Updated**: January 30, 2026
-**Version**: 1.0.0
-**Status**: ✅ Production Ready
+**Last Updated**: January 30, 2026  
+**Version**: 1.0.0  
+**Status**: ✅ Production Ready  
+**Repository**: [github.com/cristopher-dev/ecommerce-tech-haven-front](https://github.com/cristopher-dev/ecommerce-tech-haven-front)  
+**Developer**: [Cristopher Martinez](https://www.linkedin.com/in/cristopher-dev/)
 
