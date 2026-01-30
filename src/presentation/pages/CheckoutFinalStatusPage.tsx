@@ -51,8 +51,17 @@ const CheckoutFinalStatusPage: React.FC = () => {
                 </h1>
                 <p className="card-text text-muted mb-4">
                   Thank you for your purchase. Your order has been placed
-                  successfully.
+                  successfully. You will receive a confirmation email shortly.
                 </p>
+
+                {/* Delivery Estimate */}
+                <div className="alert alert-success mb-4" role="alert">
+                  <strong>📦 Expected Delivery:</strong>
+                  <br />
+                  <small>
+                    Your order should arrive within 5-7 business days.
+                  </small>
+                </div>
 
                 {/* Transaction Details */}
                 <div className="bg-light p-4 rounded mb-4">
@@ -143,11 +152,22 @@ const CheckoutFinalStatusPage: React.FC = () => {
                   <div className="mb-4">
                     <h5 className="text-start mb-3">Delivery Address</h5>
                     <div className="alert alert-info" role="alert">
+                      <p className="mb-1">
+                        <strong>
+                          {checkout.deliveryData.firstName}{" "}
+                          {checkout.deliveryData.lastName}
+                        </strong>
+                      </p>
                       <p className="mb-1">{checkout.deliveryData.address}</p>
-                      <p className="mb-0">
+                      <p className="mb-1">
                         {checkout.deliveryData.city},{" "}
                         {checkout.deliveryData.state}{" "}
                         {checkout.deliveryData.postalCode}
+                      </p>
+                      <p className="mb-0">
+                        <small className="text-muted">
+                          Phone: {checkout.deliveryData.phone}
+                        </small>
                       </p>
                     </div>
                   </div>

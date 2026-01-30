@@ -75,10 +75,13 @@ const CheckoutDeliveryPage: React.FC = () => {
       // Save delivery data to Redux
       dispatch(
         setDeliveryData({
-          address: `${formData.firstName} ${formData.lastName}, ${formData.address}`,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          address: formData.address,
           city: formData.city,
           state: formData.state,
           postalCode: formData.zipCode,
+          email: formData.email,
           phone: formData.phone,
         }),
       );

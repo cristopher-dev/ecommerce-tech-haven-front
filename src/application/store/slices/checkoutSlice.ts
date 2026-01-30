@@ -10,10 +10,13 @@ interface PaymentData {
 }
 
 interface DeliveryData {
+  firstName: string;
+  lastName: string;
   address: string;
   city: string;
   state: string;
   postalCode: string;
+  email: string;
   phone: string;
 }
 

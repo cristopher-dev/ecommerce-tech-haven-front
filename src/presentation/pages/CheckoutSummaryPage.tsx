@@ -8,6 +8,7 @@ import {
   setLastTransactionId,
   clearCart,
 } from "@/application/store/slices/checkoutSlice";
+import { updateProductStock } from "@/application/store/slices/productsSlice";
 import { transactionsApi } from "@/infrastructure/api/techHavenApiClient";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -46,34 +47,50 @@ const CheckoutSummaryPage: React.FC = () => {
       dispatch(setLoading(true));
       dispatch(setError(null));
 
-      // Extract customer name from delivery data
-      const customerName = checkout.deliveryData.address.split(",")[0].trim();
-      const customerEmail =
-        localStorage.getItem("customer_email") || "customer@techHaven.com";
+      // Extract customer name and email from delivery data
+      const customerName = `${checkout.deliveryData.firstName} ${checkout.deliveryData.lastName}`;
+      const customerEmail = checkout.deliveryData.email;
+      const customerAddress = `${checkout.deliveryData.address}, ${checkout.deliveryData.city}, ${checkout.deliveryData.state} ${checkout.deliveryData.postalCode}`;
 
-      // Create transaction in backend
-      const transactionResponse = await transactionsApi.create({
-        customerName,
-        customerEmail,
-        customerAddress: checkout.deliveryData.address,
-        productId: String(cartItems[0]?.product.id || "1"),
-        quantity: cartItems[0]?.quantity || 1,
-        cardData: {
-          cardNumber: checkout.paymentData.cardNumber,
-          cardholderName: checkout.paymentData.cardholderName,
-          expirationMonth: checkout.paymentData.expirationMonth,
-          expirationYear: checkout.paymentData.expirationYear,
-          cvv: "", // Never send CVV to backend
-        },
-      });
+      // Create transactions for each product in the cart
+      const transactionIds: string[] = [];
 
-      // Process payment
-      await transactionsApi.processPayment(transactionResponse.id, {
-        status: "COMPLETED",
-      });
+      for (const item of cartItems) {
+        const transactionResponse = await transactionsApi.create({
+          customerName,
+          customerEmail,
+          customerAddress,
+          productId: String(item.product.id),
+          quantity: Math.min(item.quantity, 10), // Ensure quantity doesn't exceed 10
+          cardData: {
+            cardNumber: checkout.paymentData.cardNumber.replace(/\s/g, ""),
+            cardholderName: checkout.paymentData.cardholderName,
+            expirationMonth: checkout.paymentData.expirationMonth,
+            expirationYear: checkout.paymentData.expirationYear,
+            cvv: "", // Never send CVV to backend
+          },
+        });
 
-      // Success - save transaction ID and navigate
-      dispatch(setLastTransactionId(transactionResponse.transactionNumber));
+        transactionIds.push(transactionResponse.id);
+
+        // Process payment for each transaction
+        await transactionsApi.processPayment(transactionResponse.id, {
+          status: "COMPLETED",
+        });
+
+        // Update product stock after successful transaction
+        dispatch(
+          updateProductStock({
+            productId: String(item.product.id),
+            quantity: item.quantity,
+          }),
+        );
+      }
+
+      // Success - save first transaction ID (main transaction) and navigate
+      const firstTransactionId = transactionIds[0];
+      const transactionData = await transactionsApi.getById(firstTransactionId);
+      dispatch(setLastTransactionId(transactionData.transactionNumber));
       dispatch(setStep("status"));
       dispatch(clearCart());
 
@@ -83,11 +100,10 @@ const CheckoutSummaryPage: React.FC = () => {
         navigate("/checkout/final");
       }, 1500);
     } catch (err) {
-      dispatch(
-        setError(
-          err instanceof Error ? err.message : "Payment processing failed",
-        ),
-      );
+      const errorMessage =
+        err instanceof Error ? err.message : "Payment processing failed";
+      dispatch(setError(errorMessage));
+      console.error("Order processing error:", err);
       setIsProcessing(false);
       dispatch(setLoading(false));
     }
@@ -186,6 +202,10 @@ const CheckoutSummaryPage: React.FC = () => {
               <div className="card">
                 <div className="card-body">
                   <p className="mb-1">
+                    <strong>Name:</strong> {checkout.deliveryData.firstName}{" "}
+                    {checkout.deliveryData.lastName}
+                  </p>
+                  <p className="mb-1">
                     <strong>Address:</strong> {checkout.deliveryData.address}
                   </p>
                   <p className="mb-1">
@@ -194,6 +214,9 @@ const CheckoutSummaryPage: React.FC = () => {
                   </p>
                   <p className="mb-1">
                     <strong>ZIP:</strong> {checkout.deliveryData.postalCode}
+                  </p>
+                  <p className="mb-1">
+                    <strong>Email:</strong> {checkout.deliveryData.email}
                   </p>
                   <p className="mb-0">
                     <strong>Phone:</strong> {checkout.deliveryData.phone}
