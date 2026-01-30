@@ -31,7 +31,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const handleBuyNow = () => {
     dispatch(addToCart({ product, quantity: 1 }));
     setTimeout(() => {
-      navigate("/checkout/delivery");
+      navigate("/cart");
     }, 300);
   };
 

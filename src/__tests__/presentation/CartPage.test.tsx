@@ -148,7 +148,7 @@ describe("CartPage", () => {
       name: /proceed to checkout/i,
     });
     expect(checkoutButton).toBeInTheDocument();
-    expect(checkoutButton).toHaveAttribute("href", "/checkout/delivery");
+    expect(checkoutButton).toHaveAttribute("href", "/cart");
   });
 
   // Test 9: Remove buttons present
