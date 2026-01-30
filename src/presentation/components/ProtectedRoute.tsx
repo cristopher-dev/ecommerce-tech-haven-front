@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Navigate } from "react-router-dom";
 import { useAppSelector } from "@/application/store/hooks";
 
@@ -9,7 +9,9 @@ interface ProtectedRouteProps {
 /**
  * ProtectedRoute component ensures that only authenticated users can access
  * certain routes. If the user is not authenticated, they are redirected to the login page.
- * This component waits for Redux state to be fully hydrated before rendering.
+ *
+ * Checks if there's a valid token in Redux state (which is persisted from localStorage).
+ * If no token exists, redirects to /login.
  *
  * @example
  * <ProtectedRoute>
@@ -17,19 +19,11 @@ interface ProtectedRouteProps {
  * </ProtectedRoute>
  */
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
+  const token = useAppSelector((state) => state.auth.token);
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
-  const [isHydrated, setIsHydrated] = useState(false);
 
-  useEffect(() => {
-    setIsHydrated(true);
-  }, []);
-
-  // While still loading from localStorage, show nothing to prevent flash of content
-  if (!isHydrated) {
-    return null;
-  }
-
-  if (!isAuthenticated) {
+  // If there's no token saved, redirect to login
+  if (!token || !isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 

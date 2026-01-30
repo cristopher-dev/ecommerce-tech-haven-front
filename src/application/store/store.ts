@@ -50,10 +50,11 @@ const storage = createSafeStorage();
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["checkout", "cart", "wishlist"], // Persist these slices
+  whitelist: ["checkout", "cart", "wishlist", "auth"], // Persist these slices
 };
 
 const persistedCheckoutReducer = persistReducer(persistConfig, checkoutReducer);
+const persistedAuthReducer = persistReducer(persistConfig, authReducer);
 
 export const store = configureStore({
   reducer: {
@@ -63,7 +64,7 @@ export const store = configureStore({
     checkout: persistedCheckoutReducer,
     wishlist: wishlistReducer,
     cart: cartReducer,
-    auth: authReducer,
+    auth: persistedAuthReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
