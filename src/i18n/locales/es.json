@@ -159,14 +159,15 @@
     "updateQuantity": "Actualizar cantidad"
   },
   "wishlistPage": {
-    "title": "Mi Lista de deseos",
+    "title": "Mi Lista de Deseos",
     "emptyWishlist": "Tu lista de deseos está vacía",
     "addItemsMessage": "¡Agrega artículos a tu lista de deseos para guardarlos para después!",
     "product": "Producto",
     "price": "Precio",
     "action": "Acción",
     "moveToCart": "Mover al carrito",
-    "remove": "Quitar"
+    "remove": "Quitar",
+    "addToCart": "Agregar al carrito"
   },
   "checkoutPage": {
     "title": "Pago",
@@ -253,11 +254,6 @@
     "orderConfirmed": "Pedido Confirmado",
     "orderNumber": "Número de Pedido",
     "estimatedDelivery": "Entrega Estimada"
-  },
-  "wishlistPage": {
-    "title": "Mi Lista de Deseos",
-    "empty": "Tu lista de deseos está vacía",
-    "addToCart": "Agregar al carrito"
   },
   "validation": {
     "cardNumberInvalid": "Número de tarjeta inválido",

@@ -283,8 +283,8 @@ const CheckoutSummaryPage: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                {cartItems.map((item, index) => (
-                  <tr key={`${item.product.id}-${index}`}>
+                {cartItems.map((item) => (
+                  <tr key={item.product.id}>
                     <td>{item.product.name}</td>
                     <td>{item.quantity}</td>
                     <td>${item.product.price.toFixed(2)}</td>

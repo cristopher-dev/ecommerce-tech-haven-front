@@ -53,8 +53,8 @@ const CartPage: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {items.map((item, index) => (
-                    <tr key={`${item.product.id}-${index}`}>
+                  {items.map((item) => (
+                    <tr key={item.product.id}>
                       <td>{item.product.name}</td>
                       <td>
                         <img

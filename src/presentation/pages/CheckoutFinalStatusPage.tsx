@@ -11,13 +11,22 @@ const CheckoutFinalStatusPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const checkout = useAppSelector((state) => state.checkout);
+  const purchasedItems = useAppSelector((state) => state.purchasedItems.items);
 
   useEffect(() => {
     // Redirect to home if no transaction ID (user came directly)
     if (!checkout.lastTransactionId) {
+      console.warn(
+        "CheckoutFinalStatusPage: No transaction ID found, redirecting to home",
+      );
       navigate("/");
+    } else {
+      console.log("CheckoutFinalStatusPage: Transaction successful", {
+        transactionId: checkout.lastTransactionId,
+        purchasedItemsCount: purchasedItems.length,
+      });
     }
-  }, [checkout.lastTransactionId, navigate]);
+  }, [checkout.lastTransactionId, purchasedItems.length, navigate]);
 
   const handleReturnHome = () => {
     dispatch(clearCheckout());
@@ -32,6 +41,28 @@ const CheckoutFinalStatusPage: React.FC = () => {
   const baseFee = checkout.baseFee / 100;
   const deliveryFee = checkout.deliveryFee / 100;
   const total = subtotal + baseFee + deliveryFee;
+
+  // Show error state if no transaction
+  if (!checkout.lastTransactionId) {
+    return (
+      <div>
+        <Header />
+        <main className="container my-5">
+          <div className="alert alert-danger" role="alert">
+            <h4 className="alert-heading">Order Processing Error</h4>
+            <p>
+              We encountered an issue processing your order. Please try again or
+              contact support.
+            </p>
+            <Link to="/" className="btn btn-primary">
+              Return to Home
+            </Link>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div>
