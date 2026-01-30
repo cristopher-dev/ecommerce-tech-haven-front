@@ -420,7 +420,10 @@ const Header: React.FC = () => {
                             borderRadius: "8px",
                           }}
                         >
-                          <li className="p-3 border-bottom bg-light rounded-top-3">
+                          <li
+                            key="cart-header"
+                            className="p-3 border-bottom bg-light rounded-top-3"
+                          >
                             <h6 className="mb-0 fw-bold">
                               <i className="bi bi-bag me-2 text-success"></i>
                               {t("cartPage.title")}
@@ -428,7 +431,7 @@ const Header: React.FC = () => {
                           </li>
 
                           {items.length === 0 ? (
-                            <li>
+                            <li key="empty-cart">
                               <div className="p-4 text-center">
                                 <i className="bi bi-bag-x fs-1 text-muted mb-3 d-block"></i>
                                 <p className="text-muted mb-0">
@@ -438,9 +441,9 @@ const Header: React.FC = () => {
                             </li>
                           ) : (
                             <>
-                              {items.slice(0, 3).map((item) => (
+                              {items.slice(0, 3).map((item, index) => (
                                 <li
-                                  key={item.product.id}
+                                  key={`cart-item-${item.product.id}-${index}`}
                                   className="border-bottom"
                                 >
                                   <div className="p-3 d-flex align-items-center gap-2">
@@ -482,7 +485,7 @@ const Header: React.FC = () => {
                                 </li>
                               ))}
 
-                              <li className="p-3">
+                              <li key="cart-totals" className="p-3">
                                 <div className="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
                                   <strong>{t("cartPage.subtotal")}:</strong>
                                   <span className="text-success fw-bold">
