@@ -27,20 +27,43 @@ const Header: React.FC = () => {
     navigate("/");
   };
 
-  const handleMockLogin = () => {
-    const mockToken = "mock-demo-token-" + Date.now();
-    const mockUserData = {
-      id: "1",
-      email: "admin@techhaven.com",
-      firstName: "Admin",
-      lastName: "User",
-      role: "ADMIN" as const,
-      phone: "123456789",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    dispatch(setUser(mockUserData));
-    dispatch(setToken(mockToken));
+  const handleMockLogin = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: "admin@techhaven.com",
+          password: "admin123",
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Login failed");
+      }
+
+      const data = await response.json();
+
+      // Set user data with real token from API
+      const userData = {
+        id: "admin-user",
+        email: data.email,
+        firstName: "Admin",
+        lastName: "User",
+        role: data.role as "ADMIN" | "USER",
+        phone: "123456789",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      dispatch(setUser(userData));
+      dispatch(setToken(data.token));
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Login failed. Please try again.");
+    }
   };
 
   return (
@@ -83,7 +106,20 @@ const Header: React.FC = () => {
 
                   {/* Search Bar */}
                   <div className="col-12 col-md-6 col-lg-5">
-                    <form className="search-form">
+                    <form
+                      className="search-form"
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        const searchInput = e.currentTarget.querySelector(
+                          'input[type="search"]',
+                        ) as HTMLInputElement;
+                        if (searchInput?.value) {
+                          navigate(
+                            `/product?search=${encodeURIComponent(searchInput.value)}`,
+                          );
+                        }
+                      }}
+                    >
                       <div className="input-group">
                         <div className="dropdown">
                           <button

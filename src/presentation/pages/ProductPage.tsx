@@ -13,32 +13,50 @@ const ProductPage: React.FC = () => {
   const [showToast, setShowToast] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
   const [product, setProduct] = useState<ProductDTO | null>(null);
+  const [products, setProducts] = useState<ProductDTO[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isSearchMode, setIsSearchMode] = useState(false);
 
   // Get product ID from search params and convert numeric IDs to prod-X format
   const rawProductId = searchParams.get("id") || "1";
+  const searchQuery = searchParams.get("search");
   const productId = /^\d+$/.test(rawProductId)
     ? `prod-${rawProductId}`
     : rawProductId;
 
   useEffect(() => {
-    const loadProduct = async () => {
+    const loadData = async () => {
       try {
         setLoading(true);
         const repo = new TechHavenApiProductRepository();
-        const data = await repo.getById(productId);
-        setProduct(data);
-        // setError(null); // Error state not defined
+
+        if (searchQuery) {
+          // Search mode: load all products and filter
+          setIsSearchMode(true);
+          const allProducts = await repo.getAll();
+          const filtered = allProducts.filter(
+            (p) =>
+              p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              p.description?.toLowerCase().includes(searchQuery.toLowerCase()),
+          );
+          setProducts(filtered);
+          setProduct(null);
+        } else {
+          // Single product mode
+          setIsSearchMode(false);
+          const data = await repo.getById(productId);
+          setProduct(data);
+          setProducts([]);
+        }
       } catch (err) {
-        console.error("Error loading product:", err);
-        // setError("Failed to load product"); // Error state not defined
+        console.error("Error loading data:", err);
       } finally {
         setLoading(false);
       }
     };
 
-    loadProduct();
-  }, [productId]);
+    loadData();
+  }, [productId, searchQuery]);
 
   const handleAddToCart = async () => {
     if (!product) return;
@@ -78,6 +96,94 @@ const ProductPage: React.FC = () => {
     );
   }
 
+  // Search results view
+  if (isSearchMode) {
+    return (
+      <div>
+        <Header />
+        <main className="container my-4">
+          <nav aria-label="breadcrumb">
+            <ol className="breadcrumb">
+              <li className="breadcrumb-item">
+                <Link to="/">Home</Link>
+              </li>
+              <li className="breadcrumb-item active">Search Results</li>
+            </ol>
+          </nav>
+
+          <h2 className="mb-4">
+            Search Results for "{searchQuery}"
+            {products.length > 0 && (
+              <span className="text-muted ms-2">({products.length} found)</span>
+            )}
+          </h2>
+
+          {products.length === 0 ? (
+            <div className="alert alert-info">
+              No products found matching "{searchQuery}".{" "}
+              <Link to="/">Back to Home</Link>
+            </div>
+          ) : (
+            <div className="row">
+              {products.map((p) => (
+                <div key={p.id} className="col-md-4 mb-4">
+                  <div className="card h-100">
+                    <img
+                      src={p.imageUrl}
+                      className="card-img-top"
+                      alt={p.name}
+                      style={{ height: "200px", objectFit: "cover" }}
+                    />
+                    <div className="card-body">
+                      <h5 className="card-title">{p.name}</h5>
+                      <p className="text-muted small">{p.description}</p>
+                      <p className="card-text text-success fw-bold">
+                        ${(p.price / 100).toFixed(2)}
+                      </p>
+                      <small className="text-muted">
+                        Stock: {p.stock} units
+                      </small>
+                    </div>
+                    <div className="card-footer bg-transparent d-grid gap-2">
+                      <button
+                        className="btn btn-sm btn-primary"
+                        onClick={() => {
+                          addToCart(
+                            {
+                              id: parseInt(p.id),
+                              name: p.name,
+                              price: p.price / 100,
+                              image: p.imageUrl,
+                              discount: 0,
+                            },
+                            1,
+                          );
+                          setShowToast(true);
+                          setTimeout(() => setShowToast(false), 3000);
+                        }}
+                        disabled={p.stock === 0}
+                      >
+                        {p.stock === 0 ? "Out of Stock" : "Add to Cart"}
+                      </button>
+                      <Link
+                        to={`/product?id=${p.id}`}
+                        className="btn btn-sm btn-outline-secondary"
+                      >
+                        View Details
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  // Single product view
   if (!product) {
     return (
       <div>
