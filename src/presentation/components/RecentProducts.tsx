@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import ProductCard from "@/presentation/components/ProductCard";
 import { TechHavenApiProductRepository } from "@/infrastructure/adapters/TechHavenApiRepositories";
 import type { ProductDTO } from "@/infrastructure/api/techHavenApiClient";
 
 const RecentProducts: React.FC = () => {
+  const { t } = useTranslation();
   const [products, setProducts] = useState<ProductDTO[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -44,7 +46,7 @@ const RecentProducts: React.FC = () => {
       <div className="container">
         <div className="row">
           <div className="col-12">
-            <h2 className="text-center mb-4">Recent Products</h2>
+            <h2 className="text-center mb-4">{t("homePage.recentProducts")}</h2>
           </div>
         </div>
         {loading && (

@@ -64,15 +64,44 @@
     "contactUs": "Contáctanos",
     "shippingInfo": "Información de envío",
     "returns": "Devoluciones",
+    "faq": "Preguntas Frecuentes",
     "company": "Empresa",
     "aboutUs": "Acerca de nosotros",
     "careers": "Empleo",
     "blog": "Blog",
-    "press": "Prensa"
+    "press": "Prensa",
+    "myAccount": "Mi Cuenta",
+    "signIn": "Iniciar Sesión",
+    "viewCart": "Ver Carrito",
+    "myWishlist": "Mi Lista de Deseos",
+    "trackOrder": "Rastrear Pedido",
+    "paymentMethods": "Métodos de Pago",
+    "privacyPolicy": "Política de Privacidad",
+    "termsOfService": "Términos de Servicio"
+  },
+  "features": {
+    "freeShippingTitle": "Envío Gratis",
+    "freeShippingDesc": "En pedidos mayores a $50",
+    "moneyBackTitle": "Garantía de Devolución de Dinero",
+    "moneyBackDesc": "Política de devolución de 30 días",
+    "supportTitle": "Soporte en Línea",
+    "supportDesc": "Servicio al cliente 24/7",
+    "secureTitle": "Pago Seguro",
+    "secureDesc": "Transacciones 100% seguras"
+  },
+  "promoBanners": {
+    "discount": "Descuento de 20%",
+    "firstPurchase": "En tu primera compra",
+    "claim": "Reclamar Ahora",
+    "exclusive": "Ofertas Exclusivas",
+    "limitedTime": "Ofertas por tiempo limitado",
+    "shop": "Comprar Ahora"
   },
   "homePage": {
     "title": "TechHaven - Tienda de Electrónica",
     "hero": "Bienvenido a TechHaven",
+    "welcome": "Bienvenido a TechHaven",
+    "discover": "Descubre lo último en tecnología e innovación",
     "heroSubtitle": "Descubre la mejor tecnología al mejor precio",
     "featured": "Productos Destacados",
     "topRated": "Productos Mejor Valorados",
@@ -81,7 +110,11 @@
     "shop": "Comprar ahora",
     "flashDeals": "Ofertas Relámpago",
     "mostViewed": "Productos más vistos",
-    "bestSellers": "Mejores vendedores en electrónica"
+    "bestSellers": "Mejores vendedores en electrónica",
+    "shopByCategory": "Comprar por Categoría",
+    "recentProducts": "Productos Recientes",
+    "topRatedProducts": "Productos Mejor Valorados",
+    "ourBrands": "Nuestras Marcas"
   },
   "productPage": {
     "title": "Detalles del Producto",
@@ -206,6 +239,17 @@
   "newsletter": {
     "description": "Obtén las últimas actualizaciones, ofertas exclusivas y consejos técnicos entregados en tu bandeja de entrada",
     "thanks": "¡Gracias por suscribirte!"
+  },
+  "checkoutFinal": {
+    "continueShopping": "Continuar Comprando",
+    "orderConfirmed": "Pedido Confirmado",
+    "orderNumber": "Número de Pedido",
+    "estimatedDelivery": "Entrega Estimada"
+  },
+  "wishlistPage": {
+    "title": "Mi Lista de Deseos",
+    "empty": "Tu lista de deseos está vacía",
+    "addToCart": "Agregar al carrito"
   },
   "validation": {
     "cardNumberInvalid": "Número de tarjeta inválido",

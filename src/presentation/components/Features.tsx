@@ -1,29 +1,31 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const Features: React.FC = () => {
+  const { t } = useTranslation();
   const features = [
     {
       icon: "🚚",
-      title: "Free Shipping",
-      desc: "On orders over $50",
+      title: t("features.freeShippingTitle"),
+      desc: t("features.freeShippingDesc"),
       color: "#0066ff",
     },
     {
       icon: "💰",
-      title: "Money Back Guarantee",
-      desc: "30 days return policy",
+      title: t("features.moneyBackTitle"),
+      desc: t("features.moneyBackDesc"),
       color: "#10b981",
     },
     {
       icon: "💬",
-      title: "Online Support",
-      desc: "24/7 customer service",
+      title: t("features.supportTitle"),
+      desc: t("features.supportDesc"),
       color: "#f59e0b",
     },
     {
       icon: "🔒",
-      title: "Secure Payment",
-      desc: "100% secure transactions",
+      title: t("features.secureTitle"),
+      desc: t("features.secureDesc"),
       color: "#ef4444",
     },
   ];

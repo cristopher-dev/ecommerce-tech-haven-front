@@ -291,7 +291,7 @@ const ProductPage: React.FC = () => {
         <Header />
         <main className="container my-4">
           <div className="alert alert-danger">
-            Product not found. <Link to="/">Back to Home</Link>
+            Product not found. <Link to="/">{t("common.back")}</Link>
           </div>
         </main>
         <Footer />
@@ -306,7 +306,7 @@ const ProductPage: React.FC = () => {
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
-              <Link to="/">Home</Link>
+              <Link to="/">{t("header.home")}</Link>
             </li>
             <li className="breadcrumb-item active" aria-current="page">
               Product

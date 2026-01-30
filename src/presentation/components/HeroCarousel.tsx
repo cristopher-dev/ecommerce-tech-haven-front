@@ -1,6 +1,8 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const HeroCarousel: React.FC = () => {
+  const { t } = useTranslation();
   return (
     <div
       id="heroCarousel"
@@ -54,7 +56,7 @@ const HeroCarousel: React.FC = () => {
                   textShadow: "0 2px 10px rgba(0,0,0,0.3)",
                 }}
               >
-                Welcome to TechHaven
+                {t("homePage.welcome")}
               </h1>
               <p
                 style={{
@@ -63,7 +65,7 @@ const HeroCarousel: React.FC = () => {
                   textShadow: "0 2px 10px rgba(0,0,0,0.3)",
                 }}
               >
-                Discover the latest in technology & innovation
+                {t("homePage.discover")}
               </p>
               <button
                 className="btn btn-light"

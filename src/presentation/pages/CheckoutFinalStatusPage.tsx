@@ -1,11 +1,13 @@
 import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "@/application/store/hooks";
 import { clearCheckout } from "@/application/store/slices/checkoutSlice";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 const CheckoutFinalStatusPage: React.FC = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const checkout = useAppSelector((state) => state.checkout);
@@ -179,10 +181,10 @@ const CheckoutFinalStatusPage: React.FC = () => {
                     className="btn btn-primary btn-lg"
                     onClick={handleReturnHome}
                   >
-                    Continue Shopping
+                    {t("checkoutFinal.continueShopping")}
                   </button>
                   <Link to="/" className="btn btn-outline-secondary">
-                    Back to Home
+                    {t("common.back")}
                   </Link>
                 </div>
 

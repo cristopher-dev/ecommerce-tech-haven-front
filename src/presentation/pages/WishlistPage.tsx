@@ -123,10 +123,10 @@ const WishlistPage: React.FC = () => {
                           <button
                             className="btn btn-sm btn-success me-2"
                             onClick={() => handleMoveToCart(item.product)}
-                            title="Add to cart"
+                            title={t("wishlistPage.addToCart")}
                           >
                             <i className="bi bi-bag-plus me-1"></i>
-                            Add to Cart
+                            {t("common.add")}
                           </button>
                           <button
                             className="btn btn-sm btn-outline-danger"

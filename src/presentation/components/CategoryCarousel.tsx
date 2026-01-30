@@ -1,6 +1,8 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const CategoryCarousel: React.FC = () => {
+  const { t } = useTranslation();
   const categories = [
     {
       name: "Electronics",
@@ -32,7 +34,7 @@ const CategoryCarousel: React.FC = () => {
   return (
     <section className="py-5 bg-light">
       <div className="container">
-        <h2 className="mb-4">Shop by Category</h2>
+        <h2 className="mb-4">{t("homePage.shopByCategory")}</h2>
         <div
           id="categoryCarousel"
           className="carousel slide"

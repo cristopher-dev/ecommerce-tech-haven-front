@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Product } from "@/domain/entities/Product";
 import { useAppDispatch } from "@/application/store/hooks";
 import { addToCart } from "@/application/store/slices/cartSlice";
@@ -14,6 +15,7 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { items: wishlistItems } = useWishlist();
@@ -223,7 +225,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             className="bi bi-bag-plus me-1"
             style={{ fontSize: "0.75rem" }}
           ></i>
-          Add to Cart
+          {t("common.add")}
         </button>
         <button
           className="btn btn-success w-100"
@@ -251,7 +253,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             className="bi bi-cart-check me-1"
             style={{ fontSize: "0.75rem" }}
           ></i>
-          Buy Now
+          {t("productPage.buyNow")}
         </button>
       </div>
     </div>

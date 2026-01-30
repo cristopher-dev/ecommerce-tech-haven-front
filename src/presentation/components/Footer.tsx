@@ -97,10 +97,10 @@ const Footer: React.FC = () => {
             </h6>
             <ul style={{ listStyle: "none", padding: 0 }}>
               {[
-                { label: "Contact Us", icon: "✉️" },
-                { label: "Shipping Info", icon: "🚚" },
-                { label: "Returns", icon: "↩️" },
-                { label: "FAQ", icon: "❓" },
+                { label: t("footer.contactUs"), icon: "✉️" },
+                { label: t("footer.shippingInfo"), icon: "🚚" },
+                { label: t("footer.returns"), icon: "↩️" },
+                { label: t("footer.faq"), icon: "❓" },
               ].map((item) => (
                 <li key={item.label}>
                   <a
@@ -126,14 +126,14 @@ const Footer: React.FC = () => {
                 color: "white",
               }}
             >
-              👤 My Account
+              👤 {t("footer.myAccount")}
             </h6>
             <ul style={{ listStyle: "none", padding: 0 }}>
               {[
-                { label: "Sign In", icon: "🔐" },
-                { label: "View Cart", icon: "🛒" },
-                { label: "My Wishlist", icon: "❤️" },
-                { label: "Track Order", icon: "📦" },
+                { label: t("footer.signIn"), icon: "🔐" },
+                { label: t("footer.viewCart"), icon: "🛒" },
+                { label: t("footer.myWishlist"), icon: "❤️" },
+                { label: t("footer.trackOrder"), icon: "📦" },
               ].map((item) => (
                 <li key={item.label}>
                   <a
@@ -159,7 +159,7 @@ const Footer: React.FC = () => {
                 color: "white",
               }}
             >
-              💳 Payment Methods
+              💳 {t("footer.paymentMethods")}
             </h6>
             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>
               {[
@@ -229,7 +229,7 @@ const Footer: React.FC = () => {
               onMouseEnter={(e) => (e.currentTarget.style.color = "#0066ff")}
               onMouseLeave={(e) => (e.currentTarget.style.color = "#b0b0b0")}
             >
-              Privacy Policy
+              {t("footer.privacyPolicy")}
             </a>
             <a
               href="#"
@@ -237,7 +237,7 @@ const Footer: React.FC = () => {
               onMouseEnter={(e) => (e.currentTarget.style.color = "#0066ff")}
               onMouseLeave={(e) => (e.currentTarget.style.color = "#b0b0b0")}
             >
-              Terms of Service
+              {t("footer.termsOfService")}
             </a>
           </div>
         </div>

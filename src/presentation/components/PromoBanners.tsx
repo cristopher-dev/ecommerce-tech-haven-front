@@ -1,6 +1,8 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const PromoBanners: React.FC = () => {
+  const { t } = useTranslation();
   return (
     <section className="py-4 bg-light">
       <div className="container">
@@ -14,9 +16,15 @@ const PromoBanners: React.FC = () => {
               />
               <div className="card-img-overlay d-flex align-items-center">
                 <div>
-                  <h5 className="card-title text-white">Get 20% Off</h5>
-                  <p className="card-text text-white">On your first purchase</p>
-                  <button className="btn btn-light">Claim Now</button>
+                  <h5 className="card-title text-white">
+                    {t("promoBanners.discount")}
+                  </h5>
+                  <p className="card-text text-white">
+                    {t("promoBanners.firstPurchase")}
+                  </p>
+                  <button className="btn btn-light">
+                    {t("promoBanners.claim")}
+                  </button>
                 </div>
               </div>
             </div>
@@ -30,9 +38,15 @@ const PromoBanners: React.FC = () => {
               />
               <div className="card-img-overlay d-flex align-items-center">
                 <div>
-                  <h5 className="card-title text-white">Exclusive Deals</h5>
-                  <p className="card-text text-white">Limited time offers</p>
-                  <button className="btn btn-light">Shop Now</button>
+                  <h5 className="card-title text-white">
+                    {t("promoBanners.exclusive")}
+                  </h5>
+                  <p className="card-text text-white">
+                    {t("promoBanners.limitedTime")}
+                  </p>
+                  <button className="btn btn-light">
+                    {t("promoBanners.shop")}
+                  </button>
                 </div>
               </div>
             </div>

@@ -1,6 +1,8 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const BrandCarousel: React.FC = () => {
+  const { t } = useTranslation();
   const brands = [
     "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Apple_logo_black.svg/200px-Apple_logo_black.svg.png",
     "https://1000logos.net/wp-content/uploads/2017/06/Samsung-Logo.png",
@@ -13,7 +15,7 @@ const BrandCarousel: React.FC = () => {
   return (
     <section className="py-5">
       <div className="container">
-        <h2 className="mb-4">Our Brands</h2>
+        <h2 className="mb-4">{t("homePage.ourBrands")}</h2>
         <div
           id="brandCarousel"
           className="carousel slide"
