@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const Newsletter: React.FC = () => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
@@ -60,7 +62,7 @@ const Newsletter: React.FC = () => {
               textShadow: "0 2px 10px rgba(0,0,0,0.1)",
             }}
           >
-            📬 Subscribe to Our Newsletter
+            📬 {t("footer.newsletter")}
           </h2>
           <p
             style={{
@@ -69,8 +71,7 @@ const Newsletter: React.FC = () => {
               opacity: 0.9,
             }}
           >
-            Get the latest updates, exclusive offers, and tech tips delivered to
-            your inbox
+            {t("newsletter.description")}
           </p>
 
           <div className="row justify-content-center">
@@ -88,7 +89,7 @@ const Newsletter: React.FC = () => {
                 <input
                   type="email"
                   className="form-control"
-                  placeholder="Enter your email address"
+                  placeholder={t("common.email")}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -113,7 +114,7 @@ const Newsletter: React.FC = () => {
                     e.currentTarget.style.transform = "translateX(0)";
                   }}
                 >
-                  ✉️ Subscribe
+                  ✉️ {t("common.submit")}
                 </button>
               </form>
               {submitted && (
@@ -124,7 +125,7 @@ const Newsletter: React.FC = () => {
                     animation: "fadeIn 0.3s ease",
                   }}
                 >
-                  ✅ Thanks for subscribing!
+                  ✅ {t("newsletter.thanks")}
                 </div>
               )}
             </div>

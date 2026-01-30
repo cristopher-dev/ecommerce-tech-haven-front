@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAppDispatch, useWishlist } from "@/application/store/hooks";
 import {
   removeFromWishlist,
@@ -11,6 +12,7 @@ import Header from "@/presentation/components/Header";
 import Footer from "@/presentation/components/Footer";
 
 const WishlistPage: React.FC = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { items, count } = useWishlist();
 
@@ -36,28 +38,30 @@ const WishlistPage: React.FC = () => {
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
-              <Link to="/">Home</Link>
+              <Link to="/">{t("header.home")}</Link>
             </li>
-            <li className="breadcrumb-item active">Wishlist</li>
+            <li className="breadcrumb-item active">{t("header.wishlist")}</li>
           </ol>
         </nav>
 
         <h1 className="mb-4">
           <i className="bi bi-heart-fill text-danger me-2"></i>
-          My Wishlist{" "}
+          {t("wishlistPage.title")}{" "}
           {count > 0 && <span className="badge bg-danger ms-2">{count}</span>}
         </h1>
 
         {items.length === 0 ? (
           <div className="text-center py-5">
             <i className="bi bi-heart fs-1 text-muted mb-3 d-block"></i>
-            <h3 className="text-muted mb-3">Your wishlist is empty</h3>
+            <h3 className="text-muted mb-3">
+              {t("wishlistPage.emptyWishlist")}
+            </h3>
             <p className="text-muted mb-4">
-              Add items to your wishlist to save them for later!
+              {t("wishlistPage.addItemsMessage")}
             </p>
             <Link to="/product" className="btn btn-primary">
               <i className="bi bi-shop me-2"></i>
-              Continue Shopping
+              {t("cartPage.continueShoping")}
             </Link>
           </div>
         ) : (
@@ -67,15 +71,15 @@ const WishlistPage: React.FC = () => {
                 <table className="table align-middle">
                   <thead className="table-light">
                     <tr>
-                      <th scope="col">Product</th>
+                      <th scope="col">{t("wishlistPage.product")}</th>
                       <th scope="col" className="text-end">
-                        Price
+                        {t("wishlistPage.price")}
                       </th>
                       <th scope="col" className="text-center">
                         Stock
                       </th>
                       <th scope="col" className="text-end">
-                        Action
+                        {t("wishlistPage.action")}
                       </th>
                     </tr>
                   </thead>

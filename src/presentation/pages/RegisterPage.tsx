@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 import { AppDispatch, RootState } from "@/application/store/store";
 import { register } from "@/application/store/slices/authSlice";
 import { ValidationErrors } from "@/shared/types/auth";
@@ -15,6 +16,7 @@ interface FormData {
 }
 
 export default function RegisterPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { isLoading, error } = useSelector((state: RootState) => state.auth);
@@ -34,29 +36,29 @@ export default function RegisterPage() {
     const newErrors: ValidationErrors = {};
 
     if (!formData.firstName.trim()) {
-      newErrors.firstName = "First name is required";
+      newErrors.firstName = t("errors.required");
     }
 
     if (!formData.lastName.trim()) {
-      newErrors.lastName = "Last name is required";
+      newErrors.lastName = t("errors.required");
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
+      newErrors.email = t("errors.required");
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Email is invalid";
+      newErrors.email = t("errors.invalidEmail");
     }
 
     if (!formData.password) {
-      newErrors.password = "Password is required";
+      newErrors.password = t("errors.required");
     } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
+      newErrors.password = t("errors.passwordTooShort");
     }
 
     if (!formData.confirmPassword) {
-      newErrors.confirmPassword = "Please confirm your password";
+      newErrors.confirmPassword = t("errors.required");
     } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
+      newErrors.confirmPassword = t("errors.passwordMismatch");
     }
 
     setErrors(newErrors);
@@ -102,15 +104,15 @@ export default function RegisterPage() {
     <div className="register-page-fullscreen">
       <main className="register-container">
         <div className="register-card">
-          <h1>Create Your Account</h1>
-          <p>Join TechHaven to start shopping</p>
+          <h1>{t("authPage.register.title")}</h1>
+          <p>{t("homePage.hero")}</p>
 
           {error && <div className="alert alert-danger">{error}</div>}
 
           <form onSubmit={handleSubmit}>
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="firstName">First Name</label>
+                <label htmlFor="firstName">{t("common.firstName")}</label>
                 <input
                   type="text"
                   id="firstName"
@@ -129,7 +131,7 @@ export default function RegisterPage() {
               </div>
 
               <div className="form-group">
-                <label htmlFor="lastName">Last Name</label>
+                <label htmlFor="lastName">{t("common.lastName")}</label>
                 <input
                   type="text"
                   id="lastName"
@@ -149,7 +151,7 @@ export default function RegisterPage() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="email">Email Address</label>
+              <label htmlFor="email">{t("common.email")}</label>
               <input
                 type="email"
                 id="email"
@@ -166,7 +168,7 @@ export default function RegisterPage() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="password">Password</label>
+              <label htmlFor="password">{t("common.password")}</label>
               <input
                 type="password"
                 id="password"
@@ -185,7 +187,9 @@ export default function RegisterPage() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="confirmPassword">Confirm Password</label>
+              <label htmlFor="confirmPassword">
+                {t("common.confirmPassword")}
+              </label>
               <input
                 type="password"
                 id="confirmPassword"
@@ -210,12 +214,13 @@ export default function RegisterPage() {
               className="btn btn-primary btn-register"
               disabled={isLoading}
             >
-              {isLoading ? "Creating Account..." : "Create Account"}
+              {isLoading ? t("common.loading") : t("authPage.register.submit")}
             </button>
           </form>
 
           <p className="login-link">
-            Already have an account? <a href="/login">Log in here</a>
+            {t("authPage.register.alreadyAccount")}{" "}
+            <a href="/login">{t("authPage.register.signin")}</a>
           </p>
         </div>
       </main>

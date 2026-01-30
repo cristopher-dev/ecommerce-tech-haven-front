@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 import {
   useWishlist,
   useCartItems,
@@ -16,6 +17,7 @@ import { RootState } from "@/application/store/store";
 import "@/styles/components/Header.scss";
 
 const Header: React.FC = () => {
+  const { t } = useTranslation();
   const { totalItems, total, items } = useCartItems();
   const { count: wishlistCount } = useWishlist();
   const dispatch = useAppDispatch();
@@ -62,7 +64,7 @@ const Header: React.FC = () => {
       dispatch(setToken(data.token));
     } catch (error) {
       console.error("Login error:", error);
-      alert("Login failed. Please try again.");
+      alert(t("errors.loginFailed"));
     }
   };
 
@@ -127,32 +129,33 @@ const Header: React.FC = () => {
                             type="button"
                             data-bs-toggle="dropdown"
                           >
-                            <i className="bi bi-grid me-1"></i> All Categories
+                            <i className="bi bi-grid me-1"></i>{" "}
+                            {t("header.categories")}
                           </button>
                           <ul className="dropdown-menu">
                             <li>
                               <a className="dropdown-item" href="#">
-                                All Categories
+                                {t("header.allCategories")}
                               </a>
                             </li>
                             <li>
                               <a className="dropdown-item" href="#">
-                                Electronics
+                                {t("header.electronics")}
                               </a>
                             </li>
                             <li>
                               <a className="dropdown-item" href="#">
-                                Fashion
+                                {t("header.fashion")}
                               </a>
                             </li>
                             <li>
                               <a className="dropdown-item" href="#">
-                                Home & Garden
+                                {t("header.homeGarden")}
                               </a>
                             </li>
                             <li>
                               <a className="dropdown-item" href="#">
-                                Sports
+                                {t("header.sports")}
                               </a>
                             </li>
                           </ul>
@@ -160,10 +163,11 @@ const Header: React.FC = () => {
                         <input
                           type="search"
                           className="form-control border-start-0 border-end-0"
-                          placeholder="Search for products..."
+                          placeholder={t("header.search")}
                         />
                         <button className="btn btn-primary" type="submit">
-                          <i className="bi bi-search me-2"></i>Search
+                          <i className="bi bi-search me-2"></i>
+                          {t("common.search")}
                         </button>
                       </div>
                     </form>
@@ -196,7 +200,7 @@ const Header: React.FC = () => {
                                 className="text-muted d-block lh-1"
                                 style={{ fontSize: "0.7rem" }}
                               >
-                                Account
+                                {t("common.account")}
                               </small>
                               <span
                                 className="fw-600 d-block lh-1"
@@ -226,7 +230,8 @@ const Header: React.FC = () => {
                                 className="dropdown-item"
                                 to="/account/profile"
                               >
-                                <i className="bi bi-person me-2"></i>My Profile
+                                <i className="bi bi-person me-2"></i>
+                                {t("header.myProfile")}
                               </Link>
                             </li>
                             <li>
@@ -238,7 +243,7 @@ const Header: React.FC = () => {
                                 onClick={handleLogout}
                               >
                                 <i className="bi bi-box-arrow-right me-2"></i>
-                                Logout
+                                {t("common.logout")}
                               </button>
                             </li>
                           </ul>
@@ -259,13 +264,13 @@ const Header: React.FC = () => {
                               className="text-muted d-block lh-1"
                               style={{ fontSize: "0.7rem" }}
                             >
-                              Account
+                              {t("common.account")}
                             </small>
                             <span
                               className="fw-600 d-block lh-1"
                               style={{ fontSize: "0.85rem" }}
                             >
-                              Login
+                              {t("common.login")}
                             </span>
                           </div>
                         </button>
@@ -314,13 +319,13 @@ const Header: React.FC = () => {
                             className="text-muted d-block lh-1"
                             style={{ fontSize: "0.7rem" }}
                           >
-                            Favorites
+                            {t("common.favorites")}
                           </small>
                           <span
                             className="fw-600 d-block lh-1"
                             style={{ fontSize: "0.85rem" }}
                           >
-                            Wishlist
+                            {t("header.wishlist")}
                           </span>
                         </div>
                       </Link>
@@ -373,7 +378,7 @@ const Header: React.FC = () => {
                               className="text-muted d-block lh-1"
                               style={{ fontSize: "0.7rem" }}
                             >
-                              Cart Total
+                              {t("cartPage.total")}
                             </small>
                             <span
                               className="fw-600 d-block lh-1 text-success"
@@ -397,7 +402,7 @@ const Header: React.FC = () => {
                           <li className="p-3 border-bottom bg-light rounded-top-3">
                             <h6 className="mb-0 fw-bold">
                               <i className="bi bi-bag me-2 text-success"></i>
-                              Shopping Cart
+                              {t("cartPage.title")}
                             </h6>
                           </li>
 
@@ -406,7 +411,7 @@ const Header: React.FC = () => {
                               <div className="p-4 text-center">
                                 <i className="bi bi-bag-x fs-1 text-muted mb-3 d-block"></i>
                                 <p className="text-muted mb-0">
-                                  Your cart is empty
+                                  {t("cartPage.emptyCart")}
                                 </p>
                               </div>
                             </li>
@@ -458,7 +463,7 @@ const Header: React.FC = () => {
 
                               <li className="p-3">
                                 <div className="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
-                                  <strong>Subtotal:</strong>
+                                  <strong>{t("cartPage.subtotal")}:</strong>
                                   <span className="text-success fw-bold">
                                     ${total.toFixed(2)}
                                   </span>
@@ -468,13 +473,13 @@ const Header: React.FC = () => {
                                     className="btn btn-sm btn-outline-primary flex-fill"
                                     to="/cart"
                                   >
-                                    View Cart
+                                    {t("cartPage.title")}
                                   </Link>
                                   <Link
                                     className="btn btn-sm btn-success flex-fill"
                                     to="/checkout"
                                   >
-                                    Checkout
+                                    {t("checkoutPage.title")}
                                   </Link>
                                 </div>
                               </li>

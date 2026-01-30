@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 import { AppDispatch, RootState } from "@/application/store/store";
 import { login } from "@/application/store/slices/authSlice";
 import { ValidationErrors } from "@/shared/types/auth";
@@ -12,6 +13,7 @@ interface FormData {
 }
 
 export default function LoginPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const { isLoading, error } = useSelector((state: RootState) => state.auth);
@@ -28,13 +30,13 @@ export default function LoginPage() {
     const newErrors: ValidationErrors = {};
 
     if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
+      newErrors.email = t("errors.required");
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = "Email is invalid";
+      newErrors.email = t("errors.invalidEmail");
     }
 
     if (!formData.password) {
-      newErrors.password = "Password is required";
+      newErrors.password = t("errors.required");
     }
 
     setErrors(newErrors);
@@ -77,14 +79,14 @@ export default function LoginPage() {
     <div className="login-page-fullscreen">
       <main className="login-container">
         <div className="login-card">
-          <h1>Welcome Back</h1>
-          <p>Log in to your TechHaven account</p>
+          <h1>{t("common.welcome")}</h1>
+          <p>{t("authPage.login.title")}</p>
 
           {error && <div className="alert alert-danger">{error}</div>}
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="email">Email Address</label>
+              <label htmlFor="email">{t("common.email")}</label>
               <input
                 type="email"
                 id="email"
@@ -101,7 +103,7 @@ export default function LoginPage() {
             </div>
 
             <div className="form-group">
-              <label htmlFor="password">Password</label>
+              <label htmlFor="password">{t("common.password")}</label>
               <input
                 type="password"
                 id="password"
@@ -124,18 +126,19 @@ export default function LoginPage() {
               className="btn btn-primary btn-login"
               disabled={isLoading}
             >
-              {isLoading ? "Logging in..." : "Log In"}
+              {isLoading ? t("common.loading") : t("common.login")}
             </button>
           </form>
 
           <div className="additional-links">
             <a href="#forgot-password" className="forgot-password">
-              Forgot password?
+              {t("authPage.login.forgotPassword")}
             </a>
           </div>
 
           <p className="register-link">
-            Don't have an account? <a href="/register">Sign up here</a>
+            {t("authPage.login.noAccount")}{" "}
+            <a href="/register">{t("authPage.login.signup")}</a>
           </p>
         </div>
       </main>

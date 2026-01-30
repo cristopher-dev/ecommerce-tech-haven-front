@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import Header from "../components/Header";
 import HeroCarousel from "../components/HeroCarousel";
 import PromoBanners from "../components/PromoBanners";
@@ -12,6 +13,7 @@ import RecentProducts from "../components/RecentProducts";
 import TopRatedProducts from "../components/TopRatedProducts";
 
 const HomePage: React.FC = () => {
+  const { t } = useTranslation();
   return (
     <div>
       <Header />
@@ -22,10 +24,10 @@ const HomePage: React.FC = () => {
         <Features />
       </div>
       <div className="fade show">
-        <ProductSection title="Flash Deals" />
+        <ProductSection title={t("homePage.flashDeals")} />
       </div>
       <div className="fade show">
-        <ProductSection title="Most Viewed Products" />
+        <ProductSection title={t("homePage.mostViewed")} />
       </div>
       <div className="fade show">
         <PromoBanners />
@@ -34,7 +36,7 @@ const HomePage: React.FC = () => {
         <CategoryCarousel />
       </div>
       <div className="fade show">
-        <ProductSection title="Best Sellers on Electronics" />
+        <ProductSection title={t("homePage.bestSellers")} />
       </div>
       <div className="fade show">
         <RecentProducts />

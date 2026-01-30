@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const Footer: React.FC = () => {
+  const { t } = useTranslation();
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
 
   const linkStyle = (key: string) => ({
@@ -39,7 +41,7 @@ const Footer: React.FC = () => {
               🏪 TechHaven
             </div>
             <p style={{ color: "#b0b0b0", lineHeight: "1.6" }}>
-              Your one-stop shop for all tech needs and innovations.
+              {t("footer.description")}
             </p>
             <div style={{ display: "flex", gap: "0.75rem" }}>
               {[
@@ -91,7 +93,7 @@ const Footer: React.FC = () => {
                 color: "white",
               }}
             >
-              📞 Customer Service
+              📞 {t("footer.customerService")}
             </h6>
             <ul style={{ listStyle: "none", padding: 0 }}>
               {[

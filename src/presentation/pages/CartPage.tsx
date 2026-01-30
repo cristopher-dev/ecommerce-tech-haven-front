@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAppDispatch } from "@/application/store/hooks";
 import {
   removeFromCart,
@@ -10,6 +11,7 @@ import Header from "@/presentation/components/Header";
 import Footer from "@/presentation/components/Footer";
 
 const CartPage: React.FC = () => {
+  const { t } = useTranslation();
   const { items, total } = useCartItems();
   const dispatch = useAppDispatch();
 
@@ -26,28 +28,28 @@ const CartPage: React.FC = () => {
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
-              <Link to="/">Home</Link>
+              <Link to="/">{t("header.home")}</Link>
             </li>
             <li className="breadcrumb-item active" aria-current="page">
-              Cart
+              {t("cartPage.title")}
             </li>
           </ol>
         </nav>
-        <h1 className="mb-4">Shopping Cart</h1>
+        <h1 className="mb-4">{t("cartPage.title")}</h1>
         {items.length === 0 ? (
-          <p>Your cart is empty.</p>
+          <p>{t("cartPage.emptyCart")}</p>
         ) : (
           <>
             <div className="table-responsive">
               <table className="table table-striped">
                 <thead>
                   <tr>
-                    <th>Product</th>
+                    <th>{t("cartPage.product")}</th>
                     <th>Image</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Total</th>
-                    <th>Actions</th>
+                    <th>{t("cartPage.quantity")}</th>
+                    <th>{t("cartPage.price")}</th>
+                    <th>{t("common.total")}</th>
+                    <th>{t("common.remove")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -87,7 +89,7 @@ const CartPage: React.FC = () => {
                             dispatch(removeFromCart(item.product.id))
                           }
                         >
-                          Remove
+                          {t("common.remove")}
                         </button>
                       </td>
                     </tr>
@@ -97,9 +99,11 @@ const CartPage: React.FC = () => {
             </div>
             <div className="row">
               <div className="col-12 text-end">
-                <h4>Total: ${total.toFixed(2)}</h4>
+                <h4>
+                  {t("common.total")}: ${total.toFixed(2)}
+                </h4>
                 <Link to="/checkout/delivery" className="btn btn-success">
-                  Proceed to Checkout
+                  {t("checkoutPage.title")}
                 </Link>
               </div>
             </div>

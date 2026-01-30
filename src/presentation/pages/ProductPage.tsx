@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useCart } from "../../infrastructure/hooks/useCart";
@@ -14,6 +15,7 @@ import { TechHavenApiProductRepository } from "@/infrastructure/adapters/TechHav
 import type { ProductDTO } from "@/infrastructure/api/techHavenApiClient";
 
 const ProductPage: React.FC = () => {
+  const { t } = useTranslation();
   const { addToCart } = useCart();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -134,23 +136,27 @@ const ProductPage: React.FC = () => {
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb">
               <li className="breadcrumb-item">
-                <Link to="/">Home</Link>
+                <Link to="/">{t("header.home")}</Link>
               </li>
-              <li className="breadcrumb-item active">Search Results</li>
+              <li className="breadcrumb-item active">
+                {t("productPage.searchResults")}
+              </li>
             </ol>
           </nav>
 
           <h2 className="mb-4">
-            Search Results for "{searchQuery}"
+            {t("productPage.searchFor")} "{searchQuery}"
             {products.length > 0 && (
-              <span className="text-muted ms-2">({products.length} found)</span>
+              <span className="text-muted ms-2">
+                ({products.length} {t("productPage.found")})
+              </span>
             )}
           </h2>
 
           {products.length === 0 ? (
             <div className="alert alert-info">
-              No products found matching "{searchQuery}".{" "}
-              <Link to="/">Back to Home</Link>
+              {t("productPage.noFound")} "{searchQuery}".{" "}
+              <Link to="/">{t("common.back")}</Link>
             </div>
           ) : (
             <div className="row">
@@ -192,8 +198,8 @@ const ProductPage: React.FC = () => {
                         }}
                         title={
                           isInWishlist(p.id)
-                            ? "Remove from wishlist"
-                            : "Add to wishlist"
+                            ? t("productPage.removeFromWishlist")
+                            : t("productPage.addToWishlist")
                         }
                       >
                         <i
@@ -211,7 +217,8 @@ const ProductPage: React.FC = () => {
                         ${(p.price / 100).toFixed(2)}
                       </p>
                       <small className="text-muted">
-                        Stock: {p.stock} units
+                        {t("productPage.stock")}: {p.stock}{" "}
+                        {t("productPage.units")}
                       </small>
                     </div>
                     <div className="card-footer bg-transparent d-grid gap-2">
@@ -233,7 +240,9 @@ const ProductPage: React.FC = () => {
                         }}
                         disabled={p.stock === 0}
                       >
-                        {p.stock === 0 ? "Out of Stock" : "Add to Cart"}
+                        {p.stock === 0
+                          ? t("productPage.outOfStock")
+                          : t("common.add")}
                       </button>
                       <button
                         className="btn btn-sm btn-success"
@@ -255,13 +264,13 @@ const ProductPage: React.FC = () => {
                         disabled={p.stock === 0}
                       >
                         <i className="bi bi-cart-check me-1"></i>
-                        Buy Now
+                        {t("productPage.buyNow")}
                       </button>
                       <Link
                         to={`/product?id=${p.id}`}
                         className="btn btn-sm btn-outline-secondary"
                       >
-                        View Details
+                        {t("productPage.viewDetails")}
                       </Link>
                     </div>
                   </div>
