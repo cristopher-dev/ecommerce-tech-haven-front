@@ -1,4 +1,4 @@
-import { User, UserProfile } from "@/domain/entities/User";
+import { UserProfile } from "@/domain/entities/User";
 import { RegisterRequest } from "@/shared/types/auth";
 
 export interface IAuthRepository {
@@ -30,6 +30,6 @@ export class RegisterUseCase {
     }
 
     const { user: userProfile } = await this.authRepository.register(request);
-    return new User(userProfile);
+    return userProfile;
   }
 }

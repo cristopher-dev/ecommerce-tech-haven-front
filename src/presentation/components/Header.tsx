@@ -9,7 +9,6 @@ import {
 import { removeFromCart } from "@/application/store/slices/cartSlice";
 import { logout, setUser } from "@/application/store/slices/authSlice";
 import { RootState } from "@/application/store/store";
-import { User } from "@/domain/entities/User";
 import "@/styles/components/Header.scss";
 
 const Header: React.FC = () => {
@@ -25,15 +24,17 @@ const Header: React.FC = () => {
   };
 
   const handleMockLogin = () => {
-    const mockUser = new User(
-      "1",
-      "admin@techhaven.com",
-      "Admin",
-      "User",
-      "123456789",
-      new Date(),
-    );
-    dispatch(setUser(mockUser));
+    const mockUserData = {
+      id: "1",
+      email: "admin@techhaven.com",
+      firstName: "Admin",
+      lastName: "User",
+      role: "ADMIN" as const,
+      phone: "123456789",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    dispatch(setUser(mockUserData));
   };
 
   return (
@@ -57,13 +58,19 @@ const Header: React.FC = () => {
               <div className="header-main bg-white border-bottom">
                 <div className="row align-items-center py-2 py-md-3">
                   {/* Logo */}
-                  <div className="col-6 col-md-3 col-lg-2">
+                  <div className="col-6 col-md-3 col-lg-2 d-flex justify-content-center align-items-center">
                     <Link className="navbar-brand d-block" to="/">
                       <img
                         alt="TechHaven"
                         className="img-fluid"
-                        src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&h=50&q=80"
-                        style={{ maxHeight: "50px" }}
+                        src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3"
+                        style={{
+                          maxHeight: "50px",
+                          width: "50px",
+                          height: "50px",
+                          objectFit: "contain",
+                          borderRadius: "12px",
+                        }}
                       />
                     </Link>
                   </div>
@@ -114,7 +121,7 @@ const Header: React.FC = () => {
                           placeholder="Search for products..."
                         />
                         <button className="btn btn-primary" type="submit">
-                          <i className="bi bi-search"></i>
+                          <i className="bi bi-search me-2"></i>Search
                         </button>
                       </div>
                     </form>
@@ -160,7 +167,9 @@ const Header: React.FC = () => {
                           <ul className="dropdown-menu dropdown-menu-end">
                             <li>
                               <span className="dropdown-item-text">
-                                <strong>{user.getFullName()}</strong>
+                                <strong>
+                                  {user.firstName} {user.lastName}
+                                </strong>
                                 <br />
                                 <small className="text-muted">
                                   {user.email}

@@ -1,4 +1,4 @@
-import { User, UserProfile } from "@/domain/entities/User";
+import { UserProfile } from "@/domain/entities/User";
 
 export interface IAuthRepository {
   register(request: {
@@ -32,6 +32,6 @@ export class LoginUseCase {
       email,
       password,
     );
-    return { user: new User(userProfile), token };
+    return { user: userProfile, token };
   }
 }

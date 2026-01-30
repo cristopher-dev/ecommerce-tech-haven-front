@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { User } from "@/domain/entities/User";
+import { UserProfile } from "@/domain/entities/User";
 import {
   RegisterUseCase,
   IAuthRepository,
@@ -63,7 +63,7 @@ const authSlice = createSlice({
       state.error = null;
       localStorage.removeItem("authToken");
     },
-    setUser: (state, action: PayloadAction<User>) => {
+    setUser: (state, action: PayloadAction<UserProfile>) => {
       state.user = action.payload;
       state.isAuthenticated = true;
     },

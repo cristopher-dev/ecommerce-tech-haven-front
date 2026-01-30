@@ -10,8 +10,8 @@ export interface UserProfile {
   state?: string;
   zipCode?: string;
   country?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export class User implements UserProfile {

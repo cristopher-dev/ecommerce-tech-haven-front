@@ -20,7 +20,7 @@ export interface AuthResponse {
 }
 
 export interface AuthState {
-  user: User | null;
+  user: UserProfile | null;
   token: string | null;
   isLoading: boolean;
   error: string | null;
