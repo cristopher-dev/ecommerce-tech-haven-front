@@ -17,8 +17,8 @@ export default function LoginPage() {
   const { isLoading, error } = useSelector((state: RootState) => state.auth);
 
   const [formData, setFormData] = useState<FormData>({
-    email: "",
-    password: "",
+    email: "admin@techhaven.com",
+    password: "admin123",
   });
 
   const [errors, setErrors] = useState<ValidationErrors>({});
