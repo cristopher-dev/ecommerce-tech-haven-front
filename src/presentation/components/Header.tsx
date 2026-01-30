@@ -7,8 +7,9 @@ import {
   useAppDispatch,
 } from "@/application/store/hooks";
 import { removeFromCart } from "@/application/store/slices/cartSlice";
-import { logout } from "@/application/store/slices/authSlice";
+import { logout, setUser } from "@/application/store/slices/authSlice";
 import { RootState } from "@/application/store/store";
+import { User } from "@/domain/entities/User";
 import "@/styles/components/Header.scss";
 
 const Header: React.FC = () => {
@@ -21,6 +22,18 @@ const Header: React.FC = () => {
   const handleLogout = () => {
     dispatch(logout());
     navigate("/");
+  };
+
+  const handleMockLogin = () => {
+    const mockUser = new User(
+      "1",
+      "admin@techhaven.com",
+      "Admin",
+      "User",
+      "123456789",
+      new Date(),
+    );
+    dispatch(setUser(mockUser));
   };
 
   return (
@@ -47,9 +60,9 @@ const Header: React.FC = () => {
                   <div className="col-6 col-md-3 col-lg-2">
                     <Link className="navbar-brand d-block" to="/">
                       <img
-                        src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&h=50&q=80"
                         alt="TechHaven"
                         className="img-fluid"
+                        src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&h=50&q=80"
                         style={{ maxHeight: "50px" }}
                       />
                     </Link>
@@ -188,15 +201,18 @@ const Header: React.FC = () => {
                           </ul>
                         </div>
                       ) : (
-                        <Link
-                          to="/login"
-                          className="header-action d-flex align-items-center justify-content-center justify-content-lg-start py-2 px-2 px-lg-3"
+                        <button
+                          onClick={handleMockLogin}
+                          className="btn d-flex align-items-center justify-content-center justify-content-lg-start py-2 px-2 px-lg-3"
                           style={{
                             minHeight: "44px",
                             borderRadius: "8px",
                             textDecoration: "none",
                             transition: "background-color 0.3s",
                             color: "inherit",
+                            background: "transparent",
+                            border: "1px solid #0d6efd",
+                            cursor: "pointer",
                           }}
                           onMouseEnter={(e) =>
                             (e.currentTarget.style.backgroundColor = "#f5f5f5")
@@ -205,6 +221,7 @@ const Header: React.FC = () => {
                             (e.currentTarget.style.backgroundColor =
                               "transparent")
                           }
+                          title="Demo: Click to login as Admin"
                         >
                           <i className="bi bi-person-circle fs-5 text-primary"></i>
                           <div className="ms-2 d-none d-lg-block">
@@ -221,7 +238,7 @@ const Header: React.FC = () => {
                               Login
                             </span>
                           </div>
-                        </Link>
+                        </button>
                       )}
 
                       {/* Wishlist */}
