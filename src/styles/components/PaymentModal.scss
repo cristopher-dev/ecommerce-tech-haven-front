@@ -119,6 +119,128 @@
   }
 }
 
+// Credit Card Preview Styles
+.card-preview-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+  perspective: 1000px;
+
+  .card-preview {
+    position: relative;
+    width: 100%;
+    max-width: 320px;
+    height: 200px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: translateY(-5px);
+    }
+
+    .card-preview-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .card-preview-info {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px;
+      color: white;
+      pointer-events: none;
+
+      .card-number-display {
+        font-family: "Courier New", monospace;
+        font-size: 1.3rem;
+        letter-spacing: 0.15em;
+        font-weight: 600;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+        .card-digit-group {
+          display: inline-block;
+          margin-right: 8px;
+        }
+      }
+
+      .card-details {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+
+        .card-name-display {
+          font-size: 0.85rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          opacity: 0.9;
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-expiry-display {
+          font-size: 0.9rem;
+          font-weight: 600;
+          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+      }
+    }
+  }
+}
+
+// Accepted Cards Styles
+.accepted-cards {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+
+  .accepted-cards-label {
+    margin: 0 0 12px 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .card-logos {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+
+    .card-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 56px;
+      height: 36px;
+      background-color: white;
+      border-radius: 6px;
+      border: 1px solid #dee2e6;
+      transition: all 0.3s ease;
+      cursor: default;
+
+      &:hover {
+        border-color: #007bff;
+        box-shadow: 0 2px 8px rgba(0, 123, 255, 0.15);
+      }
+
+      img {
+        width: 90%;
+        height: 90%;
+        object-fit: contain;
+      }
+    }
+  }
+}
+
 .card-input-group {
   position: relative;
   display: flex;

@@ -9,6 +9,10 @@ import {
   validateCardInfo,
   type CardType,
 } from "@/shared/utils/cardValidation";
+import visaLogo from "@/assets/visa-logo.svg";
+import mastercardLogo from "@/assets/mastercard-logo.svg";
+import amexLogo from "@/assets/amex-logo.svg";
+import cardPlaceholder from "@/assets/credit-card-placeholder.svg";
 import "@/styles/components/PaymentModal.scss";
 
 interface PaymentModalProps {
@@ -203,6 +207,59 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
         </div>
 
         <form onSubmit={handleSubmit} className="payment-modal-body">
+          {/* Credit Card Preview */}
+          <div className="card-preview-container mb-4">
+            <div className="card-preview">
+              <img
+                src={cardPlaceholder}
+                alt="Credit Card"
+                className="card-preview-image"
+              />
+              <div className="card-preview-info">
+                <div className="card-number-display">
+                  {formData.cardNumber.replace(/\s/g, "").length > 0
+                    ? formatCardNumber(formData.cardNumber)
+                        .split(" ")
+                        .map((group, i) => (
+                          <span key={i} className="card-digit-group">
+                            {group}
+                          </span>
+                        ))
+                    : "•••• •••• •••• ••••"}
+                </div>
+                <div className="card-details">
+                  <div className="card-name-display">
+                    {formData.cardholderName || "CARDHOLDER NAME"}
+                  </div>
+                  <div className="card-expiry-display">
+                    {String(formData.expirationMonth).padStart(2, "0")}/
+                    {String(formData.expirationYear).slice(-2)}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Accepted Card Types */}
+          <div className="accepted-cards mb-4">
+            <p className="accepted-cards-label">Accepted Cards:</p>
+            <div className="card-logos">
+              <div className="card-logo">
+                <img src={visaLogo} alt="Visa" title="Visa" />
+              </div>
+              <div className="card-logo">
+                <img src={mastercardLogo} alt="Mastercard" title="Mastercard" />
+              </div>
+              <div className="card-logo">
+                <img
+                  src={amexLogo}
+                  alt="American Express"
+                  title="American Express"
+                />
+              </div>
+            </div>
+          </div>
+
           {/* Card Number */}
           <div className="form-group mb-3">
             <label htmlFor="cardNumber" className="form-label">
