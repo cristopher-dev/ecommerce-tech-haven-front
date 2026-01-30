@@ -5,27 +5,27 @@ const CategoryCarousel: React.FC = () => {
   const { t } = useTranslation();
   const categories = [
     {
-      name: "Electronics",
+      name: t("homePage.electronics"),
       image:
         "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80",
     },
     {
-      name: "Gadgets",
+      name: t("homePage.gadgets"),
       image:
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80",
     },
     {
-      name: "Smart Home",
+      name: t("homePage.smartHome"),
       image:
         "https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80",
     },
     {
-      name: "Wearables",
+      name: t("homePage.wearables"),
       image:
         "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80",
     },
     {
-      name: "Accessories",
+      name: t("homePage.accessories"),
       image:
         "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80",
     },

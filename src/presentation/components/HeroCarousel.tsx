@@ -90,7 +90,7 @@ const HeroCarousel: React.FC = () => {
                     "0 4px 15px rgba(0,0,0,0.2)";
                 }}
               >
-                🛍️ Shop Now
+                {t("homePage.shopNow")}
               </button>
             </div>
           </div>

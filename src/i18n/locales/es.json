@@ -110,13 +110,19 @@
     "recentlyAdded": "Agregados Recientemente",
     "categories": "Categorías",
     "shop": "Comprar ahora",
+    "shopNow": "🛍️ Comprar Ahora",
     "flashDeals": "Ofertas Relámpago",
     "mostViewed": "Productos más vistos",
     "bestSellers": "Mejores vendedores en electrónica",
     "shopByCategory": "Comprar por Categoría",
     "recentProducts": "Productos Recientes",
     "topRatedProducts": "Productos Mejor Valorados",
-    "ourBrands": "Nuestras Marcas"
+    "ourBrands": "Nuestras Marcas",
+    "electronics": "Electrónica",
+    "gadgets": "Gadgets",
+    "smartHome": "Hogar Inteligente",
+    "wearables": "Dispositivos Portátiles",
+    "accessories": "Accesorios"
   },
   "productPage": {
     "title": "Detalles del Producto",
