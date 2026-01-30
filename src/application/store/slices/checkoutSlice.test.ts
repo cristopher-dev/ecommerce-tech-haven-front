@@ -2,14 +2,23 @@ import checkoutReducer, {
   setStep,
   setDeliveryData,
   setPaymentData,
-  resetCheckout,
+  clearCheckout,
+  addToCart,
+  setLoading,
+  setError,
 } from "./checkoutSlice";
 
 describe("checkoutSlice", () => {
   const initialState = {
-    step: 1,
-    deliveryData: null,
+    cartItems: [],
     paymentData: null,
+    deliveryData: null,
+    baseFee: 5000,
+    deliveryFee: 10000,
+    loading: false,
+    error: null,
+    step: "product" as const,
+    lastTransactionId: null,
   };
 
   it("should return the initial state", () => {
@@ -18,19 +27,23 @@ describe("checkoutSlice", () => {
     );
   });
 
-  it("should handle setStep", () => {
-    const actual = checkoutReducer(initialState, setStep(2));
-    expect(actual.step).toBe(2);
+  it("should handle setStep to payment", () => {
+    const actual = checkoutReducer(initialState, setStep("payment"));
+    expect(actual.step).toBe("payment");
+  });
+
+  it("should handle setStep to summary", () => {
+    const actual = checkoutReducer(initialState, setStep("summary"));
+    expect(actual.step).toBe("summary");
   });
 
   it("should handle setDeliveryData", () => {
     const deliveryData = {
-      firstName: "John",
-      lastName: "Doe",
-      email: "john@example.com",
-      phone: "3001234567",
       address: "123 Main St",
       city: "Bogotá",
+      state: "DC",
+      postalCode: "110111",
+      phone: "3001234567",
     };
     const actual = checkoutReducer(initialState, setDeliveryData(deliveryData));
     expect(actual.deliveryData).toEqual(deliveryData);
@@ -39,32 +52,45 @@ describe("checkoutSlice", () => {
   it("should handle setPaymentData", () => {
     const paymentData = {
       cardNumber: "4111111111111111",
-      cardHolder: "John Doe",
-      expiryDate: "12/25",
+      cardholderName: "John Doe",
+      expirationMonth: 12,
+      expirationYear: 2025,
       cvv: "123",
     };
     const actual = checkoutReducer(initialState, setPaymentData(paymentData));
     expect(actual.paymentData).toEqual(paymentData);
   });
 
-  it("should handle resetCheckout", () => {
+  it("should handle clearCheckout", () => {
     const stateWithData = {
-      step: 3,
-      deliveryData: { firstName: "John" },
-      paymentData: { cardNumber: "4111" },
+      ...initialState,
+      step: "summary" as const,
+      deliveryData: {
+        address: "123 Main St",
+        city: "Bogotá",
+        state: "DC",
+        postalCode: "110111",
+        phone: "3001234567",
+      },
+      paymentData: {
+        cardNumber: "4111",
+        cardholderName: "John",
+        expirationMonth: 12,
+        expirationYear: 2025,
+        cvv: "123",
+      },
     };
-    const actual = checkoutReducer(stateWithData, resetCheckout());
+    const actual = checkoutReducer(stateWithData, clearCheckout());
     expect(actual).toEqual(initialState);
   });
 
-  it("should preserve other state when setting step", () => {
-    const stateWithData = {
-      step: 1,
-      deliveryData: { firstName: "John" },
-      paymentData: null,
-    };
-    const actual = checkoutReducer(stateWithData, setStep(2));
-    expect(actual.deliveryData).toEqual(stateWithData.deliveryData);
-    expect(actual.step).toBe(2);
+  it("should handle setLoading", () => {
+    const actual = checkoutReducer(initialState, setLoading(true));
+    expect(actual.loading).toBe(true);
+  });
+
+  it("should handle setError", () => {
+    const actual = checkoutReducer(initialState, setError("Test error"));
+    expect(actual.error).toBe("Test error");
   });
 });

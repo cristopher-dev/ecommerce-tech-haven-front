@@ -91,7 +91,7 @@ describe("TopRatedProducts Component", () => {
   it("should render responsive grid layout", async () => {
     const { container } = renderTopRatedProducts();
     await waitFor(() => {
-      const columns = container.querySelectorAll(".col-lg-3");
+      const columns = container.querySelectorAll(".col-lg-4");
       expect(columns.length).toBeGreaterThan(0);
     });
   });
