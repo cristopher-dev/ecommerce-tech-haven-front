@@ -52,6 +52,17 @@ const initialState: AuthState = {
   isAuthenticated: false,
 };
 
+// Helper function to convert Date objects to ISO strings for serialization
+const serializeUser = (user: UserProfile): UserProfile => {
+  return {
+    ...user,
+    createdAt:
+      typeof user.createdAt === "object"
+        ? (user.createdAt as any).toISOString()
+        : user.createdAt,
+  };
+};
+
 // Helper function to restore user from token
 const restoreUserFromToken = (): UserProfile | null => {
   try {
@@ -79,9 +90,10 @@ const authSlice = createSlice({
       localStorage.removeItem("authUser");
     },
     setUser: (state, action: PayloadAction<UserProfile>) => {
-      state.user = action.payload;
+      const serializedUser = serializeUser(action.payload);
+      state.user = serializedUser;
       state.isAuthenticated = true;
-      localStorage.setItem("authUser", JSON.stringify(action.payload));
+      localStorage.setItem("authUser", JSON.stringify(serializedUser));
     },
     setToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload;
@@ -105,11 +117,13 @@ const authSlice = createSlice({
       })
       .addCase(register.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.user = action.payload.user;
+        const serializedUser = serializeUser(action.payload.user);
+        state.user = serializedUser;
         state.token = action.payload.token;
         state.isAuthenticated = true;
         if (action.payload.token) {
           localStorage.setItem("authToken", action.payload.token);
+          localStorage.setItem("authUser", JSON.stringify(serializedUser));
         }
       })
       .addCase(register.rejected, (state, action) => {
@@ -123,11 +137,13 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.user = action.payload.user;
+        const serializedUser = serializeUser(action.payload.user);
+        state.user = serializedUser;
         state.token = action.payload.token;
         state.isAuthenticated = true;
         if (action.payload.token) {
           localStorage.setItem("authToken", action.payload.token);
+          localStorage.setItem("authUser", JSON.stringify(serializedUser));
         }
       })
       .addCase(login.rejected, (state, action) => {

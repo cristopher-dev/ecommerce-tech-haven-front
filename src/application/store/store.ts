@@ -107,8 +107,10 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        // Ignore these action types
+        // Ignore redux-persist actions
         ignoredActions: ["persist/PERSIST", "persist/REHYDRATE"],
+        // Ignore these paths that may contain Date objects
+        ignoredPaths: ["auth.user.createdAt"],
       },
     }),
 });

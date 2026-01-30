@@ -23,7 +23,8 @@ const CheckoutSummaryPage: React.FC = () => {
   const [isProcessing, setIsProcessing] = useState(false);
 
   // Use cart items from cartSlice, fallback to checkoutSlice
-  const cartItems = cart.items.length > 0 ? cart.items : checkout.cartItems;
+  const cartItems =
+    cart.items && cart.items.length > 0 ? cart.items : checkout.cartItems || [];
 
   // Calculate totals
   const subtotal = cartItems.reduce(
@@ -40,6 +41,12 @@ const CheckoutSummaryPage: React.FC = () => {
       !checkout.deliveryData ||
       cartItems.length === 0
     ) {
+      console.log("Missing data for order:", {
+        hasPaymentData: !!checkout.paymentData,
+        hasDeliveryData: !!checkout.deliveryData,
+        cartItemsCount: cartItems.length,
+        cartItems: cartItems,
+      });
       dispatch(setError("Missing payment or delivery information"));
       return;
     }
@@ -88,14 +95,25 @@ const CheckoutSummaryPage: React.FC = () => {
       const transactionIds: string[] = [];
 
       for (const item of cartItems) {
+        // Extract and validate productId
+        const productIdValue = item.product?.id;
+
+        if (productIdValue === null || productIdValue === undefined) {
+          throw new Error("productId should not be empty");
+        }
+
         // Ensure productId is properly converted to string
-        const productId = String(item.product.id || "").trim();
+        const productId = String(productIdValue).trim();
 
         // Validate productId - strict validation matching backend requirements
         if (typeof productId !== "string") {
           throw new Error("productId must be a string");
         }
-        if (productId === "") {
+        if (
+          productId === "" ||
+          productId === "undefined" ||
+          productId === "null"
+        ) {
           throw new Error("productId should not be empty");
         }
 
@@ -245,7 +263,7 @@ const CheckoutSummaryPage: React.FC = () => {
             <div
               className="progress-bar"
               role="progressbar"
-              style={{ width: "66%" }}
+              style={{ inlineSize: "66%" }}
               aria-valuenow={66}
               aria-valuemin={0}
               aria-valuemax={100}
