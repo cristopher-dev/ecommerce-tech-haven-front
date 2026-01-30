@@ -33,13 +33,15 @@
     "update": "Actualizar",
     "confirm": "Confirmar",
     "account": "Cuenta",
-    "favorites": "Favoritos"
+    "favorites": "Favoritos",
+    "orders": "Mis"
   },
   "header": {
     "home": "Inicio",
     "products": "Productos",
     "cart": "Carrito",
     "wishlist": "Lista de deseos",
+    "purchases": "Mis Compras",
     "account": "Cuenta",
     "search": "Buscar productos...",
     "categories": "Todas las categorías",
@@ -255,5 +257,18 @@
     "cardNumberInvalid": "Número de tarjeta inválido",
     "cardExpired": "Tarjeta expirada",
     "cvvInvalid": "CVV inválido"
+  },
+  "purchasedItemsPage": {
+    "title": "Mis Compras",
+    "description": "Ver todas tus compras e historial de transacciones",
+    "emptyMessage": "Aún no has realizado ninguna compra",
+    "continueShoppingButton": "Continuar Comprando",
+    "order": "Pedido",
+    "purchaseDate": "Fecha de compra",
+    "total": "Total",
+    "product": "Producto",
+    "quantity": "Cantidad",
+    "unitPrice": "Precio Unitario",
+    "subtotal": "Subtotal"
   }
 }

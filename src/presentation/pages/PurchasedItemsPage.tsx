@@ -1,10 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAppSelector } from "@/application/store/hooks";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
 const PurchasedItemsPage: React.FC = () => {
+  const { t } = useTranslation();
   const purchasedItems = useAppSelector((state) => state.purchasedItems.items);
 
   const groupedByTransaction = purchasedItems.reduce(
@@ -36,18 +38,16 @@ const PurchasedItemsPage: React.FC = () => {
       <main className="container my-5">
         <div className="row mb-4">
           <div className="col">
-            <h1>My Purchases</h1>
-            <p className="text-muted">
-              View all your purchased items and transaction history
-            </p>
+            <h1>{t("purchasedItemsPage.title")}</h1>
+            <p className="text-muted">{t("purchasedItemsPage.description")}</p>
           </div>
         </div>
 
         {purchasedItems.length === 0 ? (
           <div className="alert alert-info">
-            <p>You haven't made any purchases yet.</p>
+            <p>{t("purchasedItemsPage.emptyMessage")}</p>
             <Link to="/" className="btn btn-primary">
-              Continue Shopping
+              {t("purchasedItemsPage.continueShoppingButton")}
             </Link>
           </div>
         ) : (
@@ -59,7 +59,8 @@ const PurchasedItemsPage: React.FC = () => {
                     <div className="row align-items-center">
                       <div className="col-md-6">
                         <h6 className="mb-0">
-                          Order #{transaction.transactionId}
+                          {t("purchasedItemsPage.order")} #
+                          {transaction.transactionId}
                         </h6>
                         <small className="text-muted">
                           {transaction.purchaseDate.toLocaleDateString(
@@ -74,7 +75,8 @@ const PurchasedItemsPage: React.FC = () => {
                       </div>
                       <div className="col-md-6 text-end">
                         <h6 className="mb-0">
-                          Total: ${transaction.total.toFixed(2)}
+                          {t("purchasedItemsPage.total")}: $
+                          {transaction.total.toFixed(2)}
                         </h6>
                       </div>
                     </div>
@@ -84,10 +86,16 @@ const PurchasedItemsPage: React.FC = () => {
                       <table className="table table-sm">
                         <thead>
                           <tr>
-                            <th>Product</th>
-                            <th className="text-center">Quantity</th>
-                            <th className="text-end">Unit Price</th>
-                            <th className="text-end">Total</th>
+                            <th>{t("purchasedItemsPage.product")}</th>
+                            <th className="text-center">
+                              {t("purchasedItemsPage.quantity")}
+                            </th>
+                            <th className="text-end">
+                              {t("purchasedItemsPage.unitPrice")}
+                            </th>
+                            <th className="text-end">
+                              {t("purchasedItemsPage.subtotal")}
+                            </th>
                           </tr>
                         </thead>
                         <tbody>
@@ -111,9 +119,6 @@ const PurchasedItemsPage: React.FC = () => {
                                     <h6 className="mb-0">
                                       {item.product.name}
                                     </h6>
-                                    <small className="text-muted">
-                                      {item.product.category}
-                                    </small>
                                   </div>
                                 </div>
                               </td>
@@ -142,7 +147,7 @@ const PurchasedItemsPage: React.FC = () => {
         <div className="row mt-5">
           <div className="col text-center">
             <Link to="/" className="btn btn-outline-primary">
-              Continue Shopping
+              {t("purchasedItemsPage.continueShoppingButton")}
             </Link>
           </div>
         </div>

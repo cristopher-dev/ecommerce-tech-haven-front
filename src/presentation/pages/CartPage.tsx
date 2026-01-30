@@ -102,7 +102,7 @@ const CartPage: React.FC = () => {
                 <h4>
                   {t("common.total")}: ${total.toFixed(2)}
                 </h4>
-                <Link to="/checkout/delivery" className="btn btn-success">
+                <Link to="/cart" className="btn btn-success">
                   {t("checkoutPage.title")}
                 </Link>
               </div>
