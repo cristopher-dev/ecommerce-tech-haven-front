@@ -11,6 +11,7 @@ import CheckoutSummaryPage from "@/presentation/pages/CheckoutSummaryPage";
 import CheckoutFinalStatusPage from "@/presentation/pages/CheckoutFinalStatusPage";
 import RegisterPage from "@/presentation/pages/RegisterPage";
 import LoginPage from "@/presentation/pages/LoginPage";
+import ProtectedRoute from "@/presentation/components/ProtectedRoute";
 import "@/styles/App.scss";
 
 function App() {
@@ -19,20 +20,52 @@ function App() {
       <PersistGate loading={null} persistor={persistor}>
         <Router>
           <Routes>
+            {/* Public Routes */}
             <Route path="/" element={<HomePage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/product" element={<ProductPage />} />
-            <Route path="/cart" element={<CartPage />} />
-            <Route path="/wishlist" element={<WishlistPage />} />
+
+            {/* Protected Routes */}
+            <Route
+              path="/cart"
+              element={
+                <ProtectedRoute>
+                  <CartPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/wishlist"
+              element={
+                <ProtectedRoute>
+                  <WishlistPage />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/checkout/delivery"
-              element={<CheckoutDeliveryPage />}
+              element={
+                <ProtectedRoute>
+                  <CheckoutDeliveryPage />
+                </ProtectedRoute>
+              }
             />
-            <Route path="/checkout/summary" element={<CheckoutSummaryPage />} />
+            <Route
+              path="/checkout/summary"
+              element={
+                <ProtectedRoute>
+                  <CheckoutSummaryPage />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/checkout/final"
-              element={<CheckoutFinalStatusPage />}
+              element={
+                <ProtectedRoute>
+                  <CheckoutFinalStatusPage />
+                </ProtectedRoute>
+              }
             />
           </Routes>
         </Router>
