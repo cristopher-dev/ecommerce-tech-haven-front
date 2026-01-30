@@ -7,7 +7,11 @@ import {
   useAppDispatch,
 } from "@/application/store/hooks";
 import { removeFromCart } from "@/application/store/slices/cartSlice";
-import { logout, setUser } from "@/application/store/slices/authSlice";
+import {
+  logout,
+  setUser,
+  setToken,
+} from "@/application/store/slices/authSlice";
 import { RootState } from "@/application/store/store";
 import "@/styles/components/Header.scss";
 
@@ -24,6 +28,7 @@ const Header: React.FC = () => {
   };
 
   const handleMockLogin = () => {
+    const mockToken = "mock-demo-token-" + Date.now();
     const mockUserData = {
       id: "1",
       email: "admin@techhaven.com",
@@ -35,6 +40,7 @@ const Header: React.FC = () => {
       updatedAt: new Date().toISOString(),
     };
     dispatch(setUser(mockUserData));
+    dispatch(setToken(mockToken));
   };
 
   return (
