@@ -43,8 +43,8 @@ const CategoryCarousel: React.FC = () => {
           <div className="carousel-inner">
             <div className="carousel-item active">
               <div className="row">
-                {categories.slice(0, 4).map((cat, index) => (
-                  <div key={index} className="col-3">
+                {categories.slice(0, 4).map((cat) => (
+                  <div key={cat.name} className="col-3">
                     <div className="card border-0 text-center">
                       <img
                         src={cat.image}
@@ -61,8 +61,8 @@ const CategoryCarousel: React.FC = () => {
             </div>
             <div className="carousel-item">
               <div className="row">
-                {categories.slice(1, 5).map((cat, index) => (
-                  <div key={index} className="col-3">
+                {categories.slice(1, 5).map((cat) => (
+                  <div key={cat.name} className="col-3">
                     <div className="card border-0 text-center">
                       <img
                         src={cat.image}

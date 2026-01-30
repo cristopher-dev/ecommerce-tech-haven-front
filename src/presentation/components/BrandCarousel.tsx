@@ -24,11 +24,11 @@ const BrandCarousel: React.FC = () => {
           <div className="carousel-inner">
             <div className="carousel-item active">
               <div className="d-flex justify-content-around">
-                {brands.slice(0, 4).map((brand, index) => (
+                {brands.slice(0, 4).map((brand) => (
                   <img
-                    key={index}
+                    key={brand}
                     src={brand}
-                    alt={`Brand ${index + 1}`}
+                    alt="Brand logo"
                     className="img-fluid"
                     style={{ maxHeight: "60px" }}
                   />
@@ -37,11 +37,11 @@ const BrandCarousel: React.FC = () => {
             </div>
             <div className="carousel-item">
               <div className="d-flex justify-content-around">
-                {brands.slice(2, 6).map((brand, index) => (
+                {brands.slice(2, 6).map((brand) => (
                   <img
-                    key={index}
+                    key={brand}
                     src={brand}
-                    alt={`Brand ${index + 3}`}
+                    alt="Brand logo"
                     className="img-fluid"
                     style={{ maxHeight: "60px" }}
                   />

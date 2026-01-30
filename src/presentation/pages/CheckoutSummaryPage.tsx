@@ -58,12 +58,18 @@ const CheckoutSummaryPage: React.FC = () => {
       const transactionIds: string[] = [];
 
       for (const item of cartItems) {
+        // Ensure productId is properly converted to string
+        const productId = String(item.product.id);
+        if (!productId) {
+          throw new Error("Invalid product ID");
+        }
+
         const transactionResponse = await transactionsApi.create({
-          customerName,
-          customerEmail,
-          customerAddress,
-          productId: String(item.product.id),
-          quantity: Math.min(item.quantity, 10), // Ensure quantity doesn't exceed 10
+          customerName: customerName.trim(),
+          customerEmail: customerEmail.trim(),
+          customerAddress: customerAddress.trim(),
+          productId: productId,
+          quantity: Math.min(Math.max(item.quantity, 1), 10), // Ensure quantity is between 1 and 10
           cardData: {
             cardNumber: checkout.paymentData.cardNumber.replace(/\s/g, ""),
             cardholderName: checkout.paymentData.cardholderName,

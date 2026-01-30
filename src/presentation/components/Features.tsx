@@ -5,24 +5,28 @@ const Features: React.FC = () => {
   const { t } = useTranslation();
   const features = [
     {
+      id: "shipping",
       icon: "🚚",
       title: t("features.freeShippingTitle"),
       desc: t("features.freeShippingDesc"),
       color: "#0066ff",
     },
     {
+      id: "money-back",
       icon: "💰",
       title: t("features.moneyBackTitle"),
       desc: t("features.moneyBackDesc"),
       color: "#10b981",
     },
     {
+      id: "support",
       icon: "💬",
       title: t("features.supportTitle"),
       desc: t("features.supportDesc"),
       color: "#f59e0b",
     },
     {
+      id: "secure",
       icon: "🔒",
       title: t("features.secureTitle"),
       desc: t("features.secureDesc"),
@@ -30,7 +34,7 @@ const Features: React.FC = () => {
     },
   ];
 
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [hoveredFeature, setHoveredFeature] = useState<string | null>(null);
 
   return (
     <section
@@ -41,12 +45,12 @@ const Features: React.FC = () => {
     >
       <div className="container">
         <div className="row">
-          {features.map((feature, index) => (
+          {features.map((feature) => (
             <div
-              key={index}
+              key={feature.id}
               className="col-md-3 col-sm-6 mb-4"
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
+              onMouseEnter={() => setHoveredFeature(feature.id)}
+              onMouseLeave={() => setHoveredFeature(null)}
             >
               <div
                 style={{
@@ -57,11 +61,11 @@ const Features: React.FC = () => {
                   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
                   transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                   transform:
-                    hoveredIndex === index
+                    hoveredFeature === feature.id
                       ? "translateY(-8px) scale(1.02)"
                       : "translateY(0) scale(1)",
                   border:
-                    hoveredIndex === index
+                    hoveredFeature === feature.id
                       ? `2px solid ${feature.color}`
                       : "2px solid transparent",
                 }}
@@ -72,7 +76,7 @@ const Features: React.FC = () => {
                     marginBottom: "1rem",
                     transition: "transform 0.3s ease",
                     transform:
-                      hoveredIndex === index
+                      hoveredFeature === feature.id
                         ? "scale(1.2) rotate(10deg)"
                         : "scale(1)",
                   }}

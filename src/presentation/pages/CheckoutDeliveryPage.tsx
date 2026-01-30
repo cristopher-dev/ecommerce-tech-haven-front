@@ -46,6 +46,7 @@ const CheckoutDeliveryPage: React.FC = () => {
     if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
     if (!formData.address.trim()) newErrors.address = "Address is required";
     if (!formData.city.trim()) newErrors.city = "City is required";
+    if (!formData.state.trim()) newErrors.state = "State/Province is required";
     if (!formData.zipCode.trim()) newErrors.zipCode = "ZIP code is required";
     if (!formData.email.trim()) newErrors.email = "Email is required";
     else if (!/\S+@\S+\.\S+/.test(formData.email))
@@ -219,6 +220,26 @@ const CheckoutDeliveryPage: React.FC = () => {
                 <div className="invalid-feedback">{errors.city}</div>
               )}
             </div>
+            <div className="col-md-6 mb-3">
+              <label htmlFor="state" className="form-label">
+                State/Province *
+              </label>
+              <input
+                type="text"
+                className={`form-control ${touched.state && errors.state ? "is-invalid" : ""}`}
+                id="state"
+                name="state"
+                value={formData.state}
+                onChange={handleChange}
+                onBlur={() => setTouched({ ...touched, state: true })}
+                disabled={checkout.loading}
+              />
+              {touched.state && errors.state && (
+                <div className="invalid-feedback">{errors.state}</div>
+              )}
+            </div>
+          </div>
+          <div className="row">
             <div className="col-md-6 mb-3">
               <label htmlFor="zipCode" className="form-label">
                 ZIP Code *
