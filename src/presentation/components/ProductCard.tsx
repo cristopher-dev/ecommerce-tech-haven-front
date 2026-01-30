@@ -103,19 +103,34 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             onMouseEnter={() => setIsHeartHovered(true)}
             onMouseLeave={() => setIsHeartHovered(false)}
             style={{
-              transition: "all 0.3s ease",
+              transition: "all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)",
               transform: isHeartHovered
-                ? "scale(1.2) rotate(10deg)"
+                ? "scale(1.25) rotate(8deg)"
                 : "scale(1)",
               background: isInWishlist
-                ? "linear-gradient(135deg, #ff6b35 0%, #e64c00 100%)"
-                : "rgba(255, 255, 255, 0.95)",
+                ? "linear-gradient(135deg, #ff6b35 0%, #ff8c5a 100%)"
+                : "rgba(255, 255, 255, 0.9)",
               color: isInWishlist ? "white" : "#ff6b35",
-              border: "none",
-              backdropFilter: "blur(4px)",
-              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+              border: "2px solid",
+              borderColor: isInWishlist
+                ? "transparent"
+                : "rgba(255, 107, 53, 0.3)",
+              backdropFilter: "blur(10px)",
+              boxShadow: isInWishlist
+                ? "0 6px 20px rgba(255, 107, 53, 0.35)"
+                : "0 4px 15px rgba(0, 0, 0, 0.1)",
+              padding: "0.5rem",
+              width: "40px",
+              height: "40px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "1.1rem",
             }}
             title={isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
+            aria-label={
+              isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"
+            }
           >
             <i className={`bi bi-heart${isInWishlist ? "-fill" : ""}`}></i>
           </button>
