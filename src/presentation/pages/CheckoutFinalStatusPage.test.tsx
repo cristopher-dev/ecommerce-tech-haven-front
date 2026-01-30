@@ -10,13 +10,13 @@ import transactionsReducer from "@/application/store/slices/transactionsSlice";
 import deliveriesReducer from "@/application/store/slices/deliveriesSlice";
 
 jest.mock("../components/Header", () => ({
-  default: () =>
-    React.createElement("header", { "data-testid": "mock-header" }, "Header"),
+  __esModule: true,
+  default: () => <header data-testid="mock-header">Header</header>,
 }));
 
 jest.mock("../components/Footer", () => ({
-  default: () =>
-    React.createElement("footer", { "data-testid": "mock-footer" }, "Footer"),
+  __esModule: true,
+  default: () => <footer data-testid="mock-footer">Footer</footer>,
 }));
 
 import CheckoutFinalStatusPage from "./CheckoutFinalStatusPage";
@@ -32,7 +32,30 @@ describe("CheckoutFinalStatusPage", () => {
         deliveries: deliveriesReducer,
       },
       preloadedState: {
-        checkout: { step: 4, deliveryData: null, paymentData: null },
+        checkout: {
+          cartItems: [
+            {
+              product: {
+                id: 1,
+                name: "Test Product",
+                price: 99.99,
+                image: "test.jpg",
+                description: "Test",
+                rating: 5,
+                category: "Electronics",
+              },
+              quantity: 1,
+            },
+          ],
+          paymentData: null,
+          deliveryData: null,
+          baseFee: 5000,
+          deliveryFee: 10000,
+          loading: false,
+          error: null,
+          step: "status" as const,
+          lastTransactionId: transactionId,
+        },
         cart: {
           items: [],
           total: 0,
