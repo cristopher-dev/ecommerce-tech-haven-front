@@ -50,21 +50,38 @@ const CheckoutSummaryPage: React.FC = () => {
       dispatch(setError(null));
 
       // Extract customer name and email from delivery data
-      const customerName =
-        `${checkout.deliveryData.firstName} ${checkout.deliveryData.lastName}`.trim();
-      const customerEmail = String(checkout.deliveryData.email).trim();
+      const firstName = String(checkout.deliveryData.firstName || "").trim();
+      const lastName = String(checkout.deliveryData.lastName || "").trim();
+      const customerName = `${firstName} ${lastName}`.trim();
+      const customerEmail = String(checkout.deliveryData.email || "").trim();
       const customerAddress =
-        `${checkout.deliveryData.address}, ${checkout.deliveryData.city}, ${checkout.deliveryData.state} ${checkout.deliveryData.postalCode}`.trim();
+        `${String(checkout.deliveryData.address || "").trim()}, ${String(checkout.deliveryData.city || "").trim()}, ${String(checkout.deliveryData.state || "").trim()} ${String(checkout.deliveryData.postalCode || "").trim()}`
+          .replace(/,\s*,/g, ",")
+          .trim();
 
-      // Validate customer data
-      if (!customerName || customerName.length < 2) {
-        throw new Error("Invalid customer name");
+      // Validate customer data - strict validation matching backend requirements
+      if (typeof customerName !== "string") {
+        throw new Error("customerName must be a string");
       }
-      if (!customerEmail || !customerEmail.includes("@")) {
-        throw new Error("Invalid customer email");
+      if (customerName === "" || customerName.length < 2) {
+        throw new Error("customerName should not be empty");
       }
-      if (!customerAddress || customerAddress.length < 5) {
-        throw new Error("Invalid customer address");
+
+      if (typeof customerEmail !== "string") {
+        throw new Error("customerEmail must be an email");
+      }
+      if (customerEmail === "") {
+        throw new Error("customerEmail should not be empty");
+      }
+      if (!customerEmail.includes("@")) {
+        throw new Error("customerEmail must be an email");
+      }
+
+      if (typeof customerAddress !== "string") {
+        throw new Error("customerAddress must be a string");
+      }
+      if (customerAddress === "" || customerAddress.length < 5) {
+        throw new Error("customerAddress should not be empty");
       }
 
       // Create transactions for each product in the cart
@@ -72,16 +89,30 @@ const CheckoutSummaryPage: React.FC = () => {
 
       for (const item of cartItems) {
         // Ensure productId is properly converted to string
-        const productId = String(item.product.id).trim();
-        const quantity = Math.max(1, Math.min(Math.floor(item.quantity), 10));
+        const productId = String(item.product.id || "").trim();
 
-        if (!productId) {
-          throw new Error("Invalid product ID");
+        // Validate productId - strict validation matching backend requirements
+        if (typeof productId !== "string") {
+          throw new Error("productId must be a string");
+        }
+        if (productId === "") {
+          throw new Error("productId should not be empty");
         }
 
-        // Validate quantity
-        if (quantity < 1 || quantity > 10 || !Number.isInteger(quantity)) {
-          throw new Error(`Invalid quantity: ${quantity}`);
+        // Validate quantity - strict validation matching backend requirements
+        const quantity = item.quantity;
+
+        if (typeof quantity !== "number") {
+          throw new Error("quantity must be an integer number");
+        }
+        if (!Number.isInteger(quantity)) {
+          throw new Error("quantity must be an integer number");
+        }
+        if (quantity < 1) {
+          throw new Error("quantity must not be less than 1");
+        }
+        if (quantity > 10) {
+          throw new Error("quantity must not be greater than 10");
         }
 
         const transactionPayload = {
@@ -99,8 +130,43 @@ const CheckoutSummaryPage: React.FC = () => {
           },
         };
 
-        // Log the payload for debugging
-        console.log("Creating transaction with payload:", transactionPayload);
+        // Log the payload for debugging - including validation status
+        console.log("=== TRANSACTION PAYLOAD ===");
+        console.log("customerName:", {
+          value: customerName,
+          type: typeof customerName,
+          isEmpty: customerName === "",
+          isString: typeof customerName === "string",
+          length: customerName.length,
+        });
+        console.log("customerEmail:", {
+          value: customerEmail,
+          type: typeof customerEmail,
+          isEmpty: customerEmail === "",
+          isString: typeof customerEmail === "string",
+          hasAt: customerEmail.includes("@"),
+        });
+        console.log("customerAddress:", {
+          value: customerAddress,
+          type: typeof customerAddress,
+          isEmpty: customerAddress === "",
+          isString: typeof customerAddress === "string",
+          length: customerAddress.length,
+        });
+        console.log("productId:", {
+          value: productId,
+          type: typeof productId,
+          isEmpty: productId === "",
+          isString: typeof productId === "string",
+        });
+        console.log("quantity:", {
+          value: quantity,
+          type: typeof quantity,
+          isInteger: Number.isInteger(quantity),
+          isValid: quantity >= 1 && quantity <= 10,
+        });
+        console.log("Full Payload:", transactionPayload);
+        console.log("=== END PAYLOAD ===");
 
         const transactionResponse =
           await transactionsApi.create(transactionPayload);
