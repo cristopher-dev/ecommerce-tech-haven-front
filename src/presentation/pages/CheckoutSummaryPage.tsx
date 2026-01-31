@@ -1,19 +1,20 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/application/store/hooks";
+import { clearCart as clearCartState } from "@/application/store/slices/cartSlice";
 import {
-  setStep,
-  setLoading,
+  clearCart,
+  clearPaymentSensitiveData,
   setError,
   setLastTransactionId,
-  clearCart,
+  setLoading,
+  setStep,
 } from "@/application/store/slices/checkoutSlice";
 import { updateProductStock } from "@/application/store/slices/productsSlice";
 import { addToPurchasedItems } from "@/application/store/slices/purchasedItemsSlice";
-import { clearCart as clearCartState } from "@/application/store/slices/cartSlice";
 import { transactionsApi } from "@/infrastructure/api/techHavenApiClient";
-import Header from "../components/Header";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
+import Header from "../components/Header";
 
 const CheckoutSummaryPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -180,41 +181,76 @@ const CheckoutSummaryPage: React.FC = () => {
         phone: String(checkout.deliveryData.phone || "").trim(),
       };
 
-      // Create single transaction with all items (new multi-product endpoint)
+      // STEP 1: Create transaction without card data
       const transactionPayload = {
         customerName: customerName,
         customerEmail: customerEmail,
         customerAddress: customerAddress,
         items: items,
         deliveryInfo: deliveryInfo,
-        cardData: {
-          cardNumber: checkout.paymentData.cardNumber.replace(/\s/g, ""),
-          cardholderName: checkout.paymentData.cardholderName,
-          expirationMonth: checkout.paymentData.expirationMonth,
-          expirationYear: checkout.paymentData.expirationYear,
-          cvv: "", // Never send CVV to backend
-        },
       };
 
-      // Log the payload for debugging - including validation status
-      console.log("=== TRANSACTION PAYLOAD ===");
+      // Log the payload for debugging - Step 1
+      console.log("=== STEP 1: CREATE TRANSACTION ===");
       console.log("customerName:", customerName);
       console.log("customerEmail:", customerEmail);
       console.log("customerAddress:", customerAddress);
       console.log("items:", items);
       console.log("deliveryInfo:", deliveryInfo);
       console.log("Full Payload:", JSON.stringify(transactionPayload, null, 2));
-      console.log("=== END PAYLOAD ===");
+      console.log("=== END STEP 1 PAYLOAD ===");
 
       const transactionResponse =
         await transactionsApi.create(transactionPayload);
 
-      // Process payment for the transaction
-      await transactionsApi.processPayment(transactionResponse.id, {
-        status: "COMPLETED",
+      console.log("✅ Transaction created successfully:", {
+        id: transactionResponse.id,
+        transactionId: transactionResponse.transactionId,
+        orderId: transactionResponse.orderId,
+        status: transactionResponse.status,
       });
 
-      // Update product stock after successful transaction
+      // Get the transaction ID - use 'id' if available, otherwise fallback to 'transactionId'
+      const transactionIdForPayment =
+        transactionResponse.id || transactionResponse.transactionId;
+
+      if (!transactionIdForPayment) {
+        throw new Error("No transaction ID received from backend");
+      }
+
+      // STEP 2: Process payment with card data using the transaction ID from Step 1
+      const paymentPayload = {
+        cardNumber: checkout.paymentData.cardNumber.replace(/\s/g, ""),
+        cardholderName: checkout.paymentData.cardholderName,
+        expirationMonth: checkout.paymentData.expirationMonth,
+        expirationYear: checkout.paymentData.expirationYear,
+        cvv: checkout.paymentData.cvv,
+      };
+
+      console.log("=== STEP 2: PROCESS PAYMENT ===");
+      console.log("TransactionID (from Step 1):", transactionIdForPayment);
+      console.log("Payment Data:", {
+        ...paymentPayload,
+        cardNumber: "****" + paymentPayload.cardNumber.slice(-4),
+        cvv: "***",
+      });
+      console.log("=== END STEP 2 PAYLOAD ===");
+
+      const paymentResponse = await transactionsApi.processPayment(
+        transactionIdForPayment,
+        paymentPayload,
+      );
+
+      console.log("✅ Payment processed successfully:", {
+        id: paymentResponse.id,
+        status: paymentResponse.status,
+        orderId: paymentResponse.orderId,
+      });
+
+      // Clear sensitive payment data (CVV) immediately after successful payment
+      dispatch(clearPaymentSensitiveData());
+
+      // Update product stock after successful payment
       for (const item of cartItems) {
         dispatch(
           updateProductStock({
@@ -225,17 +261,14 @@ const CheckoutSummaryPage: React.FC = () => {
       }
 
       // Success - save transaction ID and navigate
-      const transactionData = await transactionsApi.getById(
-        transactionResponse.id,
-      );
-      dispatch(setLastTransactionId(transactionData.transactionId));
+      dispatch(setLastTransactionId(paymentResponse.transactionId));
       dispatch(setStep("status"));
 
       // Add items to purchased history
       dispatch(
         addToPurchasedItems({
           items: cartItems,
-          transactionId: transactionData.transactionId,
+          transactionId: paymentResponse.transactionId,
         }),
       );
 

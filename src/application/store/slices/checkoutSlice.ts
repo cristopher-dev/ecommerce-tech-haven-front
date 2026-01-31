@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { CartItem } from "@/domain/entities/CartItem";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface PaymentData {
   cardNumber: string;
@@ -95,6 +95,14 @@ export const checkoutSlice = createSlice({
     setPaymentData: (state, action: PayloadAction<PaymentData | null>) => {
       state.paymentData = action.payload;
     },
+    clearPaymentData: (state) => {
+      state.paymentData = null;
+    },
+    clearPaymentSensitiveData: (state) => {
+      if (state.paymentData) {
+        state.paymentData.cvv = "";
+      }
+    },
 
     // Delivery data
     setDeliveryData: (state, action: PayloadAction<DeliveryData | null>) => {
@@ -138,6 +146,8 @@ export const {
   updateCartItemQuantity,
   clearCart,
   setPaymentData,
+  clearPaymentData,
+  clearPaymentSensitiveData,
   setDeliveryData,
   setStep,
   setLoading,

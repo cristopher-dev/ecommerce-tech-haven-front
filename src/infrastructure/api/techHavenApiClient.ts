@@ -4,8 +4,8 @@
  * Base URL: http://localhost:3001/api
  */
 
-import { getApiBaseUrl } from "./getApiBaseUrl";
 import { withAuthInterceptor } from "./apiInterceptor";
+import { getApiBaseUrl } from "./getApiBaseUrl";
 
 const API_BASE_URL = getApiBaseUrl();
 
@@ -158,9 +158,11 @@ export interface TransactionDTO extends GetTransactionResponseDto {
 }
 
 export interface ProcessPaymentDto {
-  paymentGatewayTransactionId?: string;
-  status: "COMPLETED" | "FAILED";
-  errorMessage?: string;
+  cardNumber: string;
+  expirationMonth: number;
+  expirationYear: number;
+  cvv: string;
+  cardholderName: string;
 }
 
 export interface DeliveryDTO {

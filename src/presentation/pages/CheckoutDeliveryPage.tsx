@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "@/application/store/hooks";
 import {
   setDeliveryData,
   setPaymentData,
   setStep,
 } from "@/application/store/slices/checkoutSlice";
-import Header from "../components/Header";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
+import Header from "../components/Header";
 import PaymentModal, { type PaymentFormData } from "../components/PaymentModal";
 
 const CheckoutDeliveryPage: React.FC = () => {
@@ -93,16 +93,15 @@ const CheckoutDeliveryPage: React.FC = () => {
   };
 
   const handlePaymentSubmit = (paymentData: PaymentFormData) => {
-    // Save payment data to Redux (without CVV for security)
+    // Save payment data to Redux (including CVV temporarily for transaction processing)
+    // Note: CVV will be cleared after payment processing for security
     dispatch(
       setPaymentData({
-        cardNumber: paymentData.cardNumber
-          .slice(-4)
-          .padStart(paymentData.cardNumber.length, "*"),
+        cardNumber: paymentData.cardNumber,
         cardholderName: paymentData.cardholderName,
         expirationMonth: paymentData.expirationMonth,
         expirationYear: paymentData.expirationYear,
-        cvv: "", // Never store CVV
+        cvv: paymentData.cvv,
       }),
     );
 
