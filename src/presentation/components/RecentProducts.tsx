@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import ProductCard from "@/presentation/components/ProductCard";
 import { TechHavenApiProductRepository } from "@/infrastructure/adapters/TechHavenApiRepositories";
 import type { ProductDTO } from "@/infrastructure/api/techHavenApiClient";
+import ProductCard from "@/presentation/components/ProductCard";
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const RecentProducts: React.FC = () => {
   const { t } = useTranslation();
@@ -37,7 +37,7 @@ const RecentProducts: React.FC = () => {
 
   // Transform products to match ProductCard expectations
   const recentProducts = products.map((product, index) => ({
-    id: `recent-${parseInt(product.id.replace(/\D/g, "")) || index + 1}`,
+    id: product.id,
     name: product.name,
     price: product.price / 100,
     image:
