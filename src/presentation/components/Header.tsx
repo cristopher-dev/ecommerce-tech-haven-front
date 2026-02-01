@@ -384,7 +384,10 @@ const Header: React.FC = () => {
                               className={`dropdown-item ${currentLanguage === "es" ? "active" : ""}`}
                               onClick={() => handleLanguageChange("es")}
                             >
-                              <i className="bi bi-check-lg me-2"></i> Español
+                              {currentLanguage === "es" && (
+                                <i className="bi bi-check-lg me-2"></i>
+                              )}
+                              Español
                             </button>
                           </li>
                           <li>
@@ -392,7 +395,10 @@ const Header: React.FC = () => {
                               className={`dropdown-item ${currentLanguage === "en" ? "active" : ""}`}
                               onClick={() => handleLanguageChange("en")}
                             >
-                              <i className="bi bi-check-lg me-2"></i> English
+                              {currentLanguage === "en" && (
+                                <i className="bi bi-check-lg me-2"></i>
+                              )}
+                              English
                             </button>
                           </li>
                         </ul>
