@@ -12,9 +12,10 @@ import {
   TechHavenApiDeliveryRepository,
 } from "@/infrastructure/adapters/TechHavenApiRepositories";
 
-const productRepository = new TechHavenApiProductRepository();
-const transactionRepository = new TechHavenApiTransactionRepository();
-const deliveryRepository = new TechHavenApiDeliveryRepository();
+// Get singleton instances
+const productRepository = TechHavenApiProductRepository.getInstance();
+const transactionRepository = TechHavenApiTransactionRepository.getInstance();
+const deliveryRepository = TechHavenApiDeliveryRepository.getInstance();
 
 /**
  * Hook to manage product data from Tech Haven API

@@ -8,11 +8,16 @@ import { LoginUseCase } from "@/application/useCases/LoginUseCase";
 import { TechHavenApiAuthRepository } from "@/infrastructure/adapters/TechHavenApiRepositories";
 import { RegisterRequest, AuthState } from "@/shared/types/auth";
 
-const authRepository = new TechHavenApiAuthRepository();
+// Get singleton instance
+const authRepository = TechHavenApiAuthRepository.getInstance();
 const registerUseCase = new RegisterUseCase(authRepository);
 const loginUseCase = new LoginUseCase(authRepository);
 
-export const register = createAsyncThunk(
+export const register = createAsyncThunk<
+  { user: UserProfile; token: string | null },
+  RegisterRequest,
+  { rejectValue: string }
+>(
   "auth/register",
   async (request: RegisterRequest, { rejectWithValue }) => {
     try {
@@ -27,7 +32,11 @@ export const register = createAsyncThunk(
   },
 );
 
-export const login = createAsyncThunk(
+export const login = createAsyncThunk<
+  { user: UserProfile; token: string },
+  { email: string; password: string },
+  { rejectValue: string }
+>(
   "auth/login",
   async (
     { email, password }: { email: string; password: string },
@@ -57,7 +66,7 @@ const serializeUser = (user: UserProfile): UserProfile => {
     ...user,
     createdAt:
       typeof user.createdAt === "object"
-        ? (user.createdAt as any).toISOString()
+        ? (user.createdAt as unknown as { toISOString(): string }).toISOString()
         : user.createdAt,
   };
 };

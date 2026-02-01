@@ -23,6 +23,8 @@ class ProductRepositoryWithCache {
   private readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
   private readonly cacheTimestamps: Map<string, number> = new Map();
 
+  private constructor() {}
+
   static getInstance(): ProductRepositoryWithCache {
     if (!ProductRepositoryWithCache.instance) {
       ProductRepositoryWithCache.instance = new ProductRepositoryWithCache();
@@ -134,7 +136,18 @@ class ProductRepositoryWithCache {
  * Implements the ProductRepository port with caching and deduplication
  */
 export class TechHavenApiProductRepository {
+  private static instance: TechHavenApiProductRepository;
   private readonly cacheManager = ProductRepositoryWithCache.getInstance();
+
+  private constructor() {}
+
+  static getInstance(): TechHavenApiProductRepository {
+    if (!TechHavenApiProductRepository.instance) {
+      TechHavenApiProductRepository.instance =
+        new TechHavenApiProductRepository();
+    }
+    return TechHavenApiProductRepository.instance;
+  }
 
   async getAll(): Promise<ProductDTO[]> {
     return this.cacheManager.getAll();
@@ -150,41 +163,161 @@ export class TechHavenApiProductRepository {
 }
 
 /**
- * Tech Haven API Transaction Repository Adapter
- * Implements the TransactionRepository port
+ * Transaction Repository with request deduplication
+ * Prevents multiple identical requests from being made simultaneously
  */
-export class TechHavenApiTransactionRepository {
+class TransactionRepositoryWithCache {
+  private static instance: TransactionRepositoryWithCache;
+  private readonly pendingRequests: Map<string, Promise<TransactionDTO | TransactionDTO[]>> = new Map();
+
+  private constructor() {}
+
+  static getInstance(): TransactionRepositoryWithCache {
+    if (!TransactionRepositoryWithCache.instance) {
+      TransactionRepositoryWithCache.instance =
+        new TransactionRepositoryWithCache();
+    }
+    return TransactionRepositoryWithCache.instance;
+  }
+
   async getAll(): Promise<TransactionDTO[]> {
-    return transactionsApi.getAll();
+    const cacheKey = "all_transactions";
+
+    // If request is already pending, return the existing promise
+    if (this.pendingRequests.has(cacheKey)) {
+      return this.pendingRequests.get(cacheKey)!;
+    }
+
+    // Make the request and store the promise to deduplicate concurrent requests
+    const request = transactionsApi.getAll();
+    this.pendingRequests.set(cacheKey, request);
+
+    try {
+      return await request;
+    } finally {
+      this.pendingRequests.delete(cacheKey);
+    }
   }
 
   async getById(id: string): Promise<TransactionDTO> {
-    return transactionsApi.getById(id);
+    const cacheKey = `transaction_${id}`;
+
+    // If request is already pending, return the existing promise
+    if (this.pendingRequests.has(cacheKey)) {
+      return this.pendingRequests.get(cacheKey)!;
+    }
+
+    // Make the request
+    const request = transactionsApi.getById(id);
+    this.pendingRequests.set(cacheKey, request);
+
+    try {
+      return await request;
+    } finally {
+      this.pendingRequests.delete(cacheKey);
+    }
   }
 
   async create(data: CreateTransactionInputDto): Promise<TransactionDTO> {
-    return transactionsApi.create(data);
+    const request = transactionsApi.create(data);
+    return request;
   }
 
   async processPayment(
     id: string,
     paymentData: ProcessPaymentDto,
   ): Promise<TransactionDTO> {
-    return transactionsApi.processPayment(id, paymentData);
+    const request = transactionsApi.processPayment(id, paymentData);
+    return request;
   }
 }
 
 /**
- * Tech Haven API Customer Repository Adapter
- * Implements the CustomerRepository port
+ * Tech Haven API Transaction Repository Adapter
+ * Implements the TransactionRepository port with deduplication
  */
-export class TechHavenApiCustomerRepository {
+export class TechHavenApiTransactionRepository {
+  private static instance: TechHavenApiTransactionRepository;
+  private readonly cacheManager =
+    TransactionRepositoryWithCache.getInstance();
+
+  private constructor() {}
+
+  static getInstance(): TechHavenApiTransactionRepository {
+    if (!TechHavenApiTransactionRepository.instance) {
+      TechHavenApiTransactionRepository.instance =
+        new TechHavenApiTransactionRepository();
+    }
+    return TechHavenApiTransactionRepository.instance;
+  }
+
+  async getAll(): Promise<TransactionDTO[]> {
+    return this.cacheManager.getAll();
+  }
+
+  async getById(id: string): Promise<TransactionDTO> {
+    return this.cacheManager.getById(id);
+  }
+
+  async create(data: CreateTransactionInputDto): Promise<TransactionDTO> {
+    return this.cacheManager.create(data);
+  }
+
+  async processPayment(
+    id: string,
+    paymentData: ProcessPaymentDto,
+  ): Promise<TransactionDTO> {
+    return this.cacheManager.processPayment(id, paymentData);
+  }
+}
+
+/**
+ * Customer Repository with request deduplication
+ * Prevents multiple identical requests from being made simultaneously
+ */
+class CustomerRepositoryWithCache {
+  private static instance: CustomerRepositoryWithCache;
+  private readonly pendingRequests: Map<string, Promise<unknown>> = new Map();
+
+  static getInstance(): CustomerRepositoryWithCache {
+    if (!CustomerRepositoryWithCache.instance) {
+      CustomerRepositoryWithCache.instance = new CustomerRepositoryWithCache();
+    }
+    return CustomerRepositoryWithCache.instance;
+  }
+
   async getAll() {
-    return customersApi.getAll();
+    const cacheKey = "all_customers";
+
+    if (this.pendingRequests.has(cacheKey)) {
+      return this.pendingRequests.get(cacheKey)!;
+    }
+
+    const request = customersApi.getAll();
+    this.pendingRequests.set(cacheKey, request);
+
+    try {
+      return await request;
+    } finally {
+      this.pendingRequests.delete(cacheKey);
+    }
   }
 
   async getById(id: string) {
-    return customersApi.getById(id);
+    const cacheKey = `customer_${id}`;
+
+    if (this.pendingRequests.has(cacheKey)) {
+      return this.pendingRequests.get(cacheKey)!;
+    }
+
+    const request = customersApi.getById(id);
+    this.pendingRequests.set(cacheKey, request);
+
+    try {
+      return await request;
+    } finally {
+      this.pendingRequests.delete(cacheKey);
+    }
   }
 
   async create(data: {
@@ -198,24 +331,140 @@ export class TechHavenApiCustomerRepository {
 }
 
 /**
- * Tech Haven API Delivery Repository Adapter
- * Implements the DeliveryRepository port
+ * Tech Haven API Customer Repository Adapter
+ * Implements the CustomerRepository port with deduplication
  */
-export class TechHavenApiDeliveryRepository {
+export class TechHavenApiCustomerRepository {
+  private static instance: TechHavenApiCustomerRepository;
+  private readonly cacheManager = CustomerRepositoryWithCache.getInstance();
+
+  private constructor() {}
+
+  static getInstance(): TechHavenApiCustomerRepository {
+    if (!TechHavenApiCustomerRepository.instance) {
+      TechHavenApiCustomerRepository.instance =
+        new TechHavenApiCustomerRepository();
+    }
+    return TechHavenApiCustomerRepository.instance;
+  }
+
+  async getAll() {
+    return this.cacheManager.getAll();
+  }
+
+  async getById(id: string) {
+    return this.cacheManager.getById(id);
+  }
+
+  async create(data: {
+    name: string;
+    email: string;
+    address: string;
+    phone?: string;
+  }) {
+    return this.cacheManager.create(data);
+  }
+}
+
+/**
+ * Delivery Repository with request deduplication
+ * Prevents multiple identical requests from being made simultaneously
+ */
+class DeliveryRepositoryWithCache {
+  private static instance: DeliveryRepositoryWithCache;
+  private readonly pendingRequests: Map<string, Promise<DeliveryDTO | DeliveryDTO[]>> = new Map();
+
+  private constructor() {}
+
+  static getInstance(): DeliveryRepositoryWithCache {
+    if (!DeliveryRepositoryWithCache.instance) {
+      DeliveryRepositoryWithCache.instance = new DeliveryRepositoryWithCache();
+    }
+    return DeliveryRepositoryWithCache.instance;
+  }
+
   async getAll(): Promise<DeliveryDTO[]> {
-    return deliveriesApi.getAll();
+    const cacheKey = "all_deliveries";
+
+    // If request is already pending, return the existing promise
+    if (this.pendingRequests.has(cacheKey)) {
+      return this.pendingRequests.get(cacheKey)!;
+    }
+
+    // Make the request and store the promise to deduplicate concurrent requests
+    const request = deliveriesApi.getAll();
+    this.pendingRequests.set(cacheKey, request);
+
+    try {
+      return await request;
+    } finally {
+      this.pendingRequests.delete(cacheKey);
+    }
   }
 
   async getByTransactionId(transactionId: string): Promise<DeliveryDTO[]> {
-    return deliveriesApi.getByTransactionId(transactionId);
+    const cacheKey = `deliveries_${transactionId}`;
+
+    // If request is already pending, return the existing promise
+    if (this.pendingRequests.has(cacheKey)) {
+      return this.pendingRequests.get(cacheKey)!;
+    }
+
+    // Make the request
+    const request = deliveriesApi.getByTransactionId(transactionId);
+    this.pendingRequests.set(cacheKey, request);
+
+    try {
+      return await request;
+    } finally {
+      this.pendingRequests.delete(cacheKey);
+    }
+  }
+}
+
+/**
+ * Tech Haven API Delivery Repository Adapter
+ * Implements the DeliveryRepository port with deduplication
+ */
+export class TechHavenApiDeliveryRepository {
+  private static instance: TechHavenApiDeliveryRepository;
+  private readonly cacheManager = DeliveryRepositoryWithCache.getInstance();
+
+  private constructor() {}
+
+  static getInstance(): TechHavenApiDeliveryRepository {
+    if (!TechHavenApiDeliveryRepository.instance) {
+      TechHavenApiDeliveryRepository.instance =
+        new TechHavenApiDeliveryRepository();
+    }
+    return TechHavenApiDeliveryRepository.instance;
+  }
+
+  async getAll(): Promise<DeliveryDTO[]> {
+    return this.cacheManager.getAll();
+  }
+
+  async getByTransactionId(transactionId: string): Promise<DeliveryDTO[]> {
+    return this.cacheManager.getByTransactionId(transactionId);
   }
 }
 
 /**
  * Tech Haven API Auth Repository Adapter
- * Implements the AuthRepository port
+ * Implements the AuthRepository port with singleton pattern
  */
 export class TechHavenApiAuthRepository {
+  private static instance: TechHavenApiAuthRepository;
+
+  private constructor() {}
+
+  static getInstance(): TechHavenApiAuthRepository {
+    if (!TechHavenApiAuthRepository.instance) {
+      TechHavenApiAuthRepository.instance = new TechHavenApiAuthRepository();
+    }
+    return TechHavenApiAuthRepository.instance;
+  }
+
   async register(data: {
     email: string;
     firstName: string;
