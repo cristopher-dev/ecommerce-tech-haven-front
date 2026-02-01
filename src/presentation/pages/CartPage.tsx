@@ -57,7 +57,7 @@ const CartPage: React.FC = () => {
                       <td>{item.product.name}</td>
                       <td>
                         <img
-                          src={item.product.image}
+                          src={item.product.imageUrl || "https://via.placeholder.com/50x50?text=No+Image"}
                           alt={item.product.name}
                           style={{ width: "50px", height: "50px" }}
                         />
