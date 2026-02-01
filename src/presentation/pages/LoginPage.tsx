@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { useTranslation } from "react-i18next";
-import { AppDispatch, RootState } from "@/application/store/store";
 import { login } from "@/application/store/slices/authSlice";
+import { AppDispatch, RootState } from "@/application/store/store";
+import { useFormValidation } from "@/presentation/hooks/useFormValidation";
 import { ValidationErrors } from "@/shared/types/auth";
 import "@/styles/pages/auth.scss";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 interface FormData {
   email: string;
@@ -18,48 +18,41 @@ export default function LoginPage() {
   const dispatch = useDispatch<AppDispatch>();
   const { isLoading, error } = useSelector((state: RootState) => state.auth);
 
-  const [formData, setFormData] = useState<FormData>({
-    email: "admin@techhaven.com",
-    password: "admin123",
-  });
-
-  const [errors, setErrors] = useState<ValidationErrors>({});
-  const [touched, setTouched] = useState<Record<string, boolean>>({});
-
-  const validateForm = (): boolean => {
+  const validateLoginForm = (data: FormData): ValidationErrors => {
     const newErrors: ValidationErrors = {};
 
-    if (!formData.email.trim()) {
+    if (!data.email.trim()) {
       newErrors.email = t("errors.required");
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
       newErrors.email = t("errors.invalidEmail");
     }
 
-    if (!formData.password) {
+    if (!data.password) {
       newErrors.password = t("errors.required");
     }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return newErrors;
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    if (touched[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
-    }
-  };
+  const {
+    formData,
+    errors,
+    touched,
+    handleChange,
+    handleBlur,
+    handleValidate,
+  } = useFormValidation<FormData>({
+    initialFormData: {
+      email: "admin@techhaven.com",
+      password: "admin123",
+    },
+    validateForm: validateLoginForm,
+  });
 
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    const { name } = e.target;
-    setTouched((prev) => ({ ...prev, [name]: true }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateForm()) {
+    if (!handleValidate()) {
       return;
     }
 
