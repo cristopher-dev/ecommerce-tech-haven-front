@@ -22,7 +22,6 @@ import {
 } from "react-router-dom";
 import { PersistGate } from "redux-persist/integration/react";
 
-// Loading component shown while persisting
 const PersistGateLoader = () => (
   <div
     className="d-flex justify-content-center align-items-center"
@@ -32,25 +31,21 @@ const PersistGateLoader = () => (
   </div>
 );
 
-// Component to restore auth on app load
 function AuthRestorer({ children }: { readonly children: React.ReactNode }) {
   const dispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.auth);
   const hasInitialized = useRef(false);
 
   useEffect(() => {
-    // Only run once on component mount
     if (!hasInitialized.current) {
       hasInitialized.current = true;
       dispatch(restoreAuth());
     }
   }, [dispatch]);
 
-  // Check if there's a valid token (separate effect to avoid loop)
   useEffect(() => {
     const token = localStorage.getItem("authToken");
     if (!token && user) {
-      // No token but user exists - this is invalid state, clear it
       dispatch(logout());
     }
   }, [user, dispatch]);
@@ -58,11 +53,9 @@ function AuthRestorer({ children }: { readonly children: React.ReactNode }) {
   return <>{children}</>;
 }
 
-// Component to check if user is authenticated and redirect to login if not
 function PublicPageGuard({ children }: { readonly children: React.ReactNode }) {
   const { user } = useSelector((state: RootState) => state.auth);
 
-  // Si no hay usuario, redirigir a login
   if (!user) {
     return <Navigate to="/login" replace />;
   }

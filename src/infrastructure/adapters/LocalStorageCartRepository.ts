@@ -4,7 +4,6 @@ import { CartRepository } from "@/domain/ports/CartRepository";
 
 const CART_STORAGE_KEY = "techhaven_cart";
 
-// Generate a unique ID for a cart item if it doesn't have one
 const ensureCartItemId = (item: CartItem, index: number): CartItem => {
   if (!item.id) {
     return {
@@ -15,9 +14,7 @@ const ensureCartItemId = (item: CartItem, index: number): CartItem => {
   return item;
 };
 
-// Ensure product has an ID (fallback from item.id if necessary)
 const ensureProductId = (item: CartItem, index: number): CartItem => {
-  // Validate product exists and has an id
   if (!item.product) {
     console.warn(`Cart item ${index} has no product, skipping`);
     return item;
@@ -25,17 +22,14 @@ const ensureProductId = (item: CartItem, index: number): CartItem => {
 
   let productId = item.product.id;
 
-  // If product.id is missing or invalid, try to extract from item.id
   if (!productId && item.id && typeof item.id === "string") {
     const parts = item.id.split("-");
     const extractedId = parts[0];
 
-    // Try to parse as number, but keep as string if needed
     const numId = Number.parseInt(extractedId, 10);
     productId = Number.isNaN(numId) ? extractedId : String(numId);
   }
 
-  // If we still don't have a valid ID, return as-is (will trigger validation error downstream)
   if (!productId) {
     console.error(
       `Could not determine product ID for cart item ${index}:`,
@@ -44,7 +38,6 @@ const ensureProductId = (item: CartItem, index: number): CartItem => {
     return item;
   }
 
-  // Ensure product.id is always a string for consistency
   return {
     ...item,
     product: {
@@ -59,7 +52,6 @@ export class LocalStorageCartRepository implements CartRepository {
     const stored = localStorage.getItem(CART_STORAGE_KEY);
     if (stored) {
       const cart = JSON.parse(stored);
-      // Ensure all items have unique IDs and product IDs are present
       cart.items = cart.items
         .map((item: CartItem, index: number) => ensureProductId(item, index))
         .map((item: CartItem, index: number) => ensureCartItemId(item, index));

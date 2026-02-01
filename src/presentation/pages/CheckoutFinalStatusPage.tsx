@@ -14,7 +14,6 @@ const CheckoutFinalStatusPage: React.FC = () => {
   const purchasedItems = useAppSelector((state) => state.purchasedItems.items);
 
   useEffect(() => {
-    // Redirect to home if no transaction ID (user came directly)
     if (checkout.lastTransactionId) {
       console.log("CheckoutFinalStatusPage: Transaction successful", {
         transactionId: checkout.lastTransactionId,
@@ -33,7 +32,6 @@ const CheckoutFinalStatusPage: React.FC = () => {
     navigate("/");
   };
 
-  // Calculate order total
   const subtotal = checkout.cartItems.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
     0,

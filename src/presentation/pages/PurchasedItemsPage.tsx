@@ -15,7 +15,6 @@ const PurchasedItemsPage: React.FC = () => {
   const user = useAppSelector((state) => state.auth.user);
 
   useEffect(() => {
-    // Fetch user transactions when component mounts and user is available
     if (user?.id) {
       dispatch(fetchUserTransactions(user.id));
     }

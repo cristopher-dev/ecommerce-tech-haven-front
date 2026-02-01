@@ -52,7 +52,6 @@ const initialState: AuthState = {
   isAuthenticated: false,
 };
 
-// Helper function to convert Date objects to ISO strings for serialization
 const serializeUser = (user: UserProfile): UserProfile => {
   return {
     ...user,
@@ -63,7 +62,6 @@ const serializeUser = (user: UserProfile): UserProfile => {
   };
 };
 
-// Helper function to restore user from token
 const restoreUserFromToken = (): UserProfile | null => {
   try {
     const token = localStorage.getItem("authToken");

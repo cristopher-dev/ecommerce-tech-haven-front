@@ -6,7 +6,6 @@ import {
 } from "@/infrastructure/TechHavenApiRepositories";
 import * as apiClient from "@/infrastructure/api/techHavenApiClient";
 
-// Mock the API client
 jest.mock("@/infrastructure/api/techHavenApiClient");
 
 describe("TechHavenApiRepositories", () => {

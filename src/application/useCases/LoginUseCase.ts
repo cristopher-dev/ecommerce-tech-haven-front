@@ -20,7 +20,6 @@ export class LoginUseCase {
     email: string,
     password: string,
   ): Promise<{ user: User; token: string }> {
-    // Validate inputs
     if (!email?.includes("@")) {
       throw new Error("Invalid email format");
     }

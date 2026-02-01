@@ -44,7 +44,6 @@ const initialState: CheckoutState = {
   lastTransactionId: null,
 };
 
-// Generate a unique ID for a cart item if it doesn't have one
 const ensureCartItemId = (item: CartItem): CartItem => {
   if (!item.id) {
     return {
@@ -59,7 +58,6 @@ export const checkoutSlice = createSlice({
   name: "checkout",
   initialState,
   reducers: {
-    // Cart management
     addToCart: (state, action: PayloadAction<CartItem>) => {
       const itemWithId = ensureCartItemId(action.payload);
       const existingItem = state.cartItems.find(
@@ -91,7 +89,6 @@ export const checkoutSlice = createSlice({
       state.cartItems = [];
     },
 
-    // Payment data
     setPaymentData: (state, action: PayloadAction<PaymentData | null>) => {
       state.paymentData = action.payload;
     },
@@ -104,12 +101,10 @@ export const checkoutSlice = createSlice({
       }
     },
 
-    // Delivery data
     setDeliveryData: (state, action: PayloadAction<DeliveryData | null>) => {
       state.deliveryData = action.payload;
     },
 
-    // Checkout flow
     setStep: (state, action: PayloadAction<CheckoutState["step"]>) => {
       state.step = action.payload;
     },
@@ -120,7 +115,6 @@ export const checkoutSlice = createSlice({
       state.error = action.payload;
     },
 
-    // Transaction tracking
     setLastTransactionId: (state, action: PayloadAction<string>) => {
       state.lastTransactionId = action.payload;
     },
@@ -133,7 +127,6 @@ export const checkoutSlice = createSlice({
       state.error = null;
     },
 
-    // Fees management
     setDeliveryFee: (state, action: PayloadAction<number>) => {
       state.deliveryFee = action.payload;
     },

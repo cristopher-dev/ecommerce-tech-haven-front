@@ -22,7 +22,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const token = useAppSelector((state) => state.auth.token);
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
 
-  // If there's no token saved, redirect to login
   if (!token || !isAuthenticated) {
     return <Navigate to="/login" replace />;
   }

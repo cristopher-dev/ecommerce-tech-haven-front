@@ -72,7 +72,6 @@ export const isValidCVV = (
 ): boolean => {
   const digits = cvv.replaceAll(/\D/g, "");
 
-  // AMEX uses 4-digit CVV, others use 3
   if (cardType === "AMEX") {
     return digits.length === 4;
   }
@@ -91,7 +90,6 @@ export const isValidExpirationDate = (month: number, year: number): boolean => {
     return false;
   }
 
-  // Convert 2-digit year to 4-digit
   let fullYear = year;
   if (year < 100) {
     fullYear = year < 30 ? 2000 + year : 1900 + year; // Assume 20xx for 00-29, 19xx for 30-99
@@ -101,7 +99,6 @@ export const isValidExpirationDate = (month: number, year: number): boolean => {
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth() + 1;
 
-  // Check if expiration is in the future
   if (fullYear > currentYear) {
     return true;
   }
@@ -142,7 +139,6 @@ export const maskCardNumber = (cardNumber: string): string => {
  */
 export const isValidCardholderName = (name: string): boolean => {
   const trimmed = name.trim();
-  // Must have at least 2 parts (first and last name) and be at least 5 characters
   return trimmed.length >= 5 && trimmed.split(/\s+/).length >= 2;
 };
 

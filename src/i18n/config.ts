@@ -12,7 +12,6 @@ const resources = {
   },
 };
 
-// Get user's preferred language from localStorage or browser
 const savedLanguage = localStorage.getItem("language");
 const browserLanguage = navigator.language.split("-")[0];
 const defaultLanguage =
@@ -27,7 +26,6 @@ i18n.use(initReactI18next).init({
   },
 });
 
-// Save language preference when it changes
 i18n.on("languageChanged", (lng) => {
   localStorage.setItem("language", lng);
 });

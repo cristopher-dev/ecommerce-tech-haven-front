@@ -2,7 +2,6 @@
 /* eslint-disable no-var */
 import "@testing-library/jest-dom";
 
-// Polyfills for jsdom
 import { TextEncoder, TextDecoder } from "util";
 
 declare global {

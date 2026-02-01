@@ -25,11 +25,9 @@ const CheckoutSummaryPage: React.FC = () => {
   const cart = useAppSelector((state) => state.cart);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Use cart items from cartSlice, fallback to checkoutSlice
   const cartItems =
     cart.items && cart.items.length > 0 ? cart.items : checkout.cartItems || [];
 
-  // Calculate totals
   const subtotal = cartItems.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
     0,
@@ -59,7 +57,6 @@ const CheckoutSummaryPage: React.FC = () => {
       dispatch(setLoading(true));
       dispatch(setError(null));
 
-      // Extract customer name and email from delivery data
       const firstName = String(checkout.deliveryData.firstName || "").trim();
       const lastName = String(checkout.deliveryData.lastName || "").trim();
       const customerName = `${firstName} ${lastName}`.trim();
@@ -69,7 +66,6 @@ const CheckoutSummaryPage: React.FC = () => {
           .replaceAll(", ", ",")
           .trim();
 
-      // Validate customer data - strict validation matching backend requirements
       if (typeof customerName !== "string") {
         throw new TypeError("customerName must be a string");
       }
@@ -94,12 +90,9 @@ const CheckoutSummaryPage: React.FC = () => {
         throw new Error("customerAddress should not be empty");
       }
 
-      // Build items array for the new multi-product transaction endpoint
       const items = cartItems.map((item) => {
-        // Extract and validate productId - defensive extraction
         let productIdValue = item.product?.id;
 
-        // Log the raw values for debugging
         console.log("Transaction item processing:", {
           item_id: item.id,
           product: item.product,
@@ -107,13 +100,11 @@ const CheckoutSummaryPage: React.FC = () => {
           product_id_type: typeof productIdValue,
         });
 
-        // If product.id is missing, try alternative sources
         if (
           productIdValue === null ||
           productIdValue === undefined ||
           String(productIdValue).trim() === ""
         ) {
-          // Try to extract from cart item id
           if (item.id && typeof item.id === "string") {
             const parts = item.id.split("-");
             productIdValue = parts[0]; // First part is usually the product ID
@@ -137,10 +128,8 @@ const CheckoutSummaryPage: React.FC = () => {
           throw new Error("productId should not be empty");
         }
 
-        // Convert to string and validate
         const productId = String(productIdValue).trim();
 
-        // Validate productId - strict validation matching backend requirements
         if (typeof productId !== "string") {
           throw new TypeError("productId must be a string");
         }
@@ -153,7 +142,6 @@ const CheckoutSummaryPage: React.FC = () => {
           throw new Error("productId should not be empty");
         }
 
-        // Validate quantity - strict validation matching backend requirements
         const quantity = item.quantity;
 
         if (typeof quantity !== "number") {
@@ -172,7 +160,6 @@ const CheckoutSummaryPage: React.FC = () => {
         return { productId, quantity };
       });
 
-      // Build deliveryInfo object from checkout delivery data
       const deliveryInfo = {
         firstName: String(checkout.deliveryData.firstName || "").trim(),
         lastName: String(checkout.deliveryData.lastName || "").trim(),
@@ -183,7 +170,6 @@ const CheckoutSummaryPage: React.FC = () => {
         phone: String(checkout.deliveryData.phone || "").trim(),
       };
 
-      // STEP 1: Create transaction without card data
       const transactionPayload = {
         customerName: customerName,
         customerEmail: customerEmail,
@@ -192,7 +178,6 @@ const CheckoutSummaryPage: React.FC = () => {
         deliveryInfo: deliveryInfo,
       };
 
-      // Log the payload for debugging - Step 1
       console.log("=== STEP 1: CREATE TRANSACTION ===");
       console.log("customerName:", customerName);
       console.log("customerEmail:", customerEmail);
@@ -212,7 +197,6 @@ const CheckoutSummaryPage: React.FC = () => {
         status: transactionResponse.status,
       });
 
-      // Get the transaction ID - use 'id' if available, otherwise fallback to 'transactionId'
       const transactionIdForPayment =
         transactionResponse.id || transactionResponse.transactionId;
 
@@ -220,7 +204,6 @@ const CheckoutSummaryPage: React.FC = () => {
         throw new Error("No transaction ID received from backend");
       }
 
-      // STEP 2: Process payment with card data using the transaction ID from Step 1
       const paymentPayload = {
         cardNumber: checkout.paymentData.cardNumber.replaceAll(" ", ""),
         cardholderName: checkout.paymentData.cardholderName,
@@ -249,10 +232,8 @@ const CheckoutSummaryPage: React.FC = () => {
         orderId: paymentResponse.orderId,
       });
 
-      // Clear sensitive payment data (CVV) immediately after successful payment
       dispatch(clearPaymentSensitiveData());
 
-      // Update product stock after successful payment
       for (const item of cartItems) {
         dispatch(
           updateProductStock({
@@ -262,11 +243,9 @@ const CheckoutSummaryPage: React.FC = () => {
         );
       }
 
-      // Success - save transaction ID and navigate
       dispatch(setLastTransactionId(paymentResponse.transactionId));
       dispatch(setStep("status"));
 
-      // Add items to purchased history
       dispatch(
         addToPurchasedItems({
           items: cartItems,
@@ -274,7 +253,6 @@ const CheckoutSummaryPage: React.FC = () => {
         }),
       );
 
-      // Clear cart from both checkout and cart slices
       dispatch(clearCart());
       dispatch(clearCartState());
 
@@ -287,7 +265,6 @@ const CheckoutSummaryPage: React.FC = () => {
       const errorMessage =
         err instanceof Error ? err.message : "Payment processing failed";
 
-      // Log full error details for debugging
       console.error("Order processing error:", {
         error: err,
         message: errorMessage,

@@ -28,7 +28,6 @@ const Header: React.FC = () => {
 
   const handleLogout = () => {
     dispatch(logout());
-    // Use setTimeout to ensure logout action is processed before navigation
     setTimeout(() => {
       navigate("/");
     }, 100);
@@ -62,7 +61,6 @@ const Header: React.FC = () => {
 
       const data = await response.json();
 
-      // Set user data with real token from API
       const userData = {
         id: "admin-user",
         email: data.email,

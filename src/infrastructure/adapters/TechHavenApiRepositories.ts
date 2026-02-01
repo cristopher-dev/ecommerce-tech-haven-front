@@ -150,8 +150,6 @@ export class TechHavenApiAuthRepository {
   }> {
     const response = await authApi.login({ email, password });
 
-    // Extract email name and role from the login response
-    // Format: "name@domain.com" -> firstName: "name", lastName: "domain.com"
     const [firstName, lastName] =
       email.split("@")[0].split(".").length > 1
         ? email.split("@")[0].split(".")

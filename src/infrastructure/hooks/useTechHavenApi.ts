@@ -12,7 +12,6 @@ import {
   TechHavenApiDeliveryRepository,
 } from "@/infrastructure/adapters/TechHavenApiRepositories";
 
-// Initialize repositories
 const productRepository = new TechHavenApiProductRepository();
 const transactionRepository = new TechHavenApiTransactionRepository();
 const deliveryRepository = new TechHavenApiDeliveryRepository();

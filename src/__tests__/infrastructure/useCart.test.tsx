@@ -2,13 +2,11 @@ import { renderHook, act } from "@testing-library/react";
 import { useCart } from "@/infrastructure/useCart";
 
 describe("useCart hook", () => {
-  // Clear localStorage before each test
   beforeEach(() => {
     localStorage.clear();
     jest.clearAllMocks();
   });
 
-  // Test 1: Hook initializes with empty cart
   it("should initialize with empty cart", () => {
     const { result } = renderHook(() => useCart());
 
@@ -17,7 +15,6 @@ describe("useCart hook", () => {
     expect(result.current.cart.items).toHaveLength(0);
   });
 
-  // Test 2: addToCart function adds item to cart
   it("should add item to cart", async () => {
     const { result } = renderHook(() => useCart());
 
@@ -38,7 +35,6 @@ describe("useCart hook", () => {
     expect(result.current.cart.items[0].quantity).toBe(1);
   });
 
-  // Test 3: addToCart increases quantity for duplicate items
   it("should increase quantity when adding same product twice", async () => {
     const { result } = renderHook(() => useCart());
 
@@ -59,7 +55,6 @@ describe("useCart hook", () => {
     expect(result.current.cart.items[0].quantity).toBe(3);
   });
 
-  // Test 4: removeFromCart removes item
   it("should remove item from cart", async () => {
     const { result } = renderHook(() => useCart());
 
@@ -84,7 +79,6 @@ describe("useCart hook", () => {
     expect(result.current.cart.items).toHaveLength(0);
   });
 
-  // Test 5: updateQuantity changes item quantity
   it("should update item quantity", async () => {
     const { result } = renderHook(() => useCart());
 
@@ -109,7 +103,6 @@ describe("useCart hook", () => {
     expect(result.current.cart.items[0].quantity).toBe(5);
   });
 
-  // Test 6: getTotalItems calculates total quantity
   it("should calculate total items correctly", async () => {
     const { result } = renderHook(() => useCart());
 
@@ -137,7 +130,6 @@ describe("useCart hook", () => {
     expect(result.current.getTotalItems()).toBe(5);
   });
 
-  // Test 7: getTotalPrice calculates total price
   it("should calculate total price correctly", async () => {
     const { result } = renderHook(() => useCart());
 
@@ -162,11 +154,9 @@ describe("useCart hook", () => {
       result.current.addToCart(product2, 1); // 1 * 50 = 50
     });
 
-    // Total: 200 + 50 = 250
     expect(result.current.getTotalPrice()).toBe(250);
   });
 
-  // Test 8: Multiple products in cart
   it("should handle multiple different products", async () => {
     const { result } = renderHook(() => useCart());
 
@@ -202,11 +192,9 @@ describe("useCart hook", () => {
 
     expect(result.current.cart.items).toHaveLength(3);
     expect(result.current.getTotalItems()).toBe(4);
-    // 100 + (50*2) + 75 = 275
     expect(result.current.getTotalPrice()).toBe(275);
   });
 
-  // Test 9: Persist cart to localStorage
   it("should persist cart to localStorage using techhaven_cart key", async () => {
     const { result } = renderHook(() => useCart());
 
@@ -228,7 +216,6 @@ describe("useCart hook", () => {
     expect(parsedCart.items).toHaveLength(1);
   });
 
-  // Test 10: Load cart from localStorage on init
   it("should load cart from localStorage on initialization", () => {
     const mockCart = {
       items: [

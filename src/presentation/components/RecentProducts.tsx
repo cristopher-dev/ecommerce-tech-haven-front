@@ -16,11 +16,9 @@ const RecentProducts: React.FC = () => {
         setLoading(true);
         const repo = new TechHavenApiProductRepository();
         const data = await repo.getAll();
-        // Limit to first 5 products for recent products section
         setProducts(data.slice(0, 5));
         setError(null);
       } catch (err) {
-        // Silently handle 401 Unauthorized errors - products require authentication
         if (err instanceof Error && err.message.includes("401")) {
           setError(null); // Don't show error, allow fallback rendering
         } else {
@@ -35,7 +33,6 @@ const RecentProducts: React.FC = () => {
     loadProducts();
   }, []);
 
-  // Transform products to match ProductCard expectations
   const recentProducts = products.map((product, index) => ({
     id: product.id,
     name: product.name,

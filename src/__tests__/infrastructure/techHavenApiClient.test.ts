@@ -12,7 +12,6 @@ import {
   ProcessPaymentDto,
 } from "@/infrastructure/techHavenApiClient";
 
-// Mock fetch globally
 global.fetch = jest.fn();
 
 describe("TechHaven API Client", () => {

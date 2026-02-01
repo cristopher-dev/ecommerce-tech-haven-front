@@ -32,18 +32,15 @@ export const fetchUserTransactions = createAsyncThunk(
   "purchasedItems/fetchUserTransactions",
   async (userId: string, { rejectWithValue }) => {
     try {
-      // Fetch all transactions and products in parallel
       const [transactions, products] = await Promise.all([
         transactionsApi.getAll(),
         productsApi.getAll(),
       ]);
 
-      // Filter transactions for the current user
       const userTransactions = transactions.filter(
         (txn) => txn.customerId === userId,
       );
 
-      // Map transactions to PurchasedItems format
       const purchasedItems: PurchasedItem[] = userTransactions
         .map((txn: TransactionDTO) => {
           const product = products.find((p) => p.id === txn.productId);
@@ -82,7 +79,6 @@ const purchasedItemsSlice = createSlice({
   name: "purchasedItems",
   initialState,
   reducers: {
-    // Add items to purchased history
     addToPurchasedItems: (
       state,
       action: PayloadAction<{
@@ -106,7 +102,6 @@ const purchasedItemsSlice = createSlice({
       );
     },
 
-    // Remove purchased item
     removePurchasedItem: (state, action: PayloadAction<number>) => {
       const item = state.items.find(
         (item) => item.product.id === action.payload,
@@ -119,18 +114,15 @@ const purchasedItemsSlice = createSlice({
       );
     },
 
-    // Clear all purchased items
     clearPurchasedItems: (state) => {
       state.items = [];
       state.totalPurchases = 0;
     },
 
-    // Set loading state
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
 
-    // Set error
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
     },

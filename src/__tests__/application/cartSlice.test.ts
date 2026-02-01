@@ -1,4 +1,3 @@
-// Mock LocalStorageCartRepository before importing the slice
 jest.mock("@/infrastructure/adapters/LocalStorageCartRepository", () => ({
   LocalStorageCartRepository: jest.fn().mockImplementation(() => ({
     getCart: jest.fn().mockReturnValue({ items: [] }),

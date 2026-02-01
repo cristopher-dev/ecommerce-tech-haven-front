@@ -6,7 +6,6 @@ import ProductPage from "@/presentation/pages/ProductPage";
 import cartReducer from "@/application/store/slices/cartSlice";
 import wishlistReducer from "@/application/store/slices/wishlistSlice";
 
-// Mock Header and Footer with proper __esModule flag
 jest.mock("@/presentation/components/Header", () => ({
   __esModule: true,
   default: () => <div data-testid="header">Header</div>,

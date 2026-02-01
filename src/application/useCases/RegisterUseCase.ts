@@ -15,7 +15,6 @@ export class RegisterUseCase {
   constructor(private readonly authRepository: IAuthRepository) {}
 
   async execute(request: RegisterRequest): Promise<User> {
-    // Validate inputs
     if (!request.email?.includes("@")) {
       throw new Error("Invalid email format");
     }

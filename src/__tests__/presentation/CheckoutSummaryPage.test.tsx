@@ -14,7 +14,6 @@ import productsReducer from "@/application/store/slices/productsSlice";
 import transactionsReducer from "@/application/store/slices/transactionsSlice";
 import deliveriesReducer from "@/application/store/slices/deliveriesSlice";
 
-// Mock components
 jest.mock("@/presentation/components/Header", () => ({
   __esModule: true,
   default: () => <div data-testid="mock-header">Header</div>,

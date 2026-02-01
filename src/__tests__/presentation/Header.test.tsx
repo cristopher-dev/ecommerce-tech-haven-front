@@ -7,7 +7,6 @@ import Header from "@/presentation/pages/Header";
 import cartReducer from "@/application/store/slices/cartSlice";
 import wishlistReducer from "@/application/store/slices/wishlistSlice";
 
-// Mock SCSS imports
 jest.mock("@/presentation/components/Header.scss", () => ({}));
 
 describe("Header Component", () => {
@@ -73,7 +72,6 @@ describe("Header Component", () => {
 
   it("should display cart total price", () => {
     renderHeader();
-    // The header displays the total - just check for presence
     const allText = screen.queryAllByText(/199\.98|Total/i);
     expect(allText.length).toBeGreaterThan(0);
   });

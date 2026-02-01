@@ -14,7 +14,6 @@ import { useCart } from "../../infrastructure/hooks/useCart";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 
-// Loading view component
 const LoadingView: React.FC = () => {
   const { t } = useTranslation();
   return (
@@ -32,7 +31,6 @@ const LoadingView: React.FC = () => {
   );
 };
 
-// Not found view component
 const NotFoundView: React.FC = () => {
   const { t } = useTranslation();
   return (
@@ -48,7 +46,6 @@ const NotFoundView: React.FC = () => {
   );
 };
 
-// Search results view component
 interface SearchResultsViewProps {
   products: ProductDTO[];
   searchQuery: string | null;
@@ -232,7 +229,6 @@ const SearchResultsView: React.FC<SearchResultsViewProps> = ({
   );
 };
 
-// Helper function to build button content
 interface ButtonContentParams {
   isAdding: boolean;
   isOutOfStock: boolean;
@@ -288,7 +284,6 @@ const ProductPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [isSearchMode, setIsSearchMode] = useState(false);
 
-  // Get product ID from search params and convert numeric IDs to prod-X format
   const rawProductId = searchParams.get("id") || "1";
   const searchQuery = searchParams.get("search");
   const productId = /^\d+$/.test(rawProductId)
@@ -302,13 +297,11 @@ const ProductPage: React.FC = () => {
         const repo = new TechHavenApiProductRepository();
 
         if (searchQuery) {
-          // Search mode: send search to backend API
           setIsSearchMode(true);
           const searchResults = await repo.search(searchQuery);
           setProducts(searchResults);
           setProduct(null);
         } else {
-          // Single product mode
           setIsSearchMode(false);
           const data = await repo.getById(productId);
           setProduct(data);

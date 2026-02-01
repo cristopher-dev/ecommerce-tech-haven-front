@@ -4,10 +4,8 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import PaymentModal from "@/presentation/pages/PaymentModal";
 import userEvent from "@testing-library/user-event";
 
-// Mock SCSS imports
 jest.mock("@/presentation/components/PaymentModal.scss", () => ({}));
 
-// Mock card validation utilities
 jest.mock("@/shared/utils/cardValidation", () => ({
   isValidCardNumber: jest.fn(() => true),
   isValidCVV: jest.fn(() => true),
@@ -110,7 +108,6 @@ describe("PaymentModal Component", () => {
     if (modal) {
       fireEvent.click(modal);
     }
-    // Modal should still be visible
     expect(screen.getByText("Payment Information")).toBeInTheDocument();
   });
 

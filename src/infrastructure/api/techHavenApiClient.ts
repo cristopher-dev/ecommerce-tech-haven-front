@@ -9,7 +9,6 @@ import { getApiBaseUrl } from "./getApiBaseUrl";
 
 const API_BASE_URL = getApiBaseUrl();
 
-// Types for API requests and responses
 export interface ProductDTO {
   id: string;
   name: string;
@@ -181,10 +180,8 @@ async function apiRequest<T>(
 ): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
 
-  // Apply auth interceptor to automatically add token (skips for public endpoints)
   const enhancedOptions = withAuthInterceptor(options, endpoint);
 
-  // Ensure headers are properly merged with Content-Type always set to application/json
   const { headers: enhancedHeaders = {}, ...otherOptions } = enhancedOptions;
   const finalHeaders = {
     "Content-Type": "application/json",
@@ -202,20 +199,16 @@ async function apiRequest<T>(
       .json()
       .catch(() => ({ message: "Unknown error" }));
 
-    // Handle 401 Unauthorized - redirect to login only for protected endpoints
     if (response.status === 401) {
-      // Don't redirect for public endpoints like /products
       const publicEndpoints = ["/products"];
       const isPublicEndpoint = publicEndpoints.some((ep) =>
         endpoint.includes(ep),
       );
 
       if (!isPublicEndpoint) {
-        // Clear auth token and user data from localStorage
         localStorage.removeItem("authToken");
         localStorage.removeItem("authUser");
 
-        // Only redirect once to avoid infinite loops
         const lastRedirectTime = localStorage.getItem("lastLoginRedirect");
         const now = Date.now();
 

@@ -5,7 +5,6 @@ import { configureStore, PreloadedState } from "@reduxjs/toolkit";
 import CartPage from "@/presentation/pages/CartPage";
 import cartReducer from "@/application/store/slices/cartSlice";
 
-// Mock Header and Footer components
 jest.mock("@/presentation/components/Header", () => ({
   __esModule: true,
   default: () => <div data-testid="header">Header</div>,
@@ -71,7 +70,6 @@ describe("CartPage", () => {
     );
   };
 
-  // Test 1: Cart page renders with header and footer
   it("should render cart page with header and footer", () => {
     renderCartPage();
 
@@ -82,7 +80,6 @@ describe("CartPage", () => {
     ).toBeInTheDocument();
   });
 
-  // Test 2: Display cart items correctly
   it("should display all cart items with names", () => {
     renderCartPage();
 
@@ -90,7 +87,6 @@ describe("CartPage", () => {
     expect(screen.getByText("Test Product 2")).toBeInTheDocument();
   });
 
-  // Test 3: Display product images
   it("should display product images with correct alt text", () => {
     renderCartPage();
 
@@ -100,7 +96,6 @@ describe("CartPage", () => {
     expect(images[1]).toHaveAttribute("alt", "Test Product 2");
   });
 
-  // Test 4: Display correct quantities
   it("should display correct quantities in input fields", () => {
     renderCartPage();
 
@@ -109,38 +104,30 @@ describe("CartPage", () => {
     expect(inputs[1].value).toBe("1");
   });
 
-  // Test 5: Display cart item prices
   it("should display prices for items", () => {
     renderCartPage();
 
-    // Just check that price values are displayed (may appear multiple times)
     expect(screen.getByText("$99.99")).toBeInTheDocument();
     const prices49 = screen.getAllByText("$49.99");
     expect(prices49.length).toBeGreaterThanOrEqual(1);
   });
 
-  // Test 6: Display total prices for items
   it("should display total price for each item", () => {
     renderCartPage();
 
-    // Product 1 total: 99.99 * 2 = 199.98
     expect(screen.getByText("$199.98")).toBeInTheDocument();
-    // Product 2 appears twice: once as price ($49.99) and once as total ($49.99)
     const prices = screen.getAllByText("$49.99");
     expect(prices.length).toBeGreaterThanOrEqual(1);
   });
 
-  // Test 7: Display cart total
   it("should display total amount due", () => {
     renderCartPage();
 
-    // The total should be displayed
     const totalText = screen.getByText(/total: \$/i);
     expect(totalText).toBeInTheDocument();
     expect(totalText).toHaveTextContent("249.97");
   });
 
-  // Test 8: Checkout button present and linked
   it("should display Proceed to Checkout button with correct link", () => {
     renderCartPage();
 
@@ -151,7 +138,6 @@ describe("CartPage", () => {
     expect(checkoutButton).toHaveAttribute("href", "/cart");
   });
 
-  // Test 9: Remove buttons present
   it("should display Remove button for each cart item", () => {
     renderCartPage();
 
@@ -159,7 +145,6 @@ describe("CartPage", () => {
     expect(removeButtons).toHaveLength(2);
   });
 
-  // Test 10: Update quantity when input changes
   it("should update quantity when input value changes", async () => {
     renderCartPage();
 
@@ -173,7 +158,6 @@ describe("CartPage", () => {
     });
   });
 
-  // Test 11: Remove item from cart
   it("should remove item when Remove button is clicked", async () => {
     const store = createMockStore();
     renderCartPage(store);
@@ -186,7 +170,6 @@ describe("CartPage", () => {
     });
   });
 
-  // Test 12: Empty cart message
   it("should display empty cart message when no items", () => {
     const emptyStore = createMockStore({
       cart: {
@@ -203,7 +186,6 @@ describe("CartPage", () => {
     expect(screen.queryByRole("table")).not.toBeInTheDocument();
   });
 
-  // Test 13: Breadcrumb navigation
   it("should display breadcrumb navigation with Home and Cart", () => {
     renderCartPage();
 
@@ -211,7 +193,6 @@ describe("CartPage", () => {
     expect(screen.getByText("Cart")).toBeInTheDocument();
   });
 
-  // Test 14: Table headers
   it("should display all required table headers", () => {
     renderCartPage();
 
@@ -223,7 +204,6 @@ describe("CartPage", () => {
     expect(screen.getByText("Actions")).toBeInTheDocument();
   });
 
-  // Test 15: Responsive layout with cart rows
   it("should render table with responsive class", () => {
     renderCartPage();
 

@@ -23,18 +23,15 @@ export function withAuthInterceptor(
 ): Record<string, unknown> {
   const token = getAuthToken();
 
-  // Skip Authorization header only for auth endpoints and if no token available
   const authOnlyEndpoints = ["/auth/login", "/auth/register"];
   const isAuthOnlyEndpoint = authOnlyEndpoints.some((ep) =>
     endpoint.includes(ep),
   );
 
-  // If no token, skip adding authorization header
   if (!token) {
     return options;
   }
 
-  // If it's an auth-only endpoint (login/register), don't add token
   if (isAuthOnlyEndpoint) {
     return options;
   }
