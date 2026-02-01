@@ -528,7 +528,11 @@ const Header: React.FC = () => {
                                 >
                                   <div className="p-3 d-flex align-items-center gap-2">
                                     <img
-                                      src={item.product.image}
+                                      src={
+                                        item.product.image ||
+                                        item.product.imageUrl ||
+                                        "https://via.placeholder.com/50x50?text=Product"
+                                      }
                                       alt={item.product.name}
                                       className="rounded"
                                       style={{
