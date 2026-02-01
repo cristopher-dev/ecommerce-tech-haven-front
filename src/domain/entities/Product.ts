@@ -3,6 +3,7 @@ export interface Product {
   name: string;
   price: number;
   image?: string; // Optional as API may return imageUrl instead
+  imageUrl?: string; // Image URL from API
   discount: number;
   stock?: number; // Optional stock field from API
   description?: string; // Optional description field from API

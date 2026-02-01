@@ -92,7 +92,7 @@ const WishlistPage: React.FC = () => {
                         <td>
                           <div className="d-flex align-items-center gap-3">
                             <img
-                              src={item.product.image}
+                              src={item.product.imageUrl}
                               alt={item.product.name}
                               className="rounded"
                               style={{
