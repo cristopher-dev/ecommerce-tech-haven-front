@@ -21,7 +21,7 @@ const CheckoutProtectedRoute: React.FC<CheckoutProtectedRouteProps> = ({
 }) => {
   const token = useAppSelector((state) => state.auth.token);
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
-  const cartItems = useAppSelector((state) => state.checkout.cartItems);
+  const cartItems = useAppSelector((state) => state.cart.items);
 
   // Redirect to login if not authenticated
   if (!token || !isAuthenticated) {
