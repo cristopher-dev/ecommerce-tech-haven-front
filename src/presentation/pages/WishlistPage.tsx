@@ -9,11 +9,12 @@ import Footer from "@/presentation/components/Footer";
 import Header from "@/presentation/components/Header";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const WishlistPage: React.FC = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { items, count } = useWishlist();
 
   const handleRemoveFromWishlist = (productId: number) => {
@@ -28,6 +29,18 @@ const WishlistPage: React.FC = () => {
       }),
     );
     dispatch(moveToCart(product.id));
+  };
+
+  const handleBuyAll = () => {
+    for (const item of items) {
+      dispatch(
+        addToCart({
+          product: item.product,
+          quantity: 1,
+        }),
+      );
+    }
+    navigate("/checkout/delivery");
   };
 
   return (
@@ -192,10 +205,14 @@ const WishlistPage: React.FC = () => {
                     <i className="bi bi-arrow-left me-1"></i>
                     {t("wishlistPage.continueShopping")}
                   </Link>
-                  <Link to="/cart" className="btn btn-primary w-100">
-                    <i className="bi bi-bag me-1"></i>
-                    {t("wishlistPage.goToCart")}
-                  </Link>
+                  <button
+                    className="btn btn-success w-100"
+                    onClick={handleBuyAll}
+                    disabled={items.length === 0}
+                  >
+                    <i className="bi bi-credit-card me-1"></i>
+                    {t("common.buy")}
+                  </button>
                 </div>
               </div>
             </div>

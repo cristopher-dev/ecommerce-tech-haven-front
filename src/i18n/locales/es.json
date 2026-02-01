@@ -34,7 +34,8 @@
     "confirm": "Confirmar",
     "account": "Cuenta",
     "favorites": "Favoritos",
-    "orders": "Mis"
+    "orders": "Mis",
+    "buy": "Comprar"
   },
   "header": {
     "home": "Inicio",

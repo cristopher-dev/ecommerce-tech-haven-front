@@ -34,7 +34,8 @@
     "confirm": "Confirm",
     "account": "Account",
     "favorites": "Favorites",
-    "orders": "My"
+    "orders": "My",
+    "buy": "Buy"
   },
   "header": {
     "home": "Home",
