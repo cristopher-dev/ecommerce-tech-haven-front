@@ -7,6 +7,7 @@ import {
   setLastTransactionId,
   setLoading,
   setStep,
+  setTransactionItems,
 } from "@/application/store/slices/checkoutSlice";
 import { updateProductStock } from "@/application/store/slices/productsSlice";
 import { addToPurchasedItems } from "@/application/store/slices/purchasedItemsSlice";
@@ -252,6 +253,8 @@ const CheckoutSummaryPage: React.FC = () => {
           transactionId: paymentResponse.transactionId,
         }),
       );
+
+      dispatch(setTransactionItems(cartItems));
 
       dispatch(clearCart());
       dispatch(clearCartState());

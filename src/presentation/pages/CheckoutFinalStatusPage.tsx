@@ -16,13 +16,14 @@ const CheckoutFinalStatusPage: React.FC = () => {
   useEffect(() => {
     console.log("CheckoutFinalStatusPage mounted", {
       lastTransactionId: checkout.lastTransactionId,
+      transactionItemsCount: checkout.transactionItems.length,
       purchasedItemsCount: purchasedItems.length,
       hasCartItems: (checkout.cartItems?.length || 0) > 0,
     });
 
     // If we DON'T have transaction data, we need to redirect
     // This catches cases where user directly navigated to this page
-    if (!checkout.lastTransactionId && purchasedItems.length === 0) {
+    if (!checkout.lastTransactionId && checkout.transactionItems.length === 0) {
       console.log(
         "⚠️ No transaction data found, checking if this is a recovery scenario...",
       );
@@ -42,16 +43,21 @@ const CheckoutFinalStatusPage: React.FC = () => {
     }
 
     console.log("✅ CheckoutFinalStatusPage: Valid transaction data present");
-  }, [checkout.lastTransactionId, purchasedItems.length, navigate]);
+  }, [checkout.lastTransactionId, checkout.transactionItems.length, navigate]);
 
   const handleReturnHome = () => {
     dispatch(clearCheckout());
     navigate("/");
   };
 
-  // Use purchasedItems if available, otherwise fall back to checkout.cartItems
-  const displayItems =
-    purchasedItems.length > 0 ? purchasedItems : checkout.cartItems;
+  // Use transactionItems if available, otherwise fall back to purchasedItems, otherwise fall back to checkout.cartItems
+  let displayItems = checkout.cartItems;
+  if (purchasedItems.length > 0) {
+    displayItems = purchasedItems;
+  }
+  if (checkout.transactionItems.length > 0) {
+    displayItems = checkout.transactionItems;
+  }
   const subtotal = displayItems.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
     0,

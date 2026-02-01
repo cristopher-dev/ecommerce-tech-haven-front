@@ -19,6 +19,7 @@ describe("checkoutSlice", () => {
     error: null,
     step: "product" as const,
     lastTransactionId: null,
+    transactionItems: [],
   };
 
   it("should return the initial state", () => {
