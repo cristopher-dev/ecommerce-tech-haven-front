@@ -6,6 +6,30 @@ import { Link } from "react-router-dom";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 
+interface PurchasedItemExtended {
+  id: string;
+  product: {
+    id: string;
+    name: string;
+    price: number;
+    image?: string;
+    description?: string;
+    stock?: number;
+  };
+  quantity: number;
+  purchaseDate: string;
+  transactionId: string;
+  status?: string;
+}
+
+interface TransactionSummary {
+  transactionId: string;
+  items: PurchasedItemExtended[];
+  purchaseDate: Date;
+  status: string;
+  total: number;
+}
+
 const PurchasedItemsPage: React.FC = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
@@ -20,28 +44,31 @@ const PurchasedItemsPage: React.FC = () => {
     }
   }, [user?.id, dispatch]);
 
-  const groupedByTransaction = purchasedItems.reduce(
-    (acc, item) => {
-      if (!acc[item.transactionId]) {
-        acc[item.transactionId] = [];
-      }
-      acc[item.transactionId].push(item);
-      return acc;
-    },
-    {} as Record<string, typeof purchasedItems>,
-  );
+  // Map purchasedItems to include transaction status and group by transaction
+  const transactionsMap = new Map<string, TransactionSummary>();
+  for (const item of purchasedItems) {
+    if (!transactionsMap.has(item.transactionId)) {
+      const baseItem = item as unknown as PurchasedItemExtended;
+      transactionsMap.set(item.transactionId, {
+        transactionId: item.transactionId,
+        items: [],
+        purchaseDate: new Date(item.purchaseDate),
+        status: baseItem.status || "COMPLETED",
+        total: 0,
+      });
+    }
+    const txn = transactionsMap.get(item.transactionId)!;
+    txn.items.push(item as unknown as PurchasedItemExtended);
+    txn.total += item.product.price * item.quantity;
+  }
 
-  const transactions = Object.entries(groupedByTransaction).map(
-    ([transactionId, items]) => ({
-      transactionId,
-      items,
-      purchaseDate: new Date(items[0].purchaseDate),
-      total: items.reduce(
-        (sum, item) => sum + item.product.price * item.quantity,
-        0,
-      ),
-    }),
-  );
+  const transactions = Array.from(transactionsMap.values());
+
+  const getStatusBadgeClass = (status: string): string => {
+    if (status === "APPROVED") return "bg-success";
+    if (status === "DECLINED") return "bg-danger";
+    return "bg-warning";
+  };
 
   return (
     <div>
@@ -104,6 +131,9 @@ const PurchasedItemsPage: React.FC = () => {
                           {t("purchasedItemsPage.total")}: $
                           {transaction.total.toFixed(2)}
                         </h6>
+                        <span className={`badge ms-2 ${getStatusBadgeClass(transaction.status)}`}>
+                          {transaction.status}
+                        </span>
                       </div>
                     </div>
                   </div>
