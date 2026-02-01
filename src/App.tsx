@@ -1,5 +1,6 @@
 import { logout, restoreAuth } from "@/application/store/slices/authSlice";
 import { persistor, RootState, store } from "@/application/store/store";
+import CheckoutProtectedRoute from "@/presentation/components/CheckoutProtectedRoute";
 import ProtectedRoute from "@/presentation/components/ProtectedRoute";
 import CartPage from "@/presentation/pages/CartPage";
 import CheckoutDeliveryPage from "@/presentation/pages/CheckoutDeliveryPage";
@@ -120,33 +121,33 @@ function App() {
               <Route
                 path="/checkout"
                 element={
-                  <ProtectedRoute>
+                  <CheckoutProtectedRoute>
                     <CheckoutDeliveryPage />
-                  </ProtectedRoute>
+                  </CheckoutProtectedRoute>
                 }
               />
               <Route
                 path="/checkout/delivery"
                 element={
-                  <ProtectedRoute>
+                  <CheckoutProtectedRoute>
                     <CheckoutDeliveryPage />
-                  </ProtectedRoute>
+                  </CheckoutProtectedRoute>
                 }
               />
               <Route
                 path="/checkout/summary"
                 element={
-                  <ProtectedRoute>
+                  <CheckoutProtectedRoute>
                     <CheckoutSummaryPage />
-                  </ProtectedRoute>
+                  </CheckoutProtectedRoute>
                 }
               />
               <Route
                 path="/checkout/final"
                 element={
-                  <ProtectedRoute>
+                  <CheckoutProtectedRoute>
                     <CheckoutFinalStatusPage />
-                  </ProtectedRoute>
+                  </CheckoutProtectedRoute>
                 }
               />
             </Routes>
