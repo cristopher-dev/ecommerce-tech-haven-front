@@ -36,6 +36,7 @@ const TopRatedProducts: React.FC = () => {
             description: "Comfortable casual blue shoes",
             imageUrl:
               "https://images.unsplash.com/photo-1549298916-b41d501d3772?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300&q=80",
+            discount: 0,
           },
           {
             id: "prod-2",
@@ -45,6 +46,7 @@ const TopRatedProducts: React.FC = () => {
             description: "High-definition camera",
             imageUrl:
               "https://images.unsplash.com/photo-1502920917128-1aa500764cbd?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300&q=80",
+            discount: 15,
           },
           {
             id: "prod-3",
@@ -54,6 +56,7 @@ const TopRatedProducts: React.FC = () => {
             description: "Wireless IP security camera",
             imageUrl:
               "https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300&q=80",
+            discount: 0,
           },
           {
             id: "prod-4",
@@ -63,6 +66,7 @@ const TopRatedProducts: React.FC = () => {
             description: "Professional laptop carrying case",
             imageUrl:
               "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300&q=80",
+            discount: 15,
           },
           {
             id: "prod-5",
@@ -72,6 +76,7 @@ const TopRatedProducts: React.FC = () => {
             description: "Classic black shoes",
             imageUrl:
               "https://images.unsplash.com/photo-1549298916-b41d501d3772?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300&q=80",
+            discount: 0,
           },
           {
             id: "prod-6",
@@ -81,6 +86,7 @@ const TopRatedProducts: React.FC = () => {
             description: "Modern smartwatch with health tracking",
             imageUrl:
               "https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300&q=80",
+            discount: 15,
           },
         ];
         setProducts(mockProducts);
@@ -93,13 +99,15 @@ const TopRatedProducts: React.FC = () => {
   }, []);
 
   // Transform products to match ProductCard expectations
-  const topRatedProducts = products.map((product, index) => ({
+  const topRatedProducts = products.map((product) => ({
     id: product.id,
     name: product.name,
+    description: product.description,
     price: product.price / 100,
-    image:
+    stock: product.stock,
+    imageUrl:
       product.imageUrl || "https://via.placeholder.com/300x300?text=Product",
-    discount: (index % 2) * 15, // Vary discount for some products
+    discount: product.discount,
   }));
 
   return (
@@ -114,7 +122,11 @@ const TopRatedProducts: React.FC = () => {
         </div>
         {loading && (
           <div className="text-center">
-            <div className="spinner-border" role="status">
+            <div
+              className="spinner-border"
+              aria-live="polite"
+              aria-label="Loading products"
+            >
               <span className="visually-hidden">Loading...</span>
             </div>
           </div>

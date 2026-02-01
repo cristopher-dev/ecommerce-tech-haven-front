@@ -1,14 +1,13 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import type { ProductDTO } from "@/infrastructure/api/techHavenApiClient";
-import { useAppDispatch } from "@/application/store/hooks";
+import { useAppDispatch, useWishlist } from "@/application/store/hooks";
 import { addToCart } from "@/application/store/slices/cartSlice";
 import {
   addToWishlist,
   removeFromWishlist,
 } from "@/application/store/slices/wishlistSlice";
-import { useWishlist } from "@/application/store/hooks";
+import type { ProductDTO } from "@/infrastructure/api/techHavenApiClient";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 interface ProductCardProps {
   product: ProductDTO;
@@ -50,7 +49,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       : product.price;
 
   return (
-    <div
+    <article
       className="card h-100 border-0 product-card-modern"
       style={{
         transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
@@ -76,7 +75,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         }}
       >
         <img
-          src={product.imageUrl || product.image}
+          src={product.imageUrl}
           className="card-img-top"
           alt={product.name}
           style={{
@@ -256,7 +255,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           {t("productPage.buyNow")}
         </button>
       </div>
-    </div>
+    </article>
   );
 };
 

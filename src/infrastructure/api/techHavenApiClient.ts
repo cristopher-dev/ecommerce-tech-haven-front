@@ -17,6 +17,7 @@ export interface ProductDTO {
   price: number;
   stock: number;
   imageUrl?: string;
+  discount: number;
 }
 
 export interface UserDTO {
@@ -153,9 +154,7 @@ export interface GetTransactionResponseDto {
   };
 }
 
-export interface TransactionDTO extends GetTransactionResponseDto {
-  // TransactionDTO now extends GetTransactionResponseDto with all necessary fields
-}
+export type TransactionDTO = GetTransactionResponseDto;
 
 export interface ProcessPaymentDto {
   cardNumber: string;
@@ -220,9 +219,12 @@ async function apiRequest<T>(
         const lastRedirectTime = localStorage.getItem("lastLoginRedirect");
         const now = Date.now();
 
-        if (!lastRedirectTime || now - parseInt(lastRedirectTime) > 5000) {
+        if (
+          !lastRedirectTime ||
+          now - Number.parseInt(lastRedirectTime) > 5000
+        ) {
           localStorage.setItem("lastLoginRedirect", now.toString());
-          window.location.href = "/login";
+          globalThis.location.href = "/login";
         }
       }
     }

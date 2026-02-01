@@ -1,15 +1,14 @@
 import {
-  productsApi,
-  transactionsApi,
+  authApi,
+  CreateTransactionInputDto,
   customersApi,
   deliveriesApi,
-  authApi,
-  ProductDTO,
-  TransactionDTO,
-  CreateTransactionInputDto,
-  ProcessPaymentDto,
   DeliveryDTO,
-  LoginResponseDTO,
+  ProcessPaymentDto,
+  ProductDTO,
+  productsApi,
+  TransactionDTO,
+  transactionsApi,
 } from "@/infrastructure/api/techHavenApiClient";
 
 /**

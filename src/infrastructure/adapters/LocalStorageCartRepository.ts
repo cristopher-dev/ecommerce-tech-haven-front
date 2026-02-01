@@ -1,6 +1,6 @@
-import { CartRepository } from "@/domain/ports/CartRepository";
 import { Cart } from "@/domain/entities/Cart";
 import { CartItem } from "@/domain/entities/CartItem";
+import { CartRepository } from "@/domain/ports/CartRepository";
 
 const CART_STORAGE_KEY = "techhaven_cart";
 
@@ -31,8 +31,8 @@ const ensureProductId = (item: CartItem, index: number): CartItem => {
     const extractedId = parts[0];
 
     // Try to parse as number, but keep as string if needed
-    const numId = parseInt(extractedId, 10);
-    productId = !isNaN(numId) ? String(numId) : extractedId;
+    const numId = Number.parseInt(extractedId, 10);
+    productId = Number.isNaN(numId) ? extractedId : String(numId);
   }
 
   // If we still don't have a valid ID, return as-is (will trigger validation error downstream)

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import ProductCard from "./ProductCard";
 import { TechHavenApiProductRepository } from "@/infrastructure/adapters/TechHavenApiRepositories";
 import type { ProductDTO } from "@/infrastructure/api/techHavenApiClient";
+import React, { useEffect, useState } from "react";
+import ProductCard from "./ProductCard";
 
 interface ProductSectionProps {
   title: string;
@@ -41,9 +41,11 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title }) => {
         <div className="container">
           <h2 className="mb-4">{title}</h2>
           <div className="text-center">
-            <div className="spinner-border" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </div>
+            <output aria-label="Loading products">
+              <div className="spinner-border">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            </output>
           </div>
         </div>
       </section>
@@ -61,15 +63,7 @@ const ProductSection: React.FC<ProductSectionProps> = ({ title }) => {
         <div className="row">
           {products.map((product) => (
             <div key={product.id} className="col-lg-3 col-md-4 col-sm-6 mb-4">
-              <ProductCard
-                product={{
-                  id: product.id,
-                  name: product.name,
-                  price: product.price / 100, // Convert cents to dollars
-                  image: product.imageUrl,
-                  discount: 0,
-                }}
-              />
+              <ProductCard product={product} />
             </div>
           ))}
         </div>

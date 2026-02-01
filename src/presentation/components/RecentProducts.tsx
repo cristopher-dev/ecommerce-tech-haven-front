@@ -39,11 +39,12 @@ const RecentProducts: React.FC = () => {
   const recentProducts = products.map((product, index) => ({
     id: product.id,
     name: product.name,
+    description: product.description,
     price: product.price / 100,
-    image:
+    stock: product.stock,
+    imageUrl:
       product.imageUrl || "https://via.placeholder.com/300x300?text=Product",
     discount: (index % 3) * 10, // Vary discount for visual effect
-    rating: 5,
   }));
 
   return (
@@ -56,8 +57,8 @@ const RecentProducts: React.FC = () => {
         </div>
         {loading && (
           <div className="text-center">
-            <div className="spinner-border" role="status">
-              <span className="visually-hidden">Loading...</span>
+            <div className="spinner-border" aria-label="Loading">
+              <output></output>
             </div>
           </div>
         )}
