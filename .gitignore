@@ -37,3 +37,4 @@ leer.txt
 *.md
 coverage/
 .scannerwork
+.sonarlint
