@@ -5,12 +5,14 @@ import {
   setStep,
 } from "@/application/store/slices/checkoutSlice";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import PaymentModal, { type PaymentFormData } from "../components/PaymentModal";
 
 const CheckoutDeliveryPage: React.FC = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const checkout = useAppSelector((state) => state.checkout);
@@ -42,16 +44,23 @@ const CheckoutDeliveryPage: React.FC = () => {
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
     if (!formData.firstName.trim())
-      newErrors.firstName = "First name is required";
-    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
-    if (!formData.address.trim()) newErrors.address = "Address is required";
-    if (!formData.city.trim()) newErrors.city = "City is required";
-    if (!formData.state.trim()) newErrors.state = "State/Province is required";
-    if (!formData.zipCode.trim()) newErrors.zipCode = "ZIP code is required";
-    if (!formData.email.trim()) newErrors.email = "Email is required";
+      newErrors.firstName = t("checkoutDelivery.validation.firstNameRequired");
+    if (!formData.lastName.trim())
+      newErrors.lastName = t("checkoutDelivery.validation.lastNameRequired");
+    if (!formData.address.trim())
+      newErrors.address = t("checkoutDelivery.validation.addressRequired");
+    if (!formData.city.trim())
+      newErrors.city = t("checkoutDelivery.validation.cityRequired");
+    if (!formData.state.trim())
+      newErrors.state = t("checkoutDelivery.validation.stateRequired");
+    if (!formData.zipCode.trim())
+      newErrors.zipCode = t("checkoutDelivery.validation.zipCodeRequired");
+    if (!formData.email.trim())
+      newErrors.email = t("checkoutDelivery.validation.emailRequired");
     else if (!/\S+@\S+\.\S+/.test(formData.email))
-      newErrors.email = "Email is invalid";
-    if (!formData.phone.trim()) newErrors.phone = "Phone is required";
+      newErrors.email = t("checkoutDelivery.validation.emailInvalid");
+    if (!formData.phone.trim())
+      newErrors.phone = t("checkoutDelivery.validation.phoneRequired");
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -118,13 +127,13 @@ const CheckoutDeliveryPage: React.FC = () => {
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
-              <Link to="/">Home</Link>
+              <Link to="/">{t("header.home")}</Link>
             </li>
             <li className="breadcrumb-item">
-              <Link to="/cart">Cart</Link>
+              <Link to="/cart">{t("header.cart")}</Link>
             </li>
             <li className="breadcrumb-item active" aria-current="page">
-              Checkout - Delivery
+              {t("checkoutDelivery.breadcrumb")}
             </li>
           </ol>
         </nav>
@@ -138,16 +147,16 @@ const CheckoutDeliveryPage: React.FC = () => {
               aria-valuemin={0}
               aria-valuemax={100}
             >
-              Step 1 of 3: Delivery
+              {t("checkoutDelivery.progressBar")}
             </div>
           </div>
         </div>
-        <h2>Delivery Information</h2>
+        <h2>{t("checkoutDelivery.title")}</h2>
         <form onSubmit={handleDeliverySubmit}>
           <div className="row">
             <div className="col-md-6 mb-3">
               <label htmlFor="firstName" className="form-label">
-                First Name *
+                {t("checkoutDelivery.firstName")} *
               </label>
               <input
                 type="text"
@@ -165,7 +174,7 @@ const CheckoutDeliveryPage: React.FC = () => {
             </div>
             <div className="col-md-6 mb-3">
               <label htmlFor="lastName" className="form-label">
-                Last Name *
+                {t("checkoutDelivery.lastName")} *
               </label>
               <input
                 type="text"
@@ -184,7 +193,7 @@ const CheckoutDeliveryPage: React.FC = () => {
           </div>
           <div className="mb-3">
             <label htmlFor="address" className="form-label">
-              Address *
+              {t("checkoutDelivery.address")} *
             </label>
             <input
               type="text"
@@ -203,7 +212,7 @@ const CheckoutDeliveryPage: React.FC = () => {
           <div className="row">
             <div className="col-md-6 mb-3">
               <label htmlFor="city" className="form-label">
-                City *
+                {t("checkoutDelivery.city")} *
               </label>
               <input
                 type="text"
@@ -221,7 +230,7 @@ const CheckoutDeliveryPage: React.FC = () => {
             </div>
             <div className="col-md-6 mb-3">
               <label htmlFor="state" className="form-label">
-                State/Province *
+                {t("checkoutDelivery.state")} *
               </label>
               <input
                 type="text"
@@ -241,7 +250,7 @@ const CheckoutDeliveryPage: React.FC = () => {
           <div className="row">
             <div className="col-md-6 mb-3">
               <label htmlFor="zipCode" className="form-label">
-                ZIP Code *
+                {t("checkoutDelivery.zipCode")} *
               </label>
               <input
                 type="text"
@@ -260,7 +269,7 @@ const CheckoutDeliveryPage: React.FC = () => {
           </div>
           <div className="mb-3">
             <label htmlFor="email" className="form-label">
-              Email *
+              {t("checkoutDelivery.email")} *
             </label>
             <input
               type="email"
@@ -278,7 +287,7 @@ const CheckoutDeliveryPage: React.FC = () => {
           </div>
           <div className="mb-3">
             <label htmlFor="phone" className="form-label">
-              Phone *
+              {t("checkoutDelivery.phone")} *
             </label>
             <input
               type="tel"
@@ -296,7 +305,7 @@ const CheckoutDeliveryPage: React.FC = () => {
           </div>
           <div className="d-flex gap-2 justify-content-between mt-4">
             <Link to="/cart" className="btn btn-secondary">
-              Back to Cart
+              {t("checkoutDelivery.backToCart")}
             </Link>
             <button
               type="submit"
@@ -309,10 +318,10 @@ const CheckoutDeliveryPage: React.FC = () => {
                     className="spinner-border spinner-border-sm me-2"
                     role="status"
                   />
-                  Processing...
+                  {t("checkoutDelivery.processing")}
                 </>
               ) : (
-                "Continue to Payment"
+                t("checkoutDelivery.continueToPayment")
               )}
             </button>
           </div>

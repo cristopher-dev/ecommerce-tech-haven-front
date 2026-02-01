@@ -1,14 +1,13 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { useAppDispatch } from "@/application/store/hooks";
+import { useAppDispatch, useCartItems } from "@/application/store/hooks";
 import {
   removeFromCart,
   updateQuantity,
 } from "@/application/store/slices/cartSlice";
-import { useCartItems } from "@/application/store/hooks";
-import Header from "@/presentation/components/Header";
 import Footer from "@/presentation/components/Footer";
+import Header from "@/presentation/components/Header";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 const CartPage: React.FC = () => {
   const { t } = useTranslation();
@@ -45,7 +44,7 @@ const CartPage: React.FC = () => {
                 <thead>
                   <tr>
                     <th>{t("cartPage.product")}</th>
-                    <th>Image</th>
+                    <th>{t("cartPage.image")}</th>
                     <th>{t("cartPage.quantity")}</th>
                     <th>{t("cartPage.price")}</th>
                     <th>{t("common.total")}</th>

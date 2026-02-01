@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import { useCart } from "../../infrastructure/hooks/useCart";
 import { useAppDispatch } from "@/application/store/hooks";
 import {
   addToWishlist,
   removeFromWishlist,
 } from "@/application/store/slices/wishlistSlice";
-import { useSelector } from "react-redux";
 import { RootState } from "@/application/store/store";
 import { TechHavenApiProductRepository } from "@/infrastructure/adapters/TechHavenApiRepositories";
 import type { ProductDTO } from "@/infrastructure/api/techHavenApiClient";
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useCart } from "../../infrastructure/hooks/useCart";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
 
 const ProductPage: React.FC = () => {
   const { t } = useTranslation();
@@ -118,7 +118,7 @@ const ProductPage: React.FC = () => {
         <main className="container my-4">
           <div className="text-center">
             <div className="spinner-border" role="status">
-              <span className="visually-hidden">Loading...</span>
+              <span className="visually-hidden">{t("common.loading")}</span>
             </div>
           </div>
         </main>
@@ -291,7 +291,7 @@ const ProductPage: React.FC = () => {
         <Header />
         <main className="container my-4">
           <div className="alert alert-danger">
-            Product not found. <Link to="/">{t("common.back")}</Link>
+            {t("productPage.notFound")} <Link to="/">{t("common.back")}</Link>
           </div>
         </main>
         <Footer />
@@ -309,7 +309,7 @@ const ProductPage: React.FC = () => {
               <Link to="/">{t("header.home")}</Link>
             </li>
             <li className="breadcrumb-item active" aria-current="page">
-              Product
+              {t("productPage.title")}
             </li>
           </ol>
         </nav>
@@ -321,7 +321,7 @@ const ProductPage: React.FC = () => {
             <h1>{product.name}</h1>
             <p className="text-muted">${(product.price / 100).toFixed(2)}</p>
             <p className="text-success">
-              Stock: {product.stock} units available
+              {t("productPage.stock")}: {product.stock} {t("productPage.units")}
             </p>
             <p>{product.description}</p>
             <div className="d-flex gap-2 flex-wrap">
@@ -336,12 +336,12 @@ const ProductPage: React.FC = () => {
                       className="spinner-border spinner-border-sm me-2"
                       role="status"
                     ></span>
-                    Adding...
+                    {t("productPage.adding")}
                   </>
                 ) : product.stock === 0 ? (
-                  "Out of Stock"
+                  t("productPage.outOfStock")
                 ) : (
-                  "Add to Cart"
+                  t("productPage.addToCart")
                 )}
               </button>
               <button
@@ -355,14 +355,14 @@ const ProductPage: React.FC = () => {
                       className="spinner-border spinner-border-sm me-2"
                       role="status"
                     ></span>
-                    Loading...
+                    {t("common.loading")}
                   </>
                 ) : product.stock === 0 ? (
-                  "Out of Stock"
+                  t("productPage.outOfStock")
                 ) : (
                   <>
                     <i className="bi bi-cart-check me-2"></i>
-                    Buy Now
+                    {t("productPage.buyNow")}
                   </>
                 )}
               </button>
@@ -382,7 +382,7 @@ const ProductPage: React.FC = () => {
           >
             <div className="toast-header bg-success text-white">
               <i className="bi bi-check-circle-fill me-2"></i>
-              <strong className="me-auto">Added to Cart</strong>
+              <strong className="me-auto">{t("success.addedToCart")}</strong>
               <button
                 type="button"
                 className="btn-close btn-close-white"
@@ -390,9 +390,9 @@ const ProductPage: React.FC = () => {
               ></button>
             </div>
             <div className="toast-body">
-              <strong>{product.name}</strong> has been added to your cart!
+              <strong>{product.name}</strong> {t("productPage.addedToCartMsg")}
               <br />
-              <small>Redirecting to cart...</small>
+              <small>{t("productPage.redirectingToCart")}</small>
             </div>
           </div>
         </div>

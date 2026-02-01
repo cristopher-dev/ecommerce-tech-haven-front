@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "@/application/store/hooks";
 import { clearCheckout } from "@/application/store/slices/checkoutSlice";
-import Header from "../components/Header";
+import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { Link, useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
+import Header from "../components/Header";
 
 const CheckoutFinalStatusPage: React.FC = () => {
   const { t } = useTranslation();
@@ -49,13 +49,12 @@ const CheckoutFinalStatusPage: React.FC = () => {
         <Header />
         <main className="container my-5">
           <div className="alert alert-danger" role="alert">
-            <h4 className="alert-heading">Order Processing Error</h4>
-            <p>
-              We encountered an issue processing your order. Please try again or
-              contact support.
-            </p>
+            <h4 className="alert-heading">
+              {t("checkoutFinal.orderProcessingError")}
+            </h4>
+            <p>{t("checkoutFinal.orderProcessingErrorMsg")}</p>
             <Link to="/" className="btn btn-primary">
-              Return to Home
+              {t("checkoutFinal.returnToHome")}
             </Link>
           </div>
         </main>
@@ -80,27 +79,26 @@ const CheckoutFinalStatusPage: React.FC = () => {
                 </div>
 
                 <h1 className="card-title text-success mb-2">
-                  Order Confirmed!
+                  {t("checkoutFinal.orderConfirmed")}
                 </h1>
                 <p className="card-text text-muted mb-4">
-                  Thank you for your purchase. Your order has been placed
-                  successfully. You will receive a confirmation email shortly.
+                  {t("checkoutFinal.thankYou")}
                 </p>
 
                 {/* Delivery Estimate */}
                 <div className="alert alert-success mb-4" role="alert">
-                  <strong>📦 Expected Delivery:</strong>
+                  <strong>{t("checkoutFinal.expectedDelivery")}</strong>
                   <br />
-                  <small>
-                    Your order should arrive within 5-7 business days.
-                  </small>
+                  <small>{t("checkoutFinal.deliveryDays")}</small>
                 </div>
 
                 {/* Transaction Details */}
                 <div className="bg-light p-4 rounded mb-4">
                   <div className="row mb-3">
                     <div className="col-6 text-start">
-                      <small className="text-muted">Transaction ID</small>
+                      <small className="text-muted">
+                        {t("checkoutFinal.transactionId")}
+                      </small>
                     </div>
                     <div className="col-6 text-end">
                       <strong className="text-monospace">
@@ -111,7 +109,9 @@ const CheckoutFinalStatusPage: React.FC = () => {
 
                   <div className="row mb-3">
                     <div className="col-6 text-start">
-                      <small className="text-muted">Order Date</small>
+                      <small className="text-muted">
+                        {t("checkoutFinal.orderDate")}
+                      </small>
                     </div>
                     <div className="col-6 text-end">
                       <strong>{new Date().toLocaleDateString()}</strong>
@@ -122,14 +122,18 @@ const CheckoutFinalStatusPage: React.FC = () => {
 
                   <div className="row mb-3">
                     <div className="col-6 text-start">
-                      <small className="text-muted">Subtotal</small>
+                      <small className="text-muted">
+                        {t("checkoutFinal.subtotal")}
+                      </small>
                     </div>
                     <div className="col-6 text-end">${subtotal.toFixed(2)}</div>
                   </div>
 
                   <div className="row mb-3">
                     <div className="col-6 text-start">
-                      <small className="text-muted">Fees</small>
+                      <small className="text-muted">
+                        {t("checkoutFinal.fees")}
+                      </small>
                     </div>
                     <div className="col-6 text-end">
                       ${(baseFee + deliveryFee).toFixed(2)}
@@ -138,7 +142,7 @@ const CheckoutFinalStatusPage: React.FC = () => {
 
                   <div className="row">
                     <div className="col-6 text-start">
-                      <strong>Total Paid</strong>
+                      <strong>{t("checkoutFinal.totalPaid")}</strong>
                     </div>
                     <div className="col-6 text-end">
                       <strong className="text-success fs-5">
@@ -151,7 +155,9 @@ const CheckoutFinalStatusPage: React.FC = () => {
                 {/* Order Items */}
                 {checkout.cartItems.length > 0 && (
                   <div className="mb-4">
-                    <h5 className="text-start mb-3">Order Items</h5>
+                    <h5 className="text-start mb-3">
+                      {t("checkoutFinal.orderItems")}
+                    </h5>
                     <div className="list-group list-group-flush">
                       {checkout.cartItems.map((item) => (
                         <div
@@ -162,7 +168,7 @@ const CheckoutFinalStatusPage: React.FC = () => {
                             <div className="col-8 text-start">
                               <p className="mb-1">{item.product.name}</p>
                               <small className="text-muted">
-                                Qty: {item.quantity}
+                                {t("checkoutFinal.qty")} {item.quantity}
                               </small>
                             </div>
                             <div className="col-4 text-end">
@@ -183,7 +189,9 @@ const CheckoutFinalStatusPage: React.FC = () => {
                 {/* Delivery Info */}
                 {checkout.deliveryData && (
                   <div className="mb-4">
-                    <h5 className="text-start mb-3">Delivery Address</h5>
+                    <h5 className="text-start mb-3">
+                      {t("checkoutFinal.deliveryAddress")}
+                    </h5>
                     <div className="alert alert-info" role="alert">
                       <p className="mb-1">
                         <strong>
@@ -199,7 +207,8 @@ const CheckoutFinalStatusPage: React.FC = () => {
                       </p>
                       <p className="mb-0">
                         <small className="text-muted">
-                          Phone: {checkout.deliveryData.phone}
+                          {t("checkoutFinal.phone")}{" "}
+                          {checkout.deliveryData.phone}
                         </small>
                       </p>
                     </div>
@@ -232,7 +241,7 @@ const CheckoutFinalStatusPage: React.FC = () => {
                     />
                   </div>
                   <small className="text-muted mt-2 d-block">
-                    Step 3 of 3: Order Complete
+                    {t("checkoutFinal.progressBar")}
                   </small>
                 </div>
               </div>
