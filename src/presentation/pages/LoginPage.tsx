@@ -43,8 +43,8 @@ export default function LoginPage() {
     handleValidate,
   } = useFormValidation<FormData>({
     initialFormData: {
-      email: "admin@techhaven.com",
-      password: "admin123",
+      email: import.meta.env.VITE_DEMO_EMAIL || "admin@techhaven.com",
+      password: import.meta.env.VITE_DEMO_PASSWORD || "admin123",
     },
     validateForm: validateLoginForm,
   });

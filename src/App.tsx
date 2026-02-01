@@ -1,27 +1,26 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { logout, restoreAuth } from "@/application/store/slices/authSlice";
+import { persistor, RootState, store } from "@/application/store/store";
+import ProtectedRoute from "@/presentation/components/ProtectedRoute";
+import CartPage from "@/presentation/pages/CartPage";
+import CheckoutDeliveryPage from "@/presentation/pages/CheckoutDeliveryPage";
+import CheckoutFinalStatusPage from "@/presentation/pages/CheckoutFinalStatusPage";
+import CheckoutSummaryPage from "@/presentation/pages/CheckoutSummaryPage";
+import HomePage from "@/presentation/pages/HomePage";
+import LoginPage from "@/presentation/pages/LoginPage";
+import ProductPage from "@/presentation/pages/ProductPage";
+import PurchasedItemsPage from "@/presentation/pages/PurchasedItemsPage";
+import RegisterPage from "@/presentation/pages/RegisterPage";
+import WishlistPage from "@/presentation/pages/WishlistPage";
+import "@/styles/App.scss";
 import React, { useEffect, useState } from "react";
 import { Provider, useDispatch, useSelector } from "react-redux";
+import {
+  Navigate,
+  Route,
+  BrowserRouter as Router,
+  Routes,
+} from "react-router-dom";
 import { PersistGate } from "redux-persist/integration/react";
-import { store, persistor } from "@/application/store/store";
-import { restoreAuth, logout } from "@/application/store/slices/authSlice";
-import { RootState } from "@/application/store/store";
-import HomePage from "@/presentation/pages/HomePage";
-import ProductPage from "@/presentation/pages/ProductPage";
-import CartPage from "@/presentation/pages/CartPage";
-import WishlistPage from "@/presentation/pages/WishlistPage";
-import PurchasedItemsPage from "@/presentation/pages/PurchasedItemsPage";
-import CheckoutDeliveryPage from "@/presentation/pages/CheckoutDeliveryPage";
-import CheckoutSummaryPage from "@/presentation/pages/CheckoutSummaryPage";
-import CheckoutFinalStatusPage from "@/presentation/pages/CheckoutFinalStatusPage";
-import RegisterPage from "@/presentation/pages/RegisterPage";
-import LoginPage from "@/presentation/pages/LoginPage";
-import ProtectedRoute from "@/presentation/components/ProtectedRoute";
-import "@/styles/App.scss";
 
 // Loading component shown while persisting
 const PersistGateLoader = () => (
