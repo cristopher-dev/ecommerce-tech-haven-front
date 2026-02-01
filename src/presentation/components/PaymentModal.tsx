@@ -36,11 +36,12 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
   onSubmit: handleSubmitPayment,
   loading = false,
 }: PaymentModalProps) => {
+  const currentDate = new Date();
   const [formData, setFormData] = useState<PaymentFormData>({
     cardNumber: "",
     cardholderName: "",
-    expirationMonth: 1,
-    expirationYear: new Date().getFullYear(),
+    expirationMonth: currentDate.getMonth() + 1,
+    expirationYear: currentDate.getFullYear(),
     cvv: "",
   });
 
