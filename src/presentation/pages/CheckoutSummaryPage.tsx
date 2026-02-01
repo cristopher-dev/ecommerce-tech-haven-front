@@ -12,6 +12,7 @@ import { updateProductStock } from "@/application/store/slices/productsSlice";
 import { addToPurchasedItems } from "@/application/store/slices/purchasedItemsSlice";
 import { transactionsApi } from "@/infrastructure/api/techHavenApiClient";
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
@@ -19,6 +20,7 @@ import Header from "../components/Header";
 const CheckoutSummaryPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const checkout = useAppSelector((state) => state.checkout);
   const cart = useAppSelector((state) => state.cart);
   const [isProcessing, setIsProcessing] = useState(false);
