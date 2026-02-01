@@ -48,7 +48,7 @@ const calculateTotal = (items: CartItem[]): number => {
 };
 
 const calculateTotalItems = (items: CartItem[]): number => {
-  return items.reduce((total, item) => total + item.quantity, 0);
+  return items.length;
 };
 
 const cartSlice = createSlice({
