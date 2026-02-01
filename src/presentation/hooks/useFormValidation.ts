@@ -1,5 +1,5 @@
 import { ValidationErrors } from "@/shared/types/auth";
-import { useState } from "react";
+import { ChangeEvent, FocusEvent, useState } from "react";
 
 interface UseFormValidationProps<T> {
   initialFormData: T;
@@ -14,7 +14,7 @@ export function useFormValidation<T>({
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (touched[name]) {
@@ -22,7 +22,7 @@ export function useFormValidation<T>({
     }
   };
 
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+  const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
     const { name } = e.target;
     setTouched((prev) => ({ ...prev, [name]: true }));
   };
