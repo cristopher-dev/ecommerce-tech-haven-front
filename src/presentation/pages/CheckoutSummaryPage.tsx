@@ -390,29 +390,34 @@ const CheckoutSummaryPage: React.FC = () => {
               </tbody>
             </table>
 
-            <h3 className="mt-4">Delivery Information</h3>
+            <h3 className="mt-4">{t("checkoutSummary.deliveryInformation")}</h3>
             {checkout.deliveryData && (
               <div className="card">
                 <div className="card-body">
                   <p className="mb-1">
-                    <strong>Name:</strong> {checkout.deliveryData.firstName}{" "}
+                    <strong>{t("checkoutSummary.name")}:</strong>{" "}
+                    {checkout.deliveryData.firstName}{" "}
                     {checkout.deliveryData.lastName}
                   </p>
                   <p className="mb-1">
-                    <strong>Address:</strong> {checkout.deliveryData.address}
+                    <strong>{t("checkoutSummary.address")}:</strong>{" "}
+                    {checkout.deliveryData.address}
                   </p>
                   <p className="mb-1">
-                    <strong>City:</strong> {checkout.deliveryData.city},{" "}
-                    {checkout.deliveryData.state}
+                    <strong>{t("checkoutSummary.city")}:</strong>{" "}
+                    {checkout.deliveryData.city}, {checkout.deliveryData.state}
                   </p>
                   <p className="mb-1">
-                    <strong>ZIP:</strong> {checkout.deliveryData.postalCode}
+                    <strong>{t("checkoutSummary.zip")}:</strong>{" "}
+                    {checkout.deliveryData.postalCode}
                   </p>
                   <p className="mb-1">
-                    <strong>Email:</strong> {checkout.deliveryData.email}
+                    <strong>{t("checkoutSummary.email")}:</strong>{" "}
+                    {checkout.deliveryData.email}
                   </p>
                   <p className="mb-0">
-                    <strong>Phone:</strong> {checkout.deliveryData.phone}
+                    <strong>{t("checkoutSummary.phone")}:</strong>{" "}
+                    {checkout.deliveryData.phone}
                   </p>
                 </div>
               </div>
@@ -420,41 +425,46 @@ const CheckoutSummaryPage: React.FC = () => {
           </div>
 
           <div className="col-md-4">
-            <h3>Cost Breakdown</h3>
+            <h3>{t("checkoutSummary.costBreakdown")}</h3>
             <div className="card">
               <div className="card-body">
                 <div className="row mb-2">
-                  <div className="col">Subtotal:</div>
+                  <div className="col">{t("checkoutSummary.subtotal")}:</div>
                   <div className="col text-end">${subtotal.toFixed(2)}</div>
                 </div>
                 <div className="row mb-2">
-                  <div className="col">Base Fee:</div>
+                  <div className="col">{t("checkoutSummary.baseFee")}:</div>
                   <div className="col text-end">${baseFee.toFixed(2)}</div>
                 </div>
                 <div className="row mb-3">
-                  <div className="col">Delivery Fee:</div>
+                  <div className="col">{t("checkoutSummary.deliveryFee")}:</div>
                   <div className="col text-end">${deliveryFee.toFixed(2)}</div>
                 </div>
                 <hr />
                 <div className="row mb-3">
-                  <div className="col fs-5 fw-bold">Total:</div>
+                  <div className="col fs-5 fw-bold">
+                    {t("checkoutSummary.total")}:
+                  </div>
                   <div className="col text-end fs-5 fw-bold text-primary">
                     ${total.toFixed(2)}
                   </div>
                 </div>
 
-                <h5 className="mt-4 mb-3">Payment Information</h5>
+                <h5 className="mt-4 mb-3">
+                  {t("checkoutSummary.paymentInformation")}
+                </h5>
                 {checkout.paymentData && (
                   <div className="mb-3">
                     <p className="mb-1">
-                      <strong>Card:</strong> {checkout.paymentData.cardNumber}
+                      <strong>{t("checkoutSummary.card")}:</strong>{" "}
+                      {checkout.paymentData.cardNumber}
                     </p>
                     <p className="mb-1">
-                      <strong>Holder:</strong>{" "}
+                      <strong>{t("checkoutSummary.holder")}:</strong>{" "}
                       {checkout.paymentData.cardholderName}
                     </p>
                     <p className="mb-0">
-                      <strong>Expires:</strong>{" "}
+                      <strong>{t("checkoutSummary.expires")}:</strong>{" "}
                       {checkout.paymentData.expirationMonth
                         .toString()
                         .padStart(2, "0")}
@@ -476,10 +486,10 @@ const CheckoutSummaryPage: React.FC = () => {
                           className="spinner-border spinner-border-sm me-2"
                           role="status"
                         />
-                        Processing Payment...
+                        {t("checkoutSummary.processingPayment")}
                       </>
                     ) : (
-                      `Place Order (${total.toFixed(2)})`
+                      `${t("checkoutSummary.placeOrder")} (${total.toFixed(2)})`
                     )}
                   </button>
                 </div>
@@ -489,7 +499,7 @@ const CheckoutSummaryPage: React.FC = () => {
                     to="/checkout/delivery"
                     className="btn btn-outline-secondary w-100"
                   >
-                    Back to Delivery
+                    {t("checkoutSummary.backToDelivery")}
                   </Link>
                 </div>
               </div>

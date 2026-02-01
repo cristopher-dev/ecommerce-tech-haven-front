@@ -1,15 +1,15 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import { useAppDispatch, useWishlist } from "@/application/store/hooks";
-import {
-  removeFromWishlist,
-  moveToCart,
-} from "@/application/store/slices/wishlistSlice";
 import { addToCart } from "@/application/store/slices/checkoutSlice";
+import {
+  moveToCart,
+  removeFromWishlist,
+} from "@/application/store/slices/wishlistSlice";
 import { Product } from "@/domain/entities/Product";
-import Header from "@/presentation/components/Header";
 import Footer from "@/presentation/components/Footer";
+import Header from "@/presentation/components/Header";
+import React from "react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 const WishlistPage: React.FC = () => {
   const { t } = useTranslation();
@@ -76,7 +76,7 @@ const WishlistPage: React.FC = () => {
                         {t("wishlistPage.price")}
                       </th>
                       <th scope="col" className="text-center">
-                        Stock
+                        {t("wishlistPage.stock")}
                       </th>
                       <th scope="col" className="text-end">
                         {t("wishlistPage.action")}
@@ -115,10 +115,12 @@ const WishlistPage: React.FC = () => {
                         </td>
                         <td className="text-center">
                           {item.product.discount > 0 ? (
-                            <span className="badge bg-success">In Stock</span>
+                            <span className="badge bg-success">
+                              {t("wishlistPage.inStock")}
+                            </span>
                           ) : (
                             <span className="badge bg-danger">
-                              Out of Stock
+                              {t("wishlistPage.outOfStock")}
                             </span>
                           )}
                         </td>
@@ -157,16 +159,20 @@ const WishlistPage: React.FC = () => {
                 <div className="card-body">
                   <h5 className="card-title mb-3">
                     <i className="bi bi-heart-fill text-danger me-2"></i>
-                    Wishlist Summary
+                    {t("wishlistPage.summary")}
                   </h5>
 
                   <div className="mb-3 pb-3 border-bottom">
                     <div className="d-flex justify-content-between mb-2">
-                      <small className="text-muted">Total Items:</small>
+                      <small className="text-muted">
+                        {t("wishlistPage.totalItems")}
+                      </small>
                       <strong>{count}</strong>
                     </div>
                     <div className="d-flex justify-content-between">
-                      <small className="text-muted">Total Value:</small>
+                      <small className="text-muted">
+                        {t("wishlistPage.totalValue")}
+                      </small>
                       <strong className="text-success">
                         $
                         {items
@@ -184,11 +190,11 @@ const WishlistPage: React.FC = () => {
                     className="btn btn-outline-primary w-100 mb-2"
                   >
                     <i className="bi bi-arrow-left me-1"></i>
-                    Continue Shopping
+                    {t("wishlistPage.continueShopping")}
                   </Link>
                   <Link to="/cart" className="btn btn-primary w-100">
                     <i className="bi bi-bag me-1"></i>
-                    Go to Cart
+                    {t("wishlistPage.goToCart")}
                   </Link>
                 </div>
               </div>

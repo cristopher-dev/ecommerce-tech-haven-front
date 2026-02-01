@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { useAppSelector, useAppDispatch } from "@/application/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/application/store/hooks";
 import { fetchUserTransactions } from "@/application/store/slices/purchasedItemsSlice";
-import Header from "../components/Header";
+import React, { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import Footer from "../components/Footer";
+import Header from "../components/Header";
 
 const PurchasedItemsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -61,9 +61,9 @@ const PurchasedItemsPage: React.FC = () => {
               className="spinner-border spinner-border-sm me-2"
               role="status"
             >
-              <span className="visually-hidden">Loading...</span>
+              <span className="visually-hidden">{t("common.loading")}</span>
             </div>
-            Loading your purchases...
+            {t("purchasedItemsPage.loadingMessage")}
           </div>
         )}
 
