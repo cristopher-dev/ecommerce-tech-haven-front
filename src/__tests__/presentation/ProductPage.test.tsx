@@ -2,17 +2,17 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
-import ProductPage from "./ProductPage";
+import ProductPage from "@/presentation/pages/ProductPage";
 import cartReducer from "@/application/store/slices/cartSlice";
 import wishlistReducer from "@/application/store/slices/wishlistSlice";
 
 // Mock Header and Footer with proper __esModule flag
-jest.mock("../components/Header", () => ({
+jest.mock("@/presentation/components/Header", () => ({
   __esModule: true,
   default: () => <div data-testid="header">Header</div>,
 }));
 
-jest.mock("../components/Footer", () => ({
+jest.mock("@/presentation/components/Footer", () => ({
   __esModule: true,
   default: () => <div data-testid="footer">Footer</div>,
 }));

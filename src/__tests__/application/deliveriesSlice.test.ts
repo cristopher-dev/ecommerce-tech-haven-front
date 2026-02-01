@@ -4,7 +4,7 @@ import deliveriesReducer, {
   setDeliveries,
   setCurrentDelivery,
   updateDeliveryStatus,
-} from "./deliveriesSlice";
+} from "@/application/store/slices/deliveriesSlice";
 import type { DeliveryDTO } from "@/infrastructure/api/techHavenApiClient";
 
 describe("deliveriesSlice", () => {

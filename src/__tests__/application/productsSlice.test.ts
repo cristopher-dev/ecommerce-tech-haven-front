@@ -5,7 +5,7 @@ import productsReducer, {
   setProducts,
   setSelectedProduct,
   updateProductStock,
-} from "./productsSlice";
+} from "@/application/store/slices/productsSlice";
 import type { ProductDTO } from "../../../infrastructure/api/techHavenApiClient";
 
 describe("productsSlice", () => {

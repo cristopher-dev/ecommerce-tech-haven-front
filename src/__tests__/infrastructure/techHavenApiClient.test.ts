@@ -10,7 +10,7 @@ import {
   CreateTransactionInputDto,
   CreateCustomerInputDto,
   ProcessPaymentDto,
-} from "./techHavenApiClient";
+} from "@/infrastructure/techHavenApiClient";
 
 // Mock fetch globally
 global.fetch = jest.fn();

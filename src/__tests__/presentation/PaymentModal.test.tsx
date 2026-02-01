@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import PaymentModal from "./PaymentModal";
+import PaymentModal from "@/presentation/pages/PaymentModal";
 import userEvent from "@testing-library/user-event";
 
 // Mock SCSS imports
-jest.mock("./PaymentModal.scss", () => ({}));
+jest.mock("@/presentation/components/PaymentModal.scss", () => ({}));
 
 // Mock card validation utilities
 jest.mock("@/shared/utils/cardValidation", () => ({

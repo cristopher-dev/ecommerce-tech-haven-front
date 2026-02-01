@@ -15,22 +15,22 @@ import transactionsReducer from "@/application/store/slices/transactionsSlice";
 import deliveriesReducer from "@/application/store/slices/deliveriesSlice";
 
 // Mock components
-jest.mock("../components/Header", () => ({
+jest.mock("@/presentation/components/Header", () => ({
   __esModule: true,
   default: () => <div data-testid="mock-header">Header</div>,
 }));
 
-jest.mock("../components/Footer", () => ({
+jest.mock("@/presentation/components/Footer", () => ({
   __esModule: true,
   default: () => <div data-testid="mock-footer">Footer</div>,
 }));
 
-jest.mock("../components/PaymentModal", () => ({
+jest.mock("@/presentation/components/PaymentModal", () => ({
   __esModule: true,
   default: () => <div data-testid="mock-modal">Modal</div>,
 }));
 
-import CheckoutDeliveryPage from "./CheckoutDeliveryPage";
+import CheckoutDeliveryPage from "@/presentation/pages/CheckoutDeliveryPage";
 
 describe("CheckoutDeliveryPage", () => {
   const createMockStore = (overrides: any = {}) => {

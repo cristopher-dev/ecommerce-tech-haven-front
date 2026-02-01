@@ -15,12 +15,12 @@ import transactionsReducer from "@/application/store/slices/transactionsSlice";
 import deliveriesReducer from "@/application/store/slices/deliveriesSlice";
 
 // Mock components
-jest.mock("../components/Header", () => ({
+jest.mock("@/presentation/components/Header", () => ({
   __esModule: true,
   default: () => <div data-testid="mock-header">Header</div>,
 }));
 
-jest.mock("../components/Footer", () => ({
+jest.mock("@/presentation/components/Footer", () => ({
   __esModule: true,
   default: () => <div data-testid="mock-footer">Footer</div>,
 }));
@@ -36,7 +36,7 @@ jest.mock("@/infrastructure/api/techHavenApiClient", () => ({
   },
 }));
 
-import CheckoutSummaryPage from "./CheckoutSummaryPage";
+import CheckoutSummaryPage from "@/presentation/pages/CheckoutSummaryPage";
 
 describe("CheckoutSummaryPage", () => {
   const mockDeliveryData = {

@@ -48,33 +48,5 @@
   },
   "overrides": {
     "vite": "npm:rolldown-vite@7.2.5"
-  },
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "jsdom",
-    "setupFilesAfterEnv": [
-      "<rootDir>/src/setupTests.ts"
-    ],
-    "globals": {
-      "ts-jest": {
-        "useESM": true,
-        "tsconfig": {
-          "module": "esnext",
-          "esModuleInterop": true
-        }
-      }
-    },
-    "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/src/$1",
-      "\\.(css|scss|sass)$": "identity-obj-proxy",
-      "\\.(jpg|jpeg|png|gif|svg)$": "<rootDir>/__mocks__/fileMock.js"
-    },
-    "transform": {
-      "^.+\\.(ts|tsx)$": "ts-jest"
-    },
-    "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.(ts|tsx|js)",
-      "<rootDir>/src/**/*.(test|spec).(ts|tsx|js)"
-    ]
   }
 }

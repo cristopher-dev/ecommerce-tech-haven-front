@@ -1,5 +1,5 @@
 // Mock LocalStorageCartRepository before importing the slice
-jest.mock('../../../infrastructure/adapters/LocalStorageCartRepository', () => ({
+jest.mock("@/infrastructure/adapters/LocalStorageCartRepository", () => ({
   LocalStorageCartRepository: jest.fn().mockImplementation(() => ({
     getCart: jest.fn().mockReturnValue({ items: [] }),
     saveCart: jest.fn(),
@@ -8,26 +8,26 @@ jest.mock('../../../infrastructure/adapters/LocalStorageCartRepository', () => (
 
 import cartReducer, {
   addToCart,
-  removeFromCart,
-  updateQuantity,
   clearCart,
+  removeFromCart,
   setCart,
-  setLoading,
   setError,
-} from './cartSlice';
-import { Product } from '../../../domain/entities/Product';
+  setLoading,
+  updateQuantity,
+} from "@/application/store/slices/cartSlice";
+import { Product } from "@/domain/entities/Product";
 
-describe('cartSlice', () => {
+describe("cartSlice", () => {
   const mockProduct: Product = {
     id: 1,
-    name: 'Test Product',
+    name: "Test Product",
     price: 10.99,
-    image: 'test.jpg',
+    image: "test.jpg",
     discount: 0,
   };
 
-  it('should return the initial state', () => {
-    expect(cartReducer(undefined, { type: 'unknown' } as any)).toEqual({
+  it("should return the initial state", () => {
+    expect(cartReducer(undefined, { type: "unknown" } as any)).toEqual({
       items: [],
       total: 0,
       totalItems: 0,
@@ -36,7 +36,7 @@ describe('cartSlice', () => {
     });
   });
 
-  it('should add product to cart', () => {
+  it("should add product to cart", () => {
     const action = addToCart({ product: mockProduct, quantity: 2 });
     const result = cartReducer(
       {
@@ -46,7 +46,7 @@ describe('cartSlice', () => {
         loading: false,
         error: null,
       },
-      action
+      action,
     );
 
     expect(result.items).toHaveLength(1);
@@ -56,7 +56,7 @@ describe('cartSlice', () => {
     expect(result.totalItems).toBe(2);
   });
 
-  it('should increase quantity if product already in cart', () => {
+  it("should increase quantity if product already in cart", () => {
     const initialState = {
       items: [{ product: mockProduct, quantity: 1 }],
       total: 10.99,
@@ -74,7 +74,7 @@ describe('cartSlice', () => {
     expect(result.totalItems).toBe(4);
   });
 
-  it('should remove product from cart', () => {
+  it("should remove product from cart", () => {
     const initialState = {
       items: [{ product: mockProduct, quantity: 2 }],
       total: 21.98,
@@ -91,7 +91,7 @@ describe('cartSlice', () => {
     expect(result.totalItems).toBe(0);
   });
 
-  it('should update quantity', () => {
+  it("should update quantity", () => {
     const initialState = {
       items: [{ product: mockProduct, quantity: 2 }],
       total: 21.98,
@@ -108,7 +108,7 @@ describe('cartSlice', () => {
     expect(result.totalItems).toBe(5);
   });
 
-  it('should remove item if quantity is 0 or less', () => {
+  it("should remove item if quantity is 0 or less", () => {
     const initialState = {
       items: [{ product: mockProduct, quantity: 2 }],
       total: 21.98,
@@ -125,7 +125,7 @@ describe('cartSlice', () => {
     expect(result.totalItems).toBe(0);
   });
 
-  it('should clear cart', () => {
+  it("should clear cart", () => {
     const initialState = {
       items: [{ product: mockProduct, quantity: 2 }],
       total: 21.98,
@@ -142,7 +142,7 @@ describe('cartSlice', () => {
     expect(result.totalItems).toBe(0);
   });
 
-  it('should set cart', () => {
+  it("should set cart", () => {
     const newItems = [{ product: mockProduct, quantity: 3 }];
     const action = setCart(newItems);
     const result = cartReducer(
@@ -153,7 +153,7 @@ describe('cartSlice', () => {
         loading: false,
         error: null,
       },
-      action
+      action,
     );
 
     expect(result.items).toEqual(newItems);
@@ -161,7 +161,7 @@ describe('cartSlice', () => {
     expect(result.totalItems).toBe(3);
   });
 
-  it('should set loading', () => {
+  it("should set loading", () => {
     const action = setLoading(true);
     const result = cartReducer(
       {
@@ -171,14 +171,14 @@ describe('cartSlice', () => {
         loading: false,
         error: null,
       },
-      action
+      action,
     );
 
     expect(result.loading).toBe(true);
   });
 
-  it('should set error', () => {
-    const action = setError('Test error');
+  it("should set error", () => {
+    const action = setError("Test error");
     const result = cartReducer(
       {
         items: [],
@@ -187,9 +187,9 @@ describe('cartSlice', () => {
         loading: false,
         error: null,
       },
-      action
+      action,
     );
 
-    expect(result.error).toBe('Test error');
+    expect(result.error).toBe("Test error");
   });
 });

@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
-import WishlistPage from "./WishlistPage";
+import WishlistPage from "@/presentation/pages/WishlistPage";
 import cartReducer from "@/application/store/slices/cartSlice";
 import wishlistReducer from "@/application/store/slices/wishlistSlice";
 import checkoutReducer from "@/application/store/slices/checkoutSlice";

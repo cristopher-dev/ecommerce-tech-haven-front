@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import CategoryCarousel from "./CategoryCarousel";
+import CategoryCarousel from "@/presentation/pages/CategoryCarousel";
 
-jest.mock("./CategoryCarousel.scss", () => ({}));
+jest.mock("@/presentation/components/CategoryCarousel.scss", () => ({}));
 
 describe("CategoryCarousel Component", () => {
   it("should render without crashing", () => {

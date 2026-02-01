@@ -1,5 +1,5 @@
 import { renderHook, act } from "@testing-library/react";
-import { useCart } from "./useCart";
+import { useCart } from "@/infrastructure/useCart";
 
 describe("useCart hook", () => {
   // Clear localStorage before each test

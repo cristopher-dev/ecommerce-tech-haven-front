@@ -2,11 +2,11 @@ import { render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
-import ProductCard from "./ProductCard";
+import ProductCard from "@/presentation/pages/ProductCard";
 import cartReducer from "@/application/store/slices/cartSlice";
 import wishlistReducer from "@/application/store/slices/wishlistSlice";
 
-jest.mock("./ProductCard.scss", () => ({}));
+jest.mock("@/presentation/components/ProductCard.scss", () => ({}));
 
 describe("ProductCard Component", () => {
   const mockProduct = {

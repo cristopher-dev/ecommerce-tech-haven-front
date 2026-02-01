@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import BrandCarousel from "./BrandCarousel";
+import BrandCarousel from "@/presentation/pages/BrandCarousel";
 
-jest.mock("./BrandCarousel.scss", () => ({}));
+jest.mock("@/presentation/components/BrandCarousel.scss", () => ({}));
 
 describe("BrandCarousel Component", () => {
   it("should render without crashing", () => {

@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import Features from "./Features";
+import Features from "@/presentation/pages/Features";
 
-jest.mock("./Features.scss", () => ({}));
+jest.mock("@/presentation/components/Features.scss", () => ({}));
 
 describe("Features Component", () => {
   it("should render without crashing", () => {

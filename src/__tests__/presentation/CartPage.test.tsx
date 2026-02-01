@@ -2,16 +2,16 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore, PreloadedState } from "@reduxjs/toolkit";
-import CartPage from "./CartPage";
+import CartPage from "@/presentation/pages/CartPage";
 import cartReducer from "@/application/store/slices/cartSlice";
 
 // Mock Header and Footer components
-jest.mock("../components/Header", () => ({
+jest.mock("@/presentation/components/Header", () => ({
   __esModule: true,
   default: () => <div data-testid="header">Header</div>,
 }));
 
-jest.mock("../components/Footer", () => ({
+jest.mock("@/presentation/components/Footer", () => ({
   __esModule: true,
   default: () => <div data-testid="footer">Footer</div>,
 }));

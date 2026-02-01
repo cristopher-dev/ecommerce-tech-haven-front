@@ -3,7 +3,7 @@ import {
   TechHavenApiTransactionRepository,
   TechHavenApiCustomerRepository,
   TechHavenApiDeliveryRepository,
-} from "./TechHavenApiRepositories";
+} from "@/infrastructure/TechHavenApiRepositories";
 import * as apiClient from "@/infrastructure/api/techHavenApiClient";
 
 // Mock the API client

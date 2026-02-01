@@ -1,4 +1,4 @@
-import { LocalStorageCartRepository } from "./LocalStorageCartRepository";
+import { LocalStorageCartRepository } from "@/infrastructure/LocalStorageCartRepository";
 import type { Cart } from "@/domain/entities/Cart";
 import type { CartItem } from "@/domain/entities/CartItem";
 

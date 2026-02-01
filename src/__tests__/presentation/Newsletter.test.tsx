@@ -1,8 +1,8 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import Newsletter from "./Newsletter";
+import Newsletter from "@/presentation/pages/Newsletter";
 
-jest.mock("./Newsletter.scss", () => ({}));
+jest.mock("@/presentation/components/Newsletter.scss", () => ({}));
 
 describe("Newsletter Component", () => {
   it("should render without crashing", () => {

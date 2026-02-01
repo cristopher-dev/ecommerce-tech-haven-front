@@ -1,8 +1,8 @@
 import { render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
-import Footer from "./Footer";
+import Footer from "@/presentation/components/Footer";
 
-jest.mock("./Footer.scss", () => ({}));
+jest.mock("@/presentation/components/Footer.scss", () => ({}));
 
 describe("Footer Component", () => {
   const renderFooter = () => {

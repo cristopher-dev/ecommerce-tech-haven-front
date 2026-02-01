@@ -9,17 +9,17 @@ import productsReducer from "@/application/store/slices/productsSlice";
 import transactionsReducer from "@/application/store/slices/transactionsSlice";
 import deliveriesReducer from "@/application/store/slices/deliveriesSlice";
 
-jest.mock("../components/Header", () => ({
+jest.mock("@/presentation/components/Header", () => ({
   __esModule: true,
   default: () => <header data-testid="mock-header">Header</header>,
 }));
 
-jest.mock("../components/Footer", () => ({
+jest.mock("@/presentation/components/Footer", () => ({
   __esModule: true,
   default: () => <footer data-testid="mock-footer">Footer</footer>,
 }));
 
-import CheckoutFinalStatusPage from "./CheckoutFinalStatusPage";
+import CheckoutFinalStatusPage from "@/presentation/pages/CheckoutFinalStatusPage";
 
 describe("CheckoutFinalStatusPage", () => {
   const createMockStore = (transactionId = "TXN123456") => {

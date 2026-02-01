@@ -1,4 +1,4 @@
-import { UpdateCartItemQuantityUseCase } from './UpdateCartItemQuantityUseCase';
+import { UpdateCartItemQuantityUseCase } from '@/application/useCases/UpdateCartItemQuantityUseCase';
 import { CartRepository } from '../../domain/ports/CartRepository';
 
 describe('UpdateCartItemQuantityUseCase', () => {

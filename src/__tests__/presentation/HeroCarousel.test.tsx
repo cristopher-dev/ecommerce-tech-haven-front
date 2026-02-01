@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import HeroCarousel from "./HeroCarousel";
+import HeroCarousel from "@/presentation/pages/HeroCarousel";
 
-jest.mock("./HeroCarousel.scss", () => ({}));
+jest.mock("@/presentation/components/HeroCarousel.scss", () => ({}));
 
 describe("HeroCarousel Component", () => {
   it("should render without crashing", () => {

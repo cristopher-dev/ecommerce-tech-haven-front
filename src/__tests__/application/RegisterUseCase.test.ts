@@ -1,4 +1,4 @@
-import { RegisterUseCase, IAuthRepository } from "./RegisterUseCase";
+import { RegisterUseCase, IAuthRepository } from "@/application/useCases/RegisterUseCase";
 import { User } from "@/domain/entities/User";
 
 describe("RegisterUseCase", () => {

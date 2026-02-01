@@ -1,13 +1,13 @@
 import transactionsReducer, {
-  setLoading,
-  setError,
-  setTransactions,
-  setCurrentTransaction,
-  setCreatingTransaction,
-  setProcessingPayment,
-  updateTransactionStatus,
   clearCurrentTransaction,
-} from "./transactionsSlice";
+  setCreatingTransaction,
+  setCurrentTransaction,
+  setError,
+  setLoading,
+  setProcessingPayment,
+  setTransactions,
+  updateTransactionStatus,
+} from "@/application/store/slices/transactionsSlice";
 import type { TransactionDTO } from "../../../infrastructure/api/techHavenApiClient";
 
 describe("transactionsSlice", () => {

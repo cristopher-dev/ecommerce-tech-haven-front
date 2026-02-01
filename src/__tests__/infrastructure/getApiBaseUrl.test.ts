@@ -1,4 +1,4 @@
-import { getApiBaseUrl } from "./getApiBaseUrl";
+import { getApiBaseUrl } from "@/infrastructure/getApiBaseUrl";
 
 describe("getApiBaseUrl", () => {
   let originalEnv: string | undefined;

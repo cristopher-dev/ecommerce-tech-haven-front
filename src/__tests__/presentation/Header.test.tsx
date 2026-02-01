@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
-import Header from "./Header";
+import Header from "@/presentation/pages/Header";
 import cartReducer from "@/application/store/slices/cartSlice";
 import wishlistReducer from "@/application/store/slices/wishlistSlice";
 

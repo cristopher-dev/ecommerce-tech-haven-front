@@ -2,7 +2,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
-import ProductSection from "./ProductSection";
+import ProductSection from "@/presentation/pages/ProductSection";
 import cartReducer from "@/application/store/slices/cartSlice";
 import wishlistReducer from "@/application/store/slices/wishlistSlice";
 
@@ -31,7 +31,7 @@ jest.mock("@/infrastructure/adapters/TechHavenApiRepositories", () => ({
   })),
 }));
 
-jest.mock("./ProductSection.scss", () => ({}));
+jest.mock("@/presentation/components/ProductSection.scss", () => ({}));
 
 describe("ProductSection Component", () => {
   const createMockStore = () => {

@@ -1,4 +1,4 @@
-import { RemoveFromCartUseCase } from './RemoveFromCartUseCase';
+import { RemoveFromCartUseCase } from '@/application/useCases/RemoveFromCartUseCase';
 import { CartRepository } from '../../domain/ports/CartRepository';
 
 describe('RemoveFromCartUseCase', () => {

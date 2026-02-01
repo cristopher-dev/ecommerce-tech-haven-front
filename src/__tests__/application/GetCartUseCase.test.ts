@@ -1,4 +1,4 @@
-import { GetCartUseCase } from './GetCartUseCase';
+import { GetCartUseCase } from '@/application/useCases/GetCartUseCase';
 import { CartRepository } from '../../domain/ports/CartRepository';
 import { Cart } from '../../domain/entities/Cart';
 

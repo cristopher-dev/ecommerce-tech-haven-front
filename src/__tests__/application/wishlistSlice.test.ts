@@ -7,7 +7,7 @@ import wishlistReducer, {
   setError,
   setWishlist,
   moveToCart,
-} from "./wishlistSlice";
+} from "@/application/store/slices/wishlistSlice";
 import type { WishlistItem } from "../../../domain/entities/Wishlist";
 import type { Product } from "../../../domain/entities/Product";
 

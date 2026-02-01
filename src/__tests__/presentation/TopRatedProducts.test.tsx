@@ -2,7 +2,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
-import TopRatedProducts from "./TopRatedProducts";
+import TopRatedProducts from "@/presentation/pages/TopRatedProducts";
 import cartReducer from "@/application/store/slices/cartSlice";
 import wishlistReducer from "@/application/store/slices/wishlistSlice";
 
@@ -17,7 +17,7 @@ jest.mock("@/infrastructure/adapters/TechHavenApiRepositories", () => ({
   })),
 }));
 
-jest.mock("./TopRatedProducts.scss", () => ({}));
+jest.mock("@/presentation/components/TopRatedProducts.scss", () => ({}));
 
 describe("TopRatedProducts Component", () => {
   const createMockStore = () => {

@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import PromoBanners from "./PromoBanners";
+import PromoBanners from "@/presentation/components/PromoBanners";
 
-jest.mock("./PromoBanners.scss", () => ({}));
+jest.mock("@/presentation/components/PromoBanners.scss", () => ({}));
 
 describe("PromoBanners Component", () => {
   it("should render without crashing", () => {

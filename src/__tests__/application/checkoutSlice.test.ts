@@ -6,7 +6,7 @@ import checkoutReducer, {
   addToCart,
   setLoading,
   setError,
-} from "./checkoutSlice";
+} from "@/application/store/slices/checkoutSlice";
 
 describe("checkoutSlice", () => {
   const initialState = {

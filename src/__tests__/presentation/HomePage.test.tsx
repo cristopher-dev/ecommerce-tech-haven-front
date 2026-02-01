@@ -2,51 +2,51 @@ import { render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
-import HomePage from "./HomePage";
+import HomePage from "@/presentation/pages/HomePage";
 import cartReducer from "@/application/store/slices/cartSlice";
 import wishlistReducer from "@/application/store/slices/wishlistSlice";
 
-jest.mock("../components/Header", () => ({
+jest.mock("@/presentation/components/Header", () => ({
   __esModule: true,
   default: () => <div data-testid="header">Header</div>,
 }));
-jest.mock("../components/HeroCarousel", () => ({
+jest.mock("@/presentation/components/HeroCarousel", () => ({
   __esModule: true,
   default: () => <div data-testid="hero">Hero</div>,
 }));
-jest.mock("../components/PromoBanners", () => ({
+jest.mock("@/presentation/components/PromoBanners", () => ({
   __esModule: true,
   default: () => <div data-testid="promo">Promo</div>,
 }));
-jest.mock("../components/ProductSection", () => ({
+jest.mock("@/presentation/components/ProductSection", () => ({
   __esModule: true,
   default: () => <div data-testid="section">Section</div>,
 }));
-jest.mock("../components/CategoryCarousel", () => ({
+jest.mock("@/presentation/components/CategoryCarousel", () => ({
   __esModule: true,
   default: () => <div data-testid="category">Category</div>,
 }));
-jest.mock("../components/BrandCarousel", () => ({
+jest.mock("@/presentation/components/BrandCarousel", () => ({
   __esModule: true,
   default: () => <div data-testid="brand">Brand</div>,
 }));
-jest.mock("../components/Features", () => ({
+jest.mock("@/presentation/components/Features", () => ({
   __esModule: true,
   default: () => <div data-testid="features">Features</div>,
 }));
-jest.mock("../components/Newsletter", () => ({
+jest.mock("@/presentation/components/Newsletter", () => ({
   __esModule: true,
   default: () => <div data-testid="newsletter">Newsletter</div>,
 }));
-jest.mock("../components/Footer", () => ({
+jest.mock("@/presentation/components/Footer", () => ({
   __esModule: true,
   default: () => <div data-testid="footer">Footer</div>,
 }));
-jest.mock("../components/RecentProducts", () => ({
+jest.mock("@/presentation/components/RecentProducts", () => ({
   __esModule: true,
   default: () => <div data-testid="recent">Recent</div>,
 }));
-jest.mock("../components/TopRatedProducts", () => ({
+jest.mock("@/presentation/components/TopRatedProducts", () => ({
   __esModule: true,
   default: () => <div data-testid="top-rated">TopRated</div>,
 }));
