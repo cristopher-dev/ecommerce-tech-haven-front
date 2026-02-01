@@ -22,14 +22,19 @@ const CheckoutProtectedRoute: React.FC<CheckoutProtectedRouteProps> = ({
   const token = useAppSelector((state) => state.auth.token);
   const isAuthenticated = useAppSelector((state) => state.auth.isAuthenticated);
   const cartItems = useAppSelector((state) => state.cart.items);
+  const lastTransactionId = useAppSelector((state) => state.checkout.lastTransactionId);
+  const purchasedItems = useAppSelector((state) => state.purchasedItems.items);
 
   // Redirect to login if not authenticated
   if (!token || !isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
-  // Redirect to cart if cart is empty
-  if (!cartItems || cartItems.length === 0) {
+  // Allow access to final confirmation page if there's a transaction ID or purchased items
+  const hasCompletedTransaction = lastTransactionId || purchasedItems.length > 0;
+  
+  // Redirect to cart if cart is empty AND there's no completed transaction
+  if ((!cartItems || cartItems.length === 0) && !hasCompletedTransaction) {
     return <Navigate to="/cart" replace />;
   }
 
