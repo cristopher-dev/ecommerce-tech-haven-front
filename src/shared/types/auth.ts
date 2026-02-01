@@ -1,4 +1,4 @@
-import { User, UserProfile } from "@/domain/entities/User";
+import { UserProfile } from "@/domain/entities/User";
 
 export interface RegisterRequest {
   email: string;

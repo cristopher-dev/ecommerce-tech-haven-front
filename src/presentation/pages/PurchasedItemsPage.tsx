@@ -57,12 +57,9 @@ const PurchasedItemsPage: React.FC = () => {
 
         {loading && (
           <div className="alert alert-info">
-            <div
-              className="spinner-border spinner-border-sm me-2"
-              role="status"
-            >
+            <output className="spinner-border spinner-border-sm me-2">
               <span className="visually-hidden">{t("common.loading")}</span>
-            </div>
+            </output>
             {t("purchasedItemsPage.loadingMessage")}
           </div>
         )}

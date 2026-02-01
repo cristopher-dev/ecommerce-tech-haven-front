@@ -14,11 +14,272 @@ import { useCart } from "../../infrastructure/hooks/useCart";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 
+// Loading view component
+const LoadingView: React.FC = () => {
+  const { t } = useTranslation();
+  return (
+    <div>
+      <Header />
+      <main className="container my-4">
+        <div className="text-center">
+          <output className="spinner-border">
+            <span className="visually-hidden">{t("common.loading")}</span>
+          </output>
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+// Not found view component
+const NotFoundView: React.FC = () => {
+  const { t } = useTranslation();
+  return (
+    <div>
+      <Header />
+      <main className="container my-4">
+        <div className="alert alert-danger">
+          {t("productPage.notFound")} <Link to="/">{t("common.back")}</Link>
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+// Search results view component
+interface SearchResultsViewProps {
+  products: ProductDTO[];
+  searchQuery: string | null;
+}
+
+const SearchResultsView: React.FC<SearchResultsViewProps> = ({
+  products,
+  searchQuery,
+}) => {
+  const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
+  const wishlistItems = useSelector((state: RootState) => state.wishlist.items);
+
+  const isInWishlist = (productId: string) => {
+    return wishlistItems.some((item) => item.product.id === productId);
+  };
+
+  const handleWishlistToggle = (p: ProductDTO) => {
+    if (isInWishlist(p.id)) {
+      dispatch(removeFromWishlist(Number.parseInt(p.id)));
+    } else {
+      const product = {
+        id: p.id,
+        name: p.name,
+        price: p.price / 100,
+        image: p.imageUrl,
+        discount: 0,
+        stock: p.stock,
+        description: p.description,
+      };
+      dispatch(addToWishlist(product));
+    }
+  };
+
+  return (
+    <div>
+      <Header />
+      <main className="container my-4">
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
+              <Link to="/">{t("header.home")}</Link>
+            </li>
+            <li className="breadcrumb-item active">
+              {t("productPage.searchResults")}
+            </li>
+          </ol>
+        </nav>
+
+        <h2 className="mb-4">
+          {t("productPage.searchFor")} "{searchQuery}"
+          {products.length > 0 && (
+            <span className="text-muted ms-2">
+              ({products.length} {t("productPage.found")})
+            </span>
+          )}
+        </h2>
+
+        {products.length === 0 ? (
+          <div className="alert alert-info">
+            {t("productPage.noFound")} "{searchQuery}".{" "}
+            <Link to="/">{t("common.back")}</Link>
+          </div>
+        ) : (
+          <div className="row">
+            {products.map((p) => (
+              <div key={p.id} className="col-md-4 mb-4">
+                <div className="card h-100">
+                  <div style={{ position: "relative", overflow: "hidden" }}>
+                    <img
+                      src={p.imageUrl}
+                      className="card-img-top"
+                      alt={p.name}
+                      style={{ height: "200px", objectFit: "cover" }}
+                    />
+                    <button
+                      className="btn btn-sm"
+                      style={{
+                        position: "absolute",
+                        top: "10px",
+                        right: "10px",
+                        background: isInWishlist(p.id)
+                          ? "#ff6b6b"
+                          : "rgba(255,255,255,0.9)",
+                        color: isInWishlist(p.id) ? "white" : "#333",
+                        border: "none",
+                        borderRadius: "50%",
+                        width: "40px",
+                        height: "40px",
+                        padding: "0",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                      onClick={() => handleWishlistToggle(p)}
+                      title={
+                        isInWishlist(p.id)
+                          ? t("productPage.removeFromWishlist")
+                          : t("productPage.addToWishlist")
+                      }
+                    >
+                      <i
+                        className={`bi ${
+                          isInWishlist(p.id) ? "bi-heart-fill" : "bi-heart"
+                        }`}
+                        style={{ fontSize: "18px" }}
+                      ></i>
+                    </button>
+                  </div>
+                  <div className="card-body">
+                    <h5 className="card-title">{p.name}</h5>
+                    <p className="text-muted small">{p.description}</p>
+                    <p className="card-text text-success fw-bold">
+                      ${(p.price / 100).toFixed(2)}
+                    </p>
+                    <small className="text-muted">
+                      {t("productPage.stock")}: {p.stock}{" "}
+                      {t("productPage.units")}
+                    </small>
+                  </div>
+                  <div className="card-footer bg-transparent d-grid gap-2">
+                    <button
+                      className="btn btn-sm btn-primary"
+                      onClick={() => {
+                        addToCart(
+                          {
+                            id: Number.parseInt(p.id),
+                            name: p.name,
+                            price: p.price / 100,
+                            image: p.imageUrl,
+                            discount: 0,
+                          },
+                          1,
+                        );
+                      }}
+                      disabled={p.stock === 0}
+                    >
+                      {p.stock === 0
+                        ? t("productPage.outOfStock")
+                        : t("common.add")}
+                    </button>
+                    <button
+                      className="btn btn-sm btn-success"
+                      onClick={() => {
+                        addToCart(
+                          {
+                            id: Number.parseInt(p.id),
+                            name: p.name,
+                            price: p.price / 100,
+                            image: p.imageUrl,
+                            discount: 0,
+                          },
+                          1,
+                        );
+                        setTimeout(() => {
+                          navigate("/cart");
+                        }, 300);
+                      }}
+                      disabled={p.stock === 0}
+                    >
+                      <i className="bi bi-cart-check me-1"></i>
+                      {t("productPage.buyNow")}
+                    </button>
+                    <Link
+                      to={`/product?id=${p.id}`}
+                      className="btn btn-sm btn-outline-secondary"
+                    >
+                      {t("productPage.viewDetails")}
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+// Helper function to build button content
+interface ButtonContentParams {
+  isAdding: boolean;
+  isOutOfStock: boolean;
+  t: ReturnType<typeof useTranslation>["t"];
+  isBuyButton?: boolean;
+}
+
+const getButtonContent = ({
+  isAdding,
+  isOutOfStock,
+  t,
+  isBuyButton,
+}: ButtonContentParams): React.ReactNode => {
+  let label = "";
+  if (isAdding) {
+    label = isBuyButton ? t("common.loading") : t("productPage.adding");
+  } else if (isOutOfStock) {
+    label = t("productPage.outOfStock");
+  } else if (!isAdding && !isOutOfStock) {
+    label = isBuyButton ? t("productPage.buyNow") : t("productPage.addToCart");
+  }
+
+  if (isAdding) {
+    return (
+      <>
+        <output className="spinner-border spinner-border-sm me-2"></output>
+        {label}
+      </>
+    );
+  }
+
+  if (isBuyButton && !isAdding && !isOutOfStock) {
+    return (
+      <>
+        <i className="bi bi-cart-check me-2"></i>
+        {label}
+      </>
+    );
+  }
+
+  return label;
+};
+
 const ProductPage: React.FC = () => {
   const { t } = useTranslation();
   const { addToCart } = useCart();
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const [searchParams] = useSearchParams();
   const [showToast, setShowToast] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
@@ -26,7 +287,6 @@ const ProductPage: React.FC = () => {
   const [products, setProducts] = useState<ProductDTO[]>([]);
   const [loading, setLoading] = useState(true);
   const [isSearchMode, setIsSearchMode] = useState(false);
-  const wishlistItems = useSelector((state: RootState) => state.wishlist.items);
 
   // Get product ID from search params and convert numeric IDs to prod-X format
   const rawProductId = searchParams.get("id") || "1";
@@ -34,11 +294,6 @@ const ProductPage: React.FC = () => {
   const productId = /^\d+$/.test(rawProductId)
     ? `prod-${rawProductId}`
     : rawProductId;
-
-  // Check if a product is in wishlist
-  const isInWishlist = (productId: string) => {
-    return wishlistItems.some((item) => item.product.id === productId);
-  };
 
   useEffect(() => {
     const loadData = async () => {
@@ -75,9 +330,9 @@ const ProductPage: React.FC = () => {
     setIsAdding(true);
     addToCart(
       {
-        id: parseInt(product.id),
+        id: Number.parseInt(product.id),
         name: product.name,
-        price: product.price / 100, // Convert cents to dollars
+        price: product.price / 100,
         image: product.imageUrl,
         discount: 0,
       },
@@ -97,9 +352,9 @@ const ProductPage: React.FC = () => {
     setIsAdding(true);
     addToCart(
       {
-        id: parseInt(product.id),
+        id: Number.parseInt(product.id),
         name: product.name,
-        price: product.price / 100, // Convert cents to dollars
+        price: product.price / 100,
         image: product.imageUrl,
         discount: 0,
       },
@@ -112,192 +367,32 @@ const ProductPage: React.FC = () => {
   };
 
   if (loading) {
-    return (
-      <div>
-        <Header />
-        <main className="container my-4">
-          <div className="text-center">
-            <div className="spinner-border" role="status">
-              <span className="visually-hidden">{t("common.loading")}</span>
-            </div>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
+    return <LoadingView />;
   }
 
-  // Search results view
   if (isSearchMode) {
-    return (
-      <div>
-        <Header />
-        <main className="container my-4">
-          <nav aria-label="breadcrumb">
-            <ol className="breadcrumb">
-              <li className="breadcrumb-item">
-                <Link to="/">{t("header.home")}</Link>
-              </li>
-              <li className="breadcrumb-item active">
-                {t("productPage.searchResults")}
-              </li>
-            </ol>
-          </nav>
-
-          <h2 className="mb-4">
-            {t("productPage.searchFor")} "{searchQuery}"
-            {products.length > 0 && (
-              <span className="text-muted ms-2">
-                ({products.length} {t("productPage.found")})
-              </span>
-            )}
-          </h2>
-
-          {products.length === 0 ? (
-            <div className="alert alert-info">
-              {t("productPage.noFound")} "{searchQuery}".{" "}
-              <Link to="/">{t("common.back")}</Link>
-            </div>
-          ) : (
-            <div className="row">
-              {products.map((p) => (
-                <div key={p.id} className="col-md-4 mb-4">
-                  <div className="card h-100">
-                    <div style={{ position: "relative", overflow: "hidden" }}>
-                      <img
-                        src={p.imageUrl}
-                        className="card-img-top"
-                        alt={p.name}
-                        style={{ height: "200px", objectFit: "cover" }}
-                      />
-                      <button
-                        className="btn btn-sm"
-                        style={{
-                          position: "absolute",
-                          top: "10px",
-                          right: "10px",
-                          background: isInWishlist(p.id)
-                            ? "#ff6b6b"
-                            : "rgba(255,255,255,0.9)",
-                          color: isInWishlist(p.id) ? "white" : "#333",
-                          border: "none",
-                          borderRadius: "50%",
-                          width: "40px",
-                          height: "40px",
-                          padding: "0",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                        onClick={() => {
-                          if (isInWishlist(p.id)) {
-                            dispatch(removeFromWishlist(parseInt(p.id)));
-                          } else {
-                            dispatch(addToWishlist(p as any));
-                          }
-                        }}
-                        title={
-                          isInWishlist(p.id)
-                            ? t("productPage.removeFromWishlist")
-                            : t("productPage.addToWishlist")
-                        }
-                      >
-                        <i
-                          className={`bi ${
-                            isInWishlist(p.id) ? "bi-heart-fill" : "bi-heart"
-                          }`}
-                          style={{ fontSize: "18px" }}
-                        ></i>
-                      </button>
-                    </div>
-                    <div className="card-body">
-                      <h5 className="card-title">{p.name}</h5>
-                      <p className="text-muted small">{p.description}</p>
-                      <p className="card-text text-success fw-bold">
-                        ${(p.price / 100).toFixed(2)}
-                      </p>
-                      <small className="text-muted">
-                        {t("productPage.stock")}: {p.stock}{" "}
-                        {t("productPage.units")}
-                      </small>
-                    </div>
-                    <div className="card-footer bg-transparent d-grid gap-2">
-                      <button
-                        className="btn btn-sm btn-primary"
-                        onClick={() => {
-                          addToCart(
-                            {
-                              id: parseInt(p.id),
-                              name: p.name,
-                              price: p.price / 100,
-                              image: p.imageUrl,
-                              discount: 0,
-                            },
-                            1,
-                          );
-                          setShowToast(true);
-                          setTimeout(() => setShowToast(false), 3000);
-                        }}
-                        disabled={p.stock === 0}
-                      >
-                        {p.stock === 0
-                          ? t("productPage.outOfStock")
-                          : t("common.add")}
-                      </button>
-                      <button
-                        className="btn btn-sm btn-success"
-                        onClick={() => {
-                          addToCart(
-                            {
-                              id: parseInt(p.id),
-                              name: p.name,
-                              price: p.price / 100,
-                              image: p.imageUrl,
-                              discount: 0,
-                            },
-                            1,
-                          );
-                          setTimeout(() => {
-                            navigate("/cart");
-                          }, 300);
-                        }}
-                        disabled={p.stock === 0}
-                      >
-                        <i className="bi bi-cart-check me-1"></i>
-                        {t("productPage.buyNow")}
-                      </button>
-                      <Link
-                        to={`/product?id=${p.id}`}
-                        className="btn btn-sm btn-outline-secondary"
-                      >
-                        {t("productPage.viewDetails")}
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </main>
-        <Footer />
-      </div>
-    );
+    return <SearchResultsView products={products} searchQuery={searchQuery} />;
   }
 
-  // Single product view
   if (!product) {
-    return (
-      <div>
-        <Header />
-        <main className="container my-4">
-          <div className="alert alert-danger">
-            {t("productPage.notFound")} <Link to="/">{t("common.back")}</Link>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
+    return <NotFoundView />;
   }
+
+  const isOutOfStock = product.stock === 0;
+
+  const addToCartButtonContent = getButtonContent({
+    isAdding,
+    isOutOfStock,
+    t,
+    isBuyButton: false,
+  });
+
+  const buyNowButtonContent = getButtonContent({
+    isAdding,
+    isOutOfStock,
+    t,
+    isBuyButton: true,
+  });
 
   return (
     <div>
@@ -330,41 +425,14 @@ const ProductPage: React.FC = () => {
                 onClick={handleAddToCart}
                 disabled={isAdding || product.stock === 0}
               >
-                {isAdding ? (
-                  <>
-                    <span
-                      className="spinner-border spinner-border-sm me-2"
-                      role="status"
-                    ></span>
-                    {t("productPage.adding")}
-                  </>
-                ) : product.stock === 0 ? (
-                  t("productPage.outOfStock")
-                ) : (
-                  t("productPage.addToCart")
-                )}
+                {addToCartButtonContent}
               </button>
               <button
                 className="btn btn-success"
                 onClick={handleBuyNow}
                 disabled={isAdding || product.stock === 0}
               >
-                {isAdding ? (
-                  <>
-                    <span
-                      className="spinner-border spinner-border-sm me-2"
-                      role="status"
-                    ></span>
-                    {t("common.loading")}
-                  </>
-                ) : product.stock === 0 ? (
-                  t("productPage.outOfStock")
-                ) : (
-                  <>
-                    <i className="bi bi-cart-check me-2"></i>
-                    {t("productPage.buyNow")}
-                  </>
-                )}
+                {buyNowButtonContent}
               </button>
             </div>
           </div>

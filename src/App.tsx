@@ -12,7 +12,7 @@ import PurchasedItemsPage from "@/presentation/pages/PurchasedItemsPage";
 import RegisterPage from "@/presentation/pages/RegisterPage";
 import WishlistPage from "@/presentation/pages/WishlistPage";
 import "@/styles/App.scss";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import {
   Navigate,
@@ -33,35 +33,33 @@ const PersistGateLoader = () => (
 );
 
 // Component to restore auth on app load
-function AuthRestorer({ children }: { children: React.ReactNode }) {
+function AuthRestorer({ children }: { readonly children: React.ReactNode }) {
   const dispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.auth);
-  const [hasInitialized, setHasInitialized] = useState(false);
+  const hasInitialized = useRef(false);
 
   useEffect(() => {
     // Only run once on component mount
-    if (!hasInitialized) {
+    if (!hasInitialized.current) {
+      hasInitialized.current = true;
       dispatch(restoreAuth());
-      setHasInitialized(true);
     }
-  }, [dispatch, hasInitialized]);
+  }, [dispatch]);
 
   // Check if there's a valid token (separate effect to avoid loop)
   useEffect(() => {
-    if (hasInitialized) {
-      const token = localStorage.getItem("authToken");
-      if (!token && user) {
-        // No token but user exists - this is invalid state, clear it
-        dispatch(logout());
-      }
+    const token = localStorage.getItem("authToken");
+    if (!token && user) {
+      // No token but user exists - this is invalid state, clear it
+      dispatch(logout());
     }
-  }, [hasInitialized, user, dispatch]);
+  }, [user, dispatch]);
 
   return <>{children}</>;
 }
 
 // Component to check if user is authenticated and redirect to login if not
-function PublicPageGuard({ children }: { children: React.ReactNode }) {
+function PublicPageGuard({ children }: { readonly children: React.ReactNode }) {
   const { user } = useSelector((state: RootState) => state.auth);
 
   // Si no hay usuario, redirigir a login

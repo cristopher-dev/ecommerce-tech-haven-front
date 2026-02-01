@@ -69,8 +69,10 @@ const CartPage: React.FC = () => {
                           value={item.quantity}
                           onChange={(e) =>
                             handleQuantityChange(
-                              item.product.id,
-                              parseInt(e.target.value) || 0,
+                              typeof item.product.id === "string"
+                                ? Number.parseInt(item.product.id, 10)
+                                : item.product.id,
+                              Number.parseInt(e.target.value, 10) || 0,
                             )
                           }
                           min="1"

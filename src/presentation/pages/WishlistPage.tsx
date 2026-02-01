@@ -86,7 +86,7 @@ const WishlistPage: React.FC = () => {
                   <tbody>
                     {items.map((item) => (
                       <tr
-                        key={item.id || item.product.id}
+                        key={`wishlist-${item.product.id}`}
                         className="border-bottom"
                       >
                         <td>
@@ -136,7 +136,7 @@ const WishlistPage: React.FC = () => {
                           <button
                             className="btn btn-sm btn-outline-danger"
                             onClick={() =>
-                              handleRemoveFromWishlist(item.product.id)
+                              handleRemoveFromWishlist(Number(item.product.id))
                             }
                             title="Remove from wishlist"
                           >

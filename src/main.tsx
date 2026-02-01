@@ -1,10 +1,10 @@
+import App from "@/App.tsx";
+import "@/i18n/config";
+import "@/styles/index.scss";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "@/styles/index.scss";
-import "@/i18n/config";
-import App from "@/App.tsx";
 
-createRoot(document.getElementById("root")).render(
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <App />
   </StrictMode>,

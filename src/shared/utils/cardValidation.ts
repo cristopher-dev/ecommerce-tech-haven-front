@@ -11,7 +11,7 @@ export type CardType = "VISA" | "MASTERCARD" | "AMEX" | "UNKNOWN";
  * @returns true if valid, false otherwise
  */
 export const isValidCardNumber = (cardNumber: string): boolean => {
-  const digits = cardNumber.replace(/\D/g, "");
+  const digits = cardNumber.replaceAll(/\D/g, "");
 
   if (digits.length < 13 || digits.length > 19) {
     return false;
@@ -21,7 +21,7 @@ export const isValidCardNumber = (cardNumber: string): boolean => {
   let isEven = false;
 
   for (let i = digits.length - 1; i >= 0; i--) {
-    let digit = parseInt(digits[i], 10);
+    let digit = Number.parseInt(digits[i], 10);
 
     if (isEven) {
       digit *= 2;
@@ -43,17 +43,17 @@ export const isValidCardNumber = (cardNumber: string): boolean => {
  * @returns The detected card type
  */
 export const getCardType = (cardNumber: string): CardType => {
-  const digits = cardNumber.replace(/\D/g, "");
+  const digits = cardNumber.replaceAll(/\D/g, "");
 
-  if (/^4[0-9]{12}(?:[0-9]{3})?$/.test(digits)) {
+  if (/^4\d{12}(?:\d{3})?$/.test(digits)) {
     return "VISA";
   }
 
-  if (/^5[1-5][0-9]{14}$/.test(digits)) {
+  if (/^5[1-5]\d{14}$/.test(digits)) {
     return "MASTERCARD";
   }
 
-  if (/^3[47][0-9]{13}$/.test(digits)) {
+  if (/^3[47]\d{13}$/.test(digits)) {
     return "AMEX";
   }
 
@@ -70,7 +70,7 @@ export const isValidCVV = (
   cvv: string,
   cardType: CardType = "UNKNOWN",
 ): boolean => {
-  const digits = cvv.replace(/\D/g, "");
+  const digits = cvv.replaceAll(/\D/g, "");
 
   // AMEX uses 4-digit CVV, others use 3
   if (cardType === "AMEX") {
@@ -119,8 +119,8 @@ export const isValidExpirationDate = (month: number, year: number): boolean => {
  * @returns Formatted card number
  */
 export const formatCardNumber = (cardNumber: string): string => {
-  const digits = cardNumber.replace(/\D/g, "");
-  return digits.replace(/(\d{4})/g, "$1 ").trim();
+  const digits = cardNumber.replaceAll(/\D/g, "");
+  return digits.replaceAll(/(\d{4})/g, "$1 ").trim();
 };
 
 /**
@@ -129,10 +129,10 @@ export const formatCardNumber = (cardNumber: string): string => {
  * @returns Masked card number
  */
 export const maskCardNumber = (cardNumber: string): string => {
-  const digits = cardNumber.replace(/\D/g, "");
+  const digits = cardNumber.replaceAll(/\D/g, "");
   const last4 = digits.slice(-4);
   const masked = "*".repeat(digits.length - 4);
-  return `${masked}${last4}`.replace(/(\d{4})/g, "$1 ").trim();
+  return `${masked}${last4}`.replaceAll(/(\d{4})/g, "$1 ").trim();
 };
 
 /**

@@ -15,16 +15,16 @@ const CheckoutFinalStatusPage: React.FC = () => {
 
   useEffect(() => {
     // Redirect to home if no transaction ID (user came directly)
-    if (!checkout.lastTransactionId) {
-      console.warn(
-        "CheckoutFinalStatusPage: No transaction ID found, redirecting to home",
-      );
-      navigate("/");
-    } else {
+    if (checkout.lastTransactionId) {
       console.log("CheckoutFinalStatusPage: Transaction successful", {
         transactionId: checkout.lastTransactionId,
         purchasedItemsCount: purchasedItems.length,
       });
+    } else {
+      console.warn(
+        "CheckoutFinalStatusPage: No transaction ID found, redirecting to home",
+      );
+      navigate("/");
     }
   }, [checkout.lastTransactionId, purchasedItems.length, navigate]);
 
@@ -41,27 +41,6 @@ const CheckoutFinalStatusPage: React.FC = () => {
   const baseFee = checkout.baseFee / 100;
   const deliveryFee = checkout.deliveryFee / 100;
   const total = subtotal + baseFee + deliveryFee;
-
-  // Show error state if no transaction
-  if (!checkout.lastTransactionId) {
-    return (
-      <div>
-        <Header />
-        <main className="container my-5">
-          <div className="alert alert-danger" role="alert">
-            <h4 className="alert-heading">
-              {t("checkoutFinal.orderProcessingError")}
-            </h4>
-            <p>{t("checkoutFinal.orderProcessingErrorMsg")}</p>
-            <Link to="/" className="btn btn-primary">
-              {t("checkoutFinal.returnToHome")}
-            </Link>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
 
   return (
     <div>
@@ -230,16 +209,12 @@ const CheckoutFinalStatusPage: React.FC = () => {
 
                 {/* Progress Bar */}
                 <div className="mt-5">
-                  <div className="progress" style={{ height: "6px" }}>
-                    <div
-                      className="progress-bar bg-success"
-                      role="progressbar"
-                      style={{ width: "100%" }}
-                      aria-valuenow={100}
-                      aria-valuemin={0}
-                      aria-valuemax={100}
-                    />
-                  </div>
+                  <progress
+                    value={100}
+                    max={100}
+                    className="w-100"
+                    style={{ height: "6px" }}
+                  />
                   <small className="text-muted mt-2 d-block">
                     {t("checkoutFinal.progressBar")}
                   </small>

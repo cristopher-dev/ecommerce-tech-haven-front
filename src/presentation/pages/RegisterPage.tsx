@@ -3,6 +3,7 @@ import { AppDispatch, RootState } from "@/application/store/store";
 import { useFormValidation } from "@/presentation/hooks/useFormValidation";
 import { ValidationErrors } from "@/shared/types/auth";
 import "@/styles/pages/auth.scss";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -71,7 +72,7 @@ export default function RegisterPage() {
     validateForm: validateRegisterForm,
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!handleValidate()) {

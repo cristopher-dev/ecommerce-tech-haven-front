@@ -66,19 +66,19 @@ const CheckoutSummaryPage: React.FC = () => {
       const customerEmail = String(checkout.deliveryData.email || "").trim();
       const customerAddress =
         `${String(checkout.deliveryData.address || "").trim()}, ${String(checkout.deliveryData.city || "").trim()}, ${String(checkout.deliveryData.state || "").trim()} ${String(checkout.deliveryData.postalCode || "").trim()}`
-          .replace(/,\s*,/g, ",")
+          .replaceAll(", ", ",")
           .trim();
 
       // Validate customer data - strict validation matching backend requirements
       if (typeof customerName !== "string") {
-        throw new Error("customerName must be a string");
+        throw new TypeError("customerName must be a string");
       }
       if (customerName === "" || customerName.length < 2) {
         throw new Error("customerName should not be empty");
       }
 
       if (typeof customerEmail !== "string") {
-        throw new Error("customerEmail must be an email");
+        throw new TypeError("customerEmail must be an email");
       }
       if (customerEmail === "") {
         throw new Error("customerEmail should not be empty");
@@ -88,7 +88,7 @@ const CheckoutSummaryPage: React.FC = () => {
       }
 
       if (typeof customerAddress !== "string") {
-        throw new Error("customerAddress must be a string");
+        throw new TypeError("customerAddress must be a string");
       }
       if (customerAddress === "" || customerAddress.length < 5) {
         throw new Error("customerAddress should not be empty");
@@ -142,7 +142,7 @@ const CheckoutSummaryPage: React.FC = () => {
 
         // Validate productId - strict validation matching backend requirements
         if (typeof productId !== "string") {
-          throw new Error("productId must be a string");
+          throw new TypeError("productId must be a string");
         }
         if (
           productId === "" ||
@@ -157,10 +157,10 @@ const CheckoutSummaryPage: React.FC = () => {
         const quantity = item.quantity;
 
         if (typeof quantity !== "number") {
-          throw new Error("quantity must be an integer number");
+          throw new TypeError("quantity must be an integer number");
         }
         if (!Number.isInteger(quantity)) {
-          throw new Error("quantity must be an integer number");
+          throw new TypeError("quantity must be an integer number");
         }
         if (quantity < 1) {
           throw new Error("quantity must not be less than 1");
@@ -222,7 +222,7 @@ const CheckoutSummaryPage: React.FC = () => {
 
       // STEP 2: Process payment with card data using the transaction ID from Step 1
       const paymentPayload = {
-        cardNumber: checkout.paymentData.cardNumber.replace(/\s/g, ""),
+        cardNumber: checkout.paymentData.cardNumber.replaceAll(" ", ""),
         cardholderName: checkout.paymentData.cardholderName,
         expirationMonth: checkout.paymentData.expirationMonth,
         expirationYear: checkout.paymentData.expirationYear,
@@ -340,31 +340,26 @@ const CheckoutSummaryPage: React.FC = () => {
         </nav>
         <div className="mb-4">
           <div className="progress">
-            <div
+            <progress
               className="progress-bar"
-              role="progressbar"
-              style={{ inlineSize: "66%" }}
-              aria-valuenow={66}
-              aria-valuemin={0}
-              aria-valuemax={100}
+              style={{ width: "66%" }}
+              value={66}
+              max={100}
             >
               Step 2 of 3: Summary
-            </div>
+            </progress>
           </div>
         </div>
 
         {checkout.error && (
-          <div
-            className="alert alert-danger alert-dismissible fade show"
-            role="alert"
-          >
+          <output className="alert alert-danger alert-dismissible fade show">
             {checkout.error}
             <button
               type="button"
               className="btn-close"
               onClick={() => dispatch(setError(null))}
             />
-          </div>
+          </output>
         )}
 
         <h2>Order Summary</h2>
@@ -484,11 +479,10 @@ const CheckoutSummaryPage: React.FC = () => {
                   >
                     {isProcessing ? (
                       <>
-                        <span
-                          className="spinner-border spinner-border-sm me-2"
-                          role="status"
-                        />
-                        {t("checkoutSummary.processingPayment")}
+                        <output className="spinner-border spinner-border-sm me-2">
+                          {t("checkoutSummary.processingPayment")}
+                        </output>
+                        <span>{t("checkoutSummary.processingPayment")}</span>
                       </>
                     ) : (
                       `${t("checkoutSummary.placeOrder")} (${total.toFixed(2)})`

@@ -11,23 +11,146 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import PaymentModal, { type PaymentFormData } from "../components/PaymentModal";
 
+interface FormDataType {
+  firstName: string;
+  lastName: string;
+  address: string;
+  city: string;
+  zipCode: string;
+  email: string;
+  phone: string;
+  state: string;
+}
+
+const INITIAL_FORM_DATA: FormDataType = {
+  firstName: "",
+  lastName: "",
+  address: "",
+  city: "",
+  zipCode: "",
+  email: "",
+  phone: "",
+  state: "",
+};
+
+const isValidEmail = (email: string): boolean => /\S+@\S+\.\S+/.test(email);
+
+const getFieldError = (
+  name: keyof FormDataType,
+  value: string,
+  t: (key: string) => string,
+): string => {
+  const isEmpty = !value.trim();
+  const messages: Record<keyof FormDataType, string> = {
+    firstName: t("checkoutDelivery.validation.firstNameRequired"),
+    lastName: t("checkoutDelivery.validation.lastNameRequired"),
+    address: t("checkoutDelivery.validation.addressRequired"),
+    city: t("checkoutDelivery.validation.cityRequired"),
+    state: t("checkoutDelivery.validation.stateRequired"),
+    zipCode: t("checkoutDelivery.validation.zipCodeRequired"),
+    email: t("checkoutDelivery.validation.emailRequired"),
+    phone: t("checkoutDelivery.validation.phoneRequired"),
+  };
+
+  if (isEmpty) return messages[name];
+  if (name === "email" && !isValidEmail(value)) {
+    return t("checkoutDelivery.validation.emailInvalid");
+  }
+  return "";
+};
+
+interface RowFormFieldProps {
+  name: keyof FormDataType;
+  label: string;
+  colClass?: string;
+  type?: string;
+}
+
+const RowFormField: React.FC<
+  RowFormFieldProps & {
+    value: string;
+    error?: string;
+    touched?: boolean;
+    disabled?: boolean;
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    onBlur: () => void;
+  }
+> = ({
+  name,
+  label,
+  colClass = "col-md-6",
+  type = "text",
+  value,
+  error,
+  touched,
+  disabled,
+  onChange,
+  onBlur,
+}) => (
+  <div className={`${colClass} mb-3`}>
+    <label htmlFor={name} className="form-label">
+      {label} *
+    </label>
+    <input
+      type={type}
+      className={`form-control ${touched && error ? "is-invalid" : ""}`}
+      id={name}
+      name={name}
+      value={value}
+      onChange={onChange}
+      onBlur={onBlur}
+      disabled={disabled}
+    />
+    {touched && error && <div className="invalid-feedback">{error}</div>}
+  </div>
+);
+
+const FullWidthFormField: React.FC<{
+  name: keyof FormDataType;
+  label: string;
+  type?: string;
+  value: string;
+  error?: string;
+  touched?: boolean;
+  disabled?: boolean;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onBlur: () => void;
+}> = ({
+  name,
+  label,
+  type = "text",
+  value,
+  error,
+  touched,
+  disabled,
+  onChange,
+  onBlur,
+}) => (
+  <div className="mb-3">
+    <label htmlFor={name} className="form-label">
+      {label} *
+    </label>
+    <input
+      type={type}
+      className={`form-control ${touched && error ? "is-invalid" : ""}`}
+      id={name}
+      name={name}
+      value={value}
+      onChange={onChange}
+      onBlur={onBlur}
+      disabled={disabled}
+    />
+    {touched && error && <div className="invalid-feedback">{error}</div>}
+  </div>
+);
+
 const CheckoutDeliveryPage: React.FC = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const checkout = useAppSelector((state) => state.checkout);
 
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    address: "",
-    city: "",
-    zipCode: "",
-    email: "",
-    phone: "",
-    state: "",
-  });
-
+  const [formData, setFormData] = useState<FormDataType>(INITIAL_FORM_DATA);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
@@ -41,35 +164,7 @@ const CheckoutDeliveryPage: React.FC = () => {
     }
   };
 
-  const validateForm = (): boolean => {
-    const newErrors: Record<string, string> = {};
-    if (!formData.firstName.trim())
-      newErrors.firstName = t("checkoutDelivery.validation.firstNameRequired");
-    if (!formData.lastName.trim())
-      newErrors.lastName = t("checkoutDelivery.validation.lastNameRequired");
-    if (!formData.address.trim())
-      newErrors.address = t("checkoutDelivery.validation.addressRequired");
-    if (!formData.city.trim())
-      newErrors.city = t("checkoutDelivery.validation.cityRequired");
-    if (!formData.state.trim())
-      newErrors.state = t("checkoutDelivery.validation.stateRequired");
-    if (!formData.zipCode.trim())
-      newErrors.zipCode = t("checkoutDelivery.validation.zipCodeRequired");
-    if (!formData.email.trim())
-      newErrors.email = t("checkoutDelivery.validation.emailRequired");
-    else if (!/\S+@\S+\.\S+/.test(formData.email))
-      newErrors.email = t("checkoutDelivery.validation.emailInvalid");
-    if (!formData.phone.trim())
-      newErrors.phone = t("checkoutDelivery.validation.phoneRequired");
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleDeliverySubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // Mark all fields as touched
+  const markAllFieldsTouched = (): void => {
     setTouched({
       firstName: true,
       lastName: true,
@@ -80,30 +175,53 @@ const CheckoutDeliveryPage: React.FC = () => {
       phone: true,
       state: true,
     });
+  };
+
+  const validateForm = (): boolean => {
+    const newErrors: Record<string, string> = {};
+    for (const key of Object.keys(INITIAL_FORM_DATA) as Array<
+      keyof FormDataType
+    >) {
+      const error = getFieldError(key, formData[key], t);
+      if (error) newErrors[key] = error;
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const saveDeliveryDataAndShowPayment = (): void => {
+    dispatch(
+      setDeliveryData({
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        address: formData.address,
+        city: formData.city,
+        state: formData.state,
+        postalCode: formData.zipCode,
+        email: formData.email,
+        phone: formData.phone,
+      }),
+    );
+    setShowPaymentModal(true);
+  };
+
+  const handleDeliverySubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    markAllFieldsTouched();
 
     if (validateForm()) {
-      // Save delivery data to Redux
-      dispatch(
-        setDeliveryData({
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          address: formData.address,
-          city: formData.city,
-          state: formData.state,
-          postalCode: formData.zipCode,
-          email: formData.email,
-          phone: formData.phone,
-        }),
-      );
-
-      // Show payment modal
-      setShowPaymentModal(true);
+      saveDeliveryDataAndShowPayment();
     }
   };
 
+  const savPaymentDataAndProceed = (): void => {
+    setShowPaymentModal(false);
+    dispatch(setStep("summary"));
+    navigate("/checkout/summary");
+  };
+
   const handlePaymentSubmit = (paymentData: PaymentFormData) => {
-    // Save payment data to Redux (including CVV temporarily for transaction processing)
-    // Note: CVV will be cleared after payment processing for security
     dispatch(
       setPaymentData({
         cardNumber: paymentData.cardNumber,
@@ -113,12 +231,7 @@ const CheckoutDeliveryPage: React.FC = () => {
         cvv: paymentData.cvv,
       }),
     );
-
-    setShowPaymentModal(false);
-
-    // Move to summary page
-    dispatch(setStep("summary"));
-    navigate("/checkout/summary");
+    savPaymentDataAndProceed();
   };
   return (
     <div>
@@ -138,171 +251,99 @@ const CheckoutDeliveryPage: React.FC = () => {
           </ol>
         </nav>
         <div className="mb-4">
-          <div className="progress">
-            <div
-              className="progress-bar"
-              role="progressbar"
-              style={{ width: "33%" }}
-              aria-valuenow={33}
-              aria-valuemin={0}
-              aria-valuemax={100}
-            >
-              {t("checkoutDelivery.progressBar")}
-            </div>
-          </div>
+          <progress value={33} max={100} className="w-100" />
         </div>
         <h2>{t("checkoutDelivery.title")}</h2>
         <form onSubmit={handleDeliverySubmit}>
           <div className="row">
-            <div className="col-md-6 mb-3">
-              <label htmlFor="firstName" className="form-label">
-                {t("checkoutDelivery.firstName")} *
-              </label>
-              <input
-                type="text"
-                className={`form-control ${touched.firstName && errors.firstName ? "is-invalid" : ""}`}
-                id="firstName"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                onBlur={() => setTouched({ ...touched, firstName: true })}
-                disabled={checkout.loading}
-              />
-              {touched.firstName && errors.firstName && (
-                <div className="invalid-feedback">{errors.firstName}</div>
-              )}
-            </div>
-            <div className="col-md-6 mb-3">
-              <label htmlFor="lastName" className="form-label">
-                {t("checkoutDelivery.lastName")} *
-              </label>
-              <input
-                type="text"
-                className={`form-control ${touched.lastName && errors.lastName ? "is-invalid" : ""}`}
-                id="lastName"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                onBlur={() => setTouched({ ...touched, lastName: true })}
-                disabled={checkout.loading}
-              />
-              {touched.lastName && errors.lastName && (
-                <div className="invalid-feedback">{errors.lastName}</div>
-              )}
-            </div>
-          </div>
-          <div className="mb-3">
-            <label htmlFor="address" className="form-label">
-              {t("checkoutDelivery.address")} *
-            </label>
-            <input
-              type="text"
-              className={`form-control ${touched.address && errors.address ? "is-invalid" : ""}`}
-              id="address"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-              onBlur={() => setTouched({ ...touched, address: true })}
+            <RowFormField
+              name="firstName"
+              label={t("checkoutDelivery.firstName")}
+              value={formData.firstName}
+              error={errors.firstName}
+              touched={touched.firstName}
               disabled={checkout.loading}
+              onChange={handleChange}
+              onBlur={() => setTouched({ ...touched, firstName: true })}
             />
-            {touched.address && errors.address && (
-              <div className="invalid-feedback">{errors.address}</div>
-            )}
+            <RowFormField
+              name="lastName"
+              label={t("checkoutDelivery.lastName")}
+              value={formData.lastName}
+              error={errors.lastName}
+              touched={touched.lastName}
+              disabled={checkout.loading}
+              onChange={handleChange}
+              onBlur={() => setTouched({ ...touched, lastName: true })}
+            />
+          </div>
+          <FullWidthFormField
+            name="address"
+            label={t("checkoutDelivery.address")}
+            value={formData.address}
+            error={errors.address}
+            touched={touched.address}
+            disabled={checkout.loading}
+            onChange={handleChange}
+            onBlur={() => setTouched({ ...touched, address: true })}
+          />
+          <div className="row">
+            <RowFormField
+              name="city"
+              label={t("checkoutDelivery.city")}
+              value={formData.city}
+              error={errors.city}
+              touched={touched.city}
+              disabled={checkout.loading}
+              onChange={handleChange}
+              onBlur={() => setTouched({ ...touched, city: true })}
+            />
+            <RowFormField
+              name="state"
+              label={t("checkoutDelivery.state")}
+              value={formData.state}
+              error={errors.state}
+              touched={touched.state}
+              disabled={checkout.loading}
+              onChange={handleChange}
+              onBlur={() => setTouched({ ...touched, state: true })}
+            />
           </div>
           <div className="row">
-            <div className="col-md-6 mb-3">
-              <label htmlFor="city" className="form-label">
-                {t("checkoutDelivery.city")} *
-              </label>
-              <input
-                type="text"
-                className={`form-control ${touched.city && errors.city ? "is-invalid" : ""}`}
-                id="city"
-                name="city"
-                value={formData.city}
-                onChange={handleChange}
-                onBlur={() => setTouched({ ...touched, city: true })}
-                disabled={checkout.loading}
-              />
-              {touched.city && errors.city && (
-                <div className="invalid-feedback">{errors.city}</div>
-              )}
-            </div>
-            <div className="col-md-6 mb-3">
-              <label htmlFor="state" className="form-label">
-                {t("checkoutDelivery.state")} *
-              </label>
-              <input
-                type="text"
-                className={`form-control ${touched.state && errors.state ? "is-invalid" : ""}`}
-                id="state"
-                name="state"
-                value={formData.state}
-                onChange={handleChange}
-                onBlur={() => setTouched({ ...touched, state: true })}
-                disabled={checkout.loading}
-              />
-              {touched.state && errors.state && (
-                <div className="invalid-feedback">{errors.state}</div>
-              )}
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-md-6 mb-3">
-              <label htmlFor="zipCode" className="form-label">
-                {t("checkoutDelivery.zipCode")} *
-              </label>
-              <input
-                type="text"
-                className={`form-control ${touched.zipCode && errors.zipCode ? "is-invalid" : ""}`}
-                id="zipCode"
-                name="zipCode"
-                value={formData.zipCode}
-                onChange={handleChange}
-                onBlur={() => setTouched({ ...touched, zipCode: true })}
-                disabled={checkout.loading}
-              />
-              {touched.zipCode && errors.zipCode && (
-                <div className="invalid-feedback">{errors.zipCode}</div>
-              )}
-            </div>
-          </div>
-          <div className="mb-3">
-            <label htmlFor="email" className="form-label">
-              {t("checkoutDelivery.email")} *
-            </label>
-            <input
-              type="email"
-              className={`form-control ${touched.email && errors.email ? "is-invalid" : ""}`}
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              onBlur={() => setTouched({ ...touched, email: true })}
+            <RowFormField
+              name="zipCode"
+              label={t("checkoutDelivery.zipCode")}
+              colClass="col-md-6"
+              value={formData.zipCode}
+              error={errors.zipCode}
+              touched={touched.zipCode}
               disabled={checkout.loading}
-            />
-            {touched.email && errors.email && (
-              <div className="invalid-feedback">{errors.email}</div>
-            )}
-          </div>
-          <div className="mb-3">
-            <label htmlFor="phone" className="form-label">
-              {t("checkoutDelivery.phone")} *
-            </label>
-            <input
-              type="tel"
-              className={`form-control ${touched.phone && errors.phone ? "is-invalid" : ""}`}
-              id="phone"
-              name="phone"
-              value={formData.phone}
               onChange={handleChange}
-              onBlur={() => setTouched({ ...touched, phone: true })}
-              disabled={checkout.loading}
+              onBlur={() => setTouched({ ...touched, zipCode: true })}
             />
-            {touched.phone && errors.phone && (
-              <div className="invalid-feedback">{errors.phone}</div>
-            )}
           </div>
+          <FullWidthFormField
+            name="email"
+            label={t("checkoutDelivery.email")}
+            type="email"
+            value={formData.email}
+            error={errors.email}
+            touched={touched.email}
+            disabled={checkout.loading}
+            onChange={handleChange}
+            onBlur={() => setTouched({ ...touched, email: true })}
+          />
+          <FullWidthFormField
+            name="phone"
+            label={t("checkoutDelivery.phone")}
+            type="tel"
+            value={formData.phone}
+            error={errors.phone}
+            touched={touched.phone}
+            disabled={checkout.loading}
+            onChange={handleChange}
+            onBlur={() => setTouched({ ...touched, phone: true })}
+          />
           <div className="d-flex gap-2 justify-content-between mt-4">
             <Link to="/cart" className="btn btn-secondary">
               {t("checkoutDelivery.backToCart")}
@@ -316,9 +357,9 @@ const CheckoutDeliveryPage: React.FC = () => {
                 <>
                   <span
                     className="spinner-border spinner-border-sm me-2"
-                    role="status"
+                    aria-label={t("checkoutDelivery.processing")}
                   />
-                  {t("checkoutDelivery.processing")}
+                  <output>{t("checkoutDelivery.processing")}</output>
                 </>
               ) : (
                 t("checkoutDelivery.continueToPayment")
