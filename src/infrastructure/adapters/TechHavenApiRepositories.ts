@@ -12,20 +12,140 @@ import {
 } from "@/infrastructure/api/techHavenApiClient";
 
 /**
- * Tech Haven API Product Repository Adapter
- * Implements the ProductRepository port
+ * Product Repository with request deduplication and caching
+ * Prevents multiple identical requests from being made simultaneously
  */
-export class TechHavenApiProductRepository {
+class ProductRepositoryWithCache {
+  private static instance: ProductRepositoryWithCache;
+  private readonly cache: Map<string, ProductDTO[]> = new Map();
+  private readonly pendingRequests: Map<string, Promise<ProductDTO[]>> =
+    new Map();
+  private readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+  private readonly cacheTimestamps: Map<string, number> = new Map();
+
+  static getInstance(): ProductRepositoryWithCache {
+    if (!ProductRepositoryWithCache.instance) {
+      ProductRepositoryWithCache.instance = new ProductRepositoryWithCache();
+    }
+    return ProductRepositoryWithCache.instance;
+  }
+
+  private isCacheValid(key: string): boolean {
+    const timestamp = this.cacheTimestamps.get(key);
+    if (!timestamp) return false;
+    return Date.now() - timestamp < this.CACHE_DURATION;
+  }
+
   async getAll(): Promise<ProductDTO[]> {
-    return productsApi.getAll();
+    const cacheKey = "all_products";
+
+    // Return cached data if valid
+    if (this.isCacheValid(cacheKey) && this.cache.has(cacheKey)) {
+      return this.cache.get(cacheKey)!;
+    }
+
+    // If request is already pending, return the existing promise
+    if (this.pendingRequests.has(cacheKey)) {
+      return this.pendingRequests.get(cacheKey)!;
+    }
+
+    // Make the request and store the promise to deduplicate concurrent requests
+    const request = productsApi.getAll();
+    this.pendingRequests.set(cacheKey, request);
+
+    try {
+      const data = await request;
+      this.cache.set(cacheKey, data);
+      this.cacheTimestamps.set(cacheKey, Date.now());
+      return data;
+    } finally {
+      this.pendingRequests.delete(cacheKey);
+    }
   }
 
   async getById(id: string): Promise<ProductDTO> {
-    return productsApi.getById(id);
+    const cacheKey = `product_${id}`;
+
+    // Return cached data if valid
+    if (this.isCacheValid(cacheKey) && this.cache.has(cacheKey)) {
+      const cached = this.cache.get(cacheKey);
+      if (cached && cached.length > 0) {
+        return cached[0];
+      }
+    }
+
+    // If request is already pending, return the existing promise
+    if (this.pendingRequests.has(cacheKey)) {
+      const result = await this.pendingRequests.get(cacheKey)!;
+      return result[0];
+    }
+
+    // Make the request
+    const request = productsApi
+      .getById(id)
+      .then((data) => [data] as unknown as ProductDTO[]);
+    this.pendingRequests.set(cacheKey, request);
+
+    try {
+      const data = await request;
+      this.cache.set(cacheKey, data);
+      this.cacheTimestamps.set(cacheKey, Date.now());
+      return data[0];
+    } finally {
+      this.pendingRequests.delete(cacheKey);
+    }
   }
 
   async search(query: string): Promise<ProductDTO[]> {
-    return productsApi.search(query);
+    const cacheKey = `search_${query}`;
+
+    // Return cached data if valid
+    if (this.isCacheValid(cacheKey) && this.cache.has(cacheKey)) {
+      return this.cache.get(cacheKey)!;
+    }
+
+    // If request is already pending, return the existing promise
+    if (this.pendingRequests.has(cacheKey)) {
+      return this.pendingRequests.get(cacheKey)!;
+    }
+
+    // Make the request
+    const request = productsApi.search(query);
+    this.pendingRequests.set(cacheKey, request);
+
+    try {
+      const data = await request;
+      this.cache.set(cacheKey, data);
+      this.cacheTimestamps.set(cacheKey, Date.now());
+      return data;
+    } finally {
+      this.pendingRequests.delete(cacheKey);
+    }
+  }
+
+  clearCache(): void {
+    this.cache.clear();
+    this.cacheTimestamps.clear();
+  }
+}
+
+/**
+ * Tech Haven API Product Repository Adapter
+ * Implements the ProductRepository port with caching and deduplication
+ */
+export class TechHavenApiProductRepository {
+  private readonly cacheManager = ProductRepositoryWithCache.getInstance();
+
+  async getAll(): Promise<ProductDTO[]> {
+    return this.cacheManager.getAll();
+  }
+
+  async getById(id: string): Promise<ProductDTO> {
+    return this.cacheManager.getById(id);
+  }
+
+  async search(query: string): Promise<ProductDTO[]> {
+    return this.cacheManager.search(query);
   }
 }
 
