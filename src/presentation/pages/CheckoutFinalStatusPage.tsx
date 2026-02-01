@@ -32,7 +32,10 @@ const CheckoutFinalStatusPage: React.FC = () => {
     navigate("/");
   };
 
-  const subtotal = checkout.cartItems.reduce(
+  // Use purchasedItems if available, otherwise fall back to checkout.cartItems
+  const displayItems =
+    purchasedItems.length > 0 ? purchasedItems : checkout.cartItems;
+  const subtotal = displayItems.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
     0,
   );
@@ -130,13 +133,13 @@ const CheckoutFinalStatusPage: React.FC = () => {
                 </div>
 
                 {/* Order Items */}
-                {checkout.cartItems.length > 0 && (
+                {displayItems.length > 0 && (
                   <div className="mb-4">
                     <h5 className="text-start mb-3">
                       {t("checkoutFinal.orderItems")}
                     </h5>
                     <div className="list-group list-group-flush">
-                      {checkout.cartItems.map((item) => (
+                      {displayItems.map((item) => (
                         <div
                           key={item.id || item.product.id}
                           className="list-group-item px-0"
