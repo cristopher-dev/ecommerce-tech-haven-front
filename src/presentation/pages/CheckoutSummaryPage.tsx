@@ -317,7 +317,7 @@ const CheckoutSummaryPage: React.FC = () => {
         <Header />
         <main className="container my-4">
           <div className="alert alert-warning">
-            Your cart is empty. <Link to="/">Continue Shopping</Link>
+            {t("checkoutSummary.emptyCart")}. <Link to="/">{t("checkoutSummary.continueShopping")}</Link>
           </div>
         </main>
         <Footer />
@@ -332,16 +332,16 @@ const CheckoutSummaryPage: React.FC = () => {
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
-              <Link to="/">Home</Link>
+              <Link to="/">{t("header.home")}</Link>
             </li>
             <li className="breadcrumb-item">
-              <Link to="/cart">Cart</Link>
+              <Link to="/cart">{t("header.cart")}</Link>
             </li>
             <li className="breadcrumb-item">
-              <Link to="/checkout/delivery">Delivery</Link>
+              <Link to="/checkout/delivery">{t("checkoutDelivery.breadcrumb")}</Link>
             </li>
             <li className="breadcrumb-item active" aria-current="page">
-              Summary
+              {t("checkoutSummary.breadcrumb")}
             </li>
           </ol>
         </nav>
@@ -353,7 +353,7 @@ const CheckoutSummaryPage: React.FC = () => {
               value={66}
               max={100}
             >
-              Step 2 of 3: Summary
+              {t("checkoutSummary.progressBar")}
             </progress>
           </div>
         </div>
@@ -369,17 +369,17 @@ const CheckoutSummaryPage: React.FC = () => {
           </output>
         )}
 
-        <h2>Order Summary</h2>
+        <h2>{t("checkoutSummary.orderSummary")}</h2>
         <div className="row">
           <div className="col-md-8">
-            <h3>Your Order</h3>
+            <h3>{t("checkoutSummary.items")}</h3>
             <table className="table table-striped">
               <thead className="table-light">
                 <tr>
-                  <th>Product</th>
-                  <th>Quantity</th>
-                  <th>Unit Price</th>
-                  <th>Total</th>
+                  <th>{t("checkoutSummary.product")}</th>
+                  <th>{t("checkoutSummary.quantity")}</th>
+                  <th>{t("checkoutSummary.price")}</th>
+                  <th>{t("common.total")}</th>
                 </tr>
               </thead>
               <tbody>

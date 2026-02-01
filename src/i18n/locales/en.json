@@ -362,6 +362,7 @@
     "processingPayment": "Processing Payment...",
     "backToDelivery": "Back to Delivery",
     "emptyCart": "Your cart is empty",
+    "continueShopping": "Continue Shopping",
     "error": "Error processing your order",
     "orderProcessingError": "Order processing error",
     "tryAgain": "Try again",

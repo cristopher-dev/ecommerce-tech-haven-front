@@ -4,6 +4,7 @@
 import "@testing-library/jest-dom";
 
 import { TextDecoder, TextEncoder } from "util";
+import i18n from "@/i18n/config";
 
 declare global {
   var TextEncoder: any;
@@ -12,3 +13,8 @@ declare global {
 
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder as any;
+
+// Initialize i18n for tests
+if (!i18n.isInitialized) {
+  i18n.init({});
+}

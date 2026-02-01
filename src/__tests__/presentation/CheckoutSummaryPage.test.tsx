@@ -13,6 +13,8 @@ import cartReducer from "@/application/store/slices/cartSlice";
 import productsReducer from "@/application/store/slices/productsSlice";
 import transactionsReducer from "@/application/store/slices/transactionsSlice";
 import deliveriesReducer from "@/application/store/slices/deliveriesSlice";
+import i18n from "@/i18n/config";
+import { I18nextProvider } from "react-i18next";
 
 jest.mock("@/presentation/components/Header", () => ({
   __esModule: true,
@@ -109,82 +111,58 @@ describe("CheckoutSummaryPage", () => {
     });
   };
 
+  const renderCheckoutSummaryPage = (store = createMockStore()) => {
+    return render(
+      <I18nextProvider i18n={i18n}>
+        <Provider store={store}>
+          <MemoryRouter>
+            <CheckoutSummaryPage />
+          </MemoryRouter>
+        </Provider>
+      </I18nextProvider>,
+    );
+  };
+
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   it("should render without crashing", () => {
     const store = createMockStore();
-    const { container } = render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <CheckoutSummaryPage />
-        </MemoryRouter>
-      </Provider>,
-    );
+    const { container } = renderCheckoutSummaryPage(store);
     expect(container).toBeInTheDocument();
   });
 
   it("should display header and footer", () => {
     const store = createMockStore();
-    render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <CheckoutSummaryPage />
-        </MemoryRouter>
-      </Provider>,
-    );
+    renderCheckoutSummaryPage(store);
     expect(screen.getByTestId("mock-header")).toBeInTheDocument();
     expect(screen.getByTestId("mock-footer")).toBeInTheDocument();
   });
 
   it("should show order summary heading", () => {
     const store = createMockStore();
-    render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <CheckoutSummaryPage />
-        </MemoryRouter>
-      </Provider>,
-    );
+    renderCheckoutSummaryPage(store);
     expect(screen.getByText(/Order Summary/i)).toBeInTheDocument();
   });
 
   it("should display delivery information", () => {
     const store = createMockStore();
-    render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <CheckoutSummaryPage />
-        </MemoryRouter>
-      </Provider>,
-    );
+    renderCheckoutSummaryPage(store);
     expect(screen.getByText(/John Doe, 123 Main St/i)).toBeInTheDocument();
     expect(screen.getByText(/New York/i)).toBeInTheDocument();
   });
 
   it("should show payment section", () => {
     const store = createMockStore();
-    render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <CheckoutSummaryPage />
-        </MemoryRouter>
-      </Provider>,
-    );
+    renderCheckoutSummaryPage(store);
     const paymentSections = screen.queryAllByText(/Payment Information/i);
     expect(paymentSections.length).toBeGreaterThan(0);
   });
 
   it("should show fees and totals", () => {
     const store = createMockStore();
-    render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <CheckoutSummaryPage />
-        </MemoryRouter>
-      </Provider>,
-    );
+    renderCheckoutSummaryPage(store);
     const subtotalElements = screen.queryAllByText(/Subtotal:/i);
     expect(subtotalElements.length).toBeGreaterThan(0);
   });
@@ -194,38 +172,20 @@ describe("CheckoutSummaryPage", () => {
       cart: { items: [] },
       checkout: { cartItems: [] },
     });
-    render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <CheckoutSummaryPage />
-        </MemoryRouter>
-      </Provider>,
-    );
+    renderCheckoutSummaryPage(store);
     expect(screen.getByText(/cart is empty/i)).toBeInTheDocument();
   });
 
   it("should render breadcrumb navigation", () => {
     const store = createMockStore();
-    render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <CheckoutSummaryPage />
-        </MemoryRouter>
-      </Provider>,
-    );
+    renderCheckoutSummaryPage(store);
     expect(screen.getByText(/Home/i)).toBeInTheDocument();
     expect(screen.getByText(/Cart/i)).toBeInTheDocument();
   });
 
   it("should render Place Order button", () => {
     const store = createMockStore();
-    render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <CheckoutSummaryPage />
-        </MemoryRouter>
-      </Provider>,
-    );
+    renderCheckoutSummaryPage(store);
     const placeOrderButton = screen.getByRole("button", {
       name: /Place Order/i,
     });
@@ -234,13 +194,7 @@ describe("CheckoutSummaryPage", () => {
 
   it("should render Back to Delivery link", () => {
     const store = createMockStore();
-    render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <CheckoutSummaryPage />
-        </MemoryRouter>
-      </Provider>,
-    );
+    renderCheckoutSummaryPage(store);
     expect(
       screen.getByRole("link", { name: /Back to Delivery/i }),
     ).toBeInTheDocument();
@@ -248,28 +202,16 @@ describe("CheckoutSummaryPage", () => {
 
   it("should show progress bar at 66%", () => {
     const store = createMockStore();
-    const { container } = render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <CheckoutSummaryPage />
-        </MemoryRouter>
-      </Provider>,
-    );
+    const { container } = renderCheckoutSummaryPage(store);
     const progressBar = container.querySelector(".progress-bar");
-    expect(progressBar?.getAttribute("aria-valuenow")).toBe("66");
+    expect(progressBar?.getAttribute("value")).toBe("66");
   });
 
   it("should disable Place Order button when loading", () => {
     const store = createMockStore({
       checkout: { loading: true },
     });
-    render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <CheckoutSummaryPage />
-        </MemoryRouter>
-      </Provider>,
-    );
+    renderCheckoutSummaryPage(store);
     const placeOrderButton = screen.getByRole("button", {
       name: /Place Order/i,
     });
@@ -280,13 +222,7 @@ describe("CheckoutSummaryPage", () => {
     const store = createMockStore({
       checkout: { error: "Payment failed" },
     });
-    render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <CheckoutSummaryPage />
-        </MemoryRouter>
-      </Provider>,
-    );
+    renderCheckoutSummaryPage(store);
     expect(screen.getByText(/Payment failed/i)).toBeInTheDocument();
   });
 
@@ -295,13 +231,7 @@ describe("CheckoutSummaryPage", () => {
     const store = createMockStore({
       checkout: { error: "Payment failed" },
     });
-    render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <CheckoutSummaryPage />
-        </MemoryRouter>
-      </Provider>,
-    );
+    renderCheckoutSummaryPage(store);
     const closeButton = screen.getByRole("button", { name: "" });
     if (closeButton) {
       await user.click(closeButton);

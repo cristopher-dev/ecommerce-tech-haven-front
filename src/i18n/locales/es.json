@@ -362,6 +362,7 @@
     "processingPayment": "Procesando Pago...",
     "backToDelivery": "Volver a Entrega",
     "emptyCart": "Tu carrito está vacío",
+    "continueShopping": "Continuar comprando",
     "error": "Error al procesar tu pedido",
     "orderProcessingError": "Error de procesamiento de pedido",
     "tryAgain": "Intenta de nuevo",
