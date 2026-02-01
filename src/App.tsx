@@ -1,5 +1,6 @@
 import { logout, restoreAuth } from "@/application/store/slices/authSlice";
 import { persistor, RootState, store } from "@/application/store/store";
+import CartProtectedRoute from "@/presentation/components/CartProtectedRoute";
 import CheckoutProtectedRoute from "@/presentation/components/CheckoutProtectedRoute";
 import ProtectedRoute from "@/presentation/components/ProtectedRoute";
 import CartPage from "@/presentation/pages/CartPage";
@@ -97,9 +98,9 @@ function App() {
               <Route
                 path="/cart"
                 element={
-                  <ProtectedRoute>
+                  <CartProtectedRoute>
                     <CartPage />
-                  </ProtectedRoute>
+                  </CartProtectedRoute>
                 }
               />
               <Route
