@@ -125,32 +125,23 @@ export interface DeliveryInfoResponseDto {
 
 export interface GetTransactionResponseDto {
   id: string;
+  customerId: string;
   transactionId: string;
   orderId: string;
-  status: "PENDING" | "APPROVED" | "FAILED";
+  status: "PENDING" | "APPROVED" | "FAILED" | "DECLINED";
   amount: number;
   baseFee: number;
   deliveryFee: number;
   subtotal: number;
-  items: TransactionItemResponseDto[];
-  customer: {
-    id: string;
-    name: string;
-    email: string;
-    address: string;
-  };
+  items: Array<{
+    productId: string;
+    quantity: number;
+  }>;
   deliveryInfo: DeliveryInfoResponseDto;
-  delivery: {
-    id: string;
-    status: "PENDING" | "IN_TRANSIT" | "DELIVERED";
-    estimatedDays: number;
-    carrier: string;
-  };
-  timeline: {
-    createdAt: string;
-    approvedAt?: string;
-    deliveryAssignedAt?: string;
-  };
+  createdAt: string;
+  updatedAt: string;
+  productId?: string | null;
+  quantity?: number;
 }
 
 export type TransactionDTO = GetTransactionResponseDto;

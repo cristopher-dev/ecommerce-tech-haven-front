@@ -37,8 +37,9 @@ export const fetchUserTransactions = createAsyncThunk(
         productsApi.getAll(),
       ]);
 
+      // Filter transactions for the current user
       const userTransactions = transactions.filter(
-        (txn) => txn.customer.id === userId,
+        (txn) => txn.customerId === userId,
       );
 
       const purchasedItems: PurchasedItem[] = userTransactions
@@ -49,7 +50,21 @@ export const fetchUserTransactions = createAsyncThunk(
               console.warn(
                 `Product not found for transaction item ${item.productId}`,
               );
-              return null;
+              // Return a partially constructed item with available data from transaction
+              return {
+                id: `${txn.id}-${item.productId}`,
+                product: {
+                  id: item.productId,
+                  name: `Product ${item.productId}`,
+                  price: txn.subtotal / item.quantity, // Estimate price
+                  description: "",
+                  image: undefined,
+                  stock: 0,
+                },
+                quantity: item.quantity,
+                purchaseDate: txn.createdAt,
+                transactionId: txn.id,
+              } as PurchasedItem;
             }
 
             return {
@@ -63,7 +78,7 @@ export const fetchUserTransactions = createAsyncThunk(
                 stock: product.stock,
               },
               quantity: item.quantity,
-              purchaseDate: txn.timeline.createdAt,
+              purchaseDate: txn.createdAt,
               transactionId: txn.id,
             } as PurchasedItem;
           }),
