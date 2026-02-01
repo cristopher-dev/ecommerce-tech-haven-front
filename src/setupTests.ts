@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-var */
+/// <reference types="jest" />
 import "@testing-library/jest-dom";
 
-import { TextEncoder, TextDecoder } from "util";
+import { TextDecoder, TextEncoder } from "util";
 
 declare global {
   var TextEncoder: any;

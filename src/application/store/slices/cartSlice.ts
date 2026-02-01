@@ -1,8 +1,8 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Cart } from "@/domain/entities/Cart";
 import { CartItem } from "@/domain/entities/CartItem";
 import { Product } from "@/domain/entities/Product";
 import { LocalStorageCartRepository } from "@/infrastructure/adapters/LocalStorageCartRepository";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const cartRepository = new LocalStorageCartRepository();
 
@@ -58,7 +58,7 @@ const cartSlice = createSlice({
     total: calculateTotal(initialState.items),
     totalItems: calculateTotalItems(initialState.items),
     loading: false,
-    error: null,
+    error: null as string | null,
   },
   reducers: {
     addToCart: (

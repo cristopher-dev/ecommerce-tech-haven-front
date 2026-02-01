@@ -1,9 +1,11 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
-import { Provider } from "react-redux";
-import { configureStore, PreloadedState } from "@reduxjs/toolkit";
-import CartPage from "@/presentation/pages/CartPage";
+/* eslint-disable @typescript-eslint/no-explicit-any -- Type compatibility needed for Redux store config */
+
 import cartReducer from "@/application/store/slices/cartSlice";
+import CartPage from "@/presentation/pages/CartPage";
+import { configureStore } from "@reduxjs/toolkit";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { Provider } from "react-redux";
+import { MemoryRouter } from "react-router-dom";
 
 jest.mock("@/presentation/components/Header", () => ({
   __esModule: true,
@@ -49,7 +51,7 @@ describe("CartPage", () => {
     cart: typeof mockCartState;
   }
 
-  const createMockStore = (preloadedState?: PreloadedState<RootState>) => {
+  const createMockStore = (preloadedState?: RootState) => {
     return configureStore({
       reducer: {
         cart: cartReducer,
@@ -57,7 +59,7 @@ describe("CartPage", () => {
       preloadedState: preloadedState || {
         cart: mockCartState,
       },
-    });
+    } as any);
   };
 
   const renderCartPage = (store = createMockStore()) => {
@@ -99,9 +101,9 @@ describe("CartPage", () => {
   it("should display correct quantities in input fields", () => {
     renderCartPage();
 
-    const inputs = screen.getAllByRole("spinbutton") as HTMLInputElement[];
-    expect(inputs[0].value).toBe("2");
-    expect(inputs[1].value).toBe("1");
+    const inputs = screen.getAllByRole("spinbutton");
+    expect((inputs[0] as HTMLInputElement).value).toBe("2");
+    expect((inputs[1] as HTMLInputElement).value).toBe("1");
   });
 
   it("should display prices for items", () => {
@@ -148,13 +150,13 @@ describe("CartPage", () => {
   it("should update quantity when input value changes", async () => {
     renderCartPage();
 
-    const inputs = screen.getAllByRole("spinbutton") as HTMLInputElement[];
+    const inputs = screen.getAllByRole("spinbutton");
     const firstInput = inputs[0];
 
     fireEvent.change(firstInput, { target: { value: "5" } });
 
     await waitFor(() => {
-      expect(firstInput.value).toBe("5");
+      expect((firstInput as HTMLInputElement).value).toBe("5");
     });
   });
 

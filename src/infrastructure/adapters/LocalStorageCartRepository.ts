@@ -92,7 +92,7 @@ export class LocalStorageCartRepository implements CartRepository {
     }
   }
 
-  private saveCart(cart: Cart): void {
+  saveCart(cart: Cart): void {
     localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
   }
 }

@@ -22,6 +22,9 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   width: 100%;
   max-width: 450px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
   animation: slideUp 0.3s ease-out;
 
   @media (max-width: 576px) {
@@ -76,6 +79,8 @@
 
 .payment-modal-body {
   padding: 20px;
+  overflow-y: auto;
+  flex: 1;
 
   @media (max-width: 576px) {
     padding: 15px;
@@ -154,13 +159,18 @@
       padding: 20px;
       color: white;
       pointer-events: none;
+      background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.1) 0%,
+        rgba(0, 0, 0, 0.3) 100%
+      );
 
       .card-number-display {
         font-family: "Courier New", monospace;
         font-size: 1.3rem;
         letter-spacing: 0.15em;
         font-weight: 600;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        text-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
 
         .card-digit-group {
           display: inline-block;
@@ -178,14 +188,14 @@
           font-weight: 600;
           text-transform: uppercase;
           letter-spacing: 0.1em;
-          opacity: 0.9;
-          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+          opacity: 1;
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         .card-expiry-display {
           font-size: 0.9rem;
           font-weight: 600;
-          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
         }
       }
     }

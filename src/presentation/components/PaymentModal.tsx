@@ -239,15 +239,6 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                             ))
                         : "•••• •••• •••• ••••"}
                     </div>
-                    <div className="card-details">
-                      <div className="card-name-display">
-                        {formData.cardholderName || "CARDHOLDER NAME"}
-                      </div>
-                      <div className="card-expiry-display">
-                        {String(formData.expirationMonth).padStart(2, "0")}/
-                        {String(formData.expirationYear).slice(-2)}
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>

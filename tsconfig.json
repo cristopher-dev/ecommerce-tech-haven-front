@@ -23,6 +23,7 @@
         "noFallthroughCasesInSwitch": true,
         "types": [
             "vite/client",
+            "node",
             "jest",
             "@testing-library/jest-dom"
         ],

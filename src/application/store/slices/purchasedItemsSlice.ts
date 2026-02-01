@@ -1,10 +1,10 @@
-import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { CartItem } from "@/domain/entities/CartItem";
 import {
-  transactionsApi,
   productsApi,
   TransactionDTO,
+  transactionsApi,
 } from "@/infrastructure/api/techHavenApiClient";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface PurchasedItem extends CartItem {
   purchaseDate: string;
@@ -38,32 +38,36 @@ export const fetchUserTransactions = createAsyncThunk(
       ]);
 
       const userTransactions = transactions.filter(
-        (txn) => txn.customerId === userId,
+        (txn) => txn.customer.id === userId,
       );
 
       const purchasedItems: PurchasedItem[] = userTransactions
-        .map((txn: TransactionDTO) => {
-          const product = products.find((p) => p.id === txn.productId);
-          if (!product) {
-            console.warn(`Product not found for transaction ${txn.id}`);
-            return null;
-          }
+        .flatMap((txn: TransactionDTO) =>
+          txn.items.map((item) => {
+            const product = products.find((p) => p.id === item.productId);
+            if (!product) {
+              console.warn(
+                `Product not found for transaction item ${item.productId}`,
+              );
+              return null;
+            }
 
-          return {
-            id: txn.id,
-            product: {
-              id: product.id,
-              name: product.name,
-              price: product.price,
-              description: product.description,
-              image: product.image,
-              stock: product.stock,
-            },
-            quantity: txn.quantity,
-            purchaseDate: txn.createdAt,
-            transactionId: txn.id,
-          } as PurchasedItem;
-        })
+            return {
+              id: `${txn.id}-${item.productId}`,
+              product: {
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                description: product.description,
+                image: product.imageUrl,
+                stock: product.stock,
+              },
+              quantity: item.quantity,
+              purchaseDate: txn.timeline.createdAt,
+              transactionId: txn.id,
+            } as PurchasedItem;
+          }),
+        )
         .filter((item): item is PurchasedItem => item !== null);
 
       return purchasedItems;

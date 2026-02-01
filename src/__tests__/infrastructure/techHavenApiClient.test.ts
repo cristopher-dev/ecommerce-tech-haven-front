@@ -1,18 +1,19 @@
+/* global process */
 import {
-  productsApi,
-  transactionsApi,
+  CreateCustomerInputDto,
+  CreateTransactionInputDto,
+  CustomerDTO,
   customersApi,
   deliveriesApi,
-  ProductDTO,
-  TransactionDTO,
-  CustomerDTO,
   DeliveryDTO,
-  CreateTransactionInputDto,
-  CreateCustomerInputDto,
   ProcessPaymentDto,
-} from "@/infrastructure/techHavenApiClient";
+  ProductDTO,
+  productsApi,
+  TransactionDTO,
+  transactionsApi,
+} from "@/infrastructure/api/techHavenApiClient";
 
-global.fetch = jest.fn();
+globalThis.fetch = jest.fn();
 
 describe("TechHaven API Client", () => {
   beforeEach(() => {
@@ -30,6 +31,7 @@ describe("TechHaven API Client", () => {
             description: "High-performance laptop",
             price: 999.99,
             stock: 10,
+            discount: 0,
           },
           {
             id: "2",
@@ -37,10 +39,11 @@ describe("TechHaven API Client", () => {
             description: "Wireless mouse",
             price: 29.99,
             stock: 50,
+            discount: 0,
           },
         ];
 
-        (global.fetch as jest.Mock).mockResolvedValueOnce({
+        (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
           ok: true,
           json: async () => mockProducts,
         });
@@ -48,7 +51,7 @@ describe("TechHaven API Client", () => {
         const result = await productsApi.getAll();
 
         expect(result).toEqual(mockProducts);
-        expect(global.fetch).toHaveBeenCalledWith(
+        expect(globalThis.fetch).toHaveBeenCalledWith(
           "http://localhost:3001/api/products",
           expect.objectContaining({
             headers: expect.objectContaining({
@@ -60,7 +63,7 @@ describe("TechHaven API Client", () => {
 
       it("should throw error when fetch fails", async () => {
         const errorMessage = "Network error";
-        (global.fetch as jest.Mock).mockResolvedValueOnce({
+        (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
           ok: false,
           status: 500,
           json: async () => ({ message: errorMessage }),
@@ -70,7 +73,7 @@ describe("TechHaven API Client", () => {
       });
 
       it("should handle JSON parse errors gracefully", async () => {
-        (global.fetch as jest.Mock).mockResolvedValueOnce({
+        (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
           ok: false,
           status: 500,
           json: async () => {
@@ -90,9 +93,10 @@ describe("TechHaven API Client", () => {
           description: "High-performance laptop",
           price: 999.99,
           stock: 10,
+          discount: 0,
         };
 
-        (global.fetch as jest.Mock).mockResolvedValueOnce({
+        (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
           ok: true,
           json: async () => mockProduct,
         });
@@ -100,14 +104,14 @@ describe("TechHaven API Client", () => {
         const result = await productsApi.getById("1");
 
         expect(result).toEqual(mockProduct);
-        expect(global.fetch).toHaveBeenCalledWith(
+        expect(globalThis.fetch).toHaveBeenCalledWith(
           "http://localhost:3001/api/products/1",
           expect.any(Object),
         );
       });
 
       it("should throw error when product not found", async () => {
-        (global.fetch as jest.Mock).mockResolvedValueOnce({
+        (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
           ok: false,
           status: 404,
           json: async () => ({ message: "Product not found" }),
@@ -119,7 +123,7 @@ describe("TechHaven API Client", () => {
       });
 
       it("should handle invalid product ID", async () => {
-        (global.fetch as jest.Mock).mockResolvedValueOnce({
+        (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
           ok: false,
           status: 400,
           json: async () => ({ message: "Invalid product ID" }),
@@ -133,23 +137,47 @@ describe("TechHaven API Client", () => {
   });
 
   describe("transactionsApi", () => {
+    const getMockTransaction = (): TransactionDTO => ({
+      id: "1",
+      transactionId: "1",
+      orderId: "1",
+      status: "APPROVED",
+      amount: 1999.98,
+      baseFee: 0,
+      deliveryFee: 10,
+      subtotal: 1999.98,
+      items: [],
+      customer: {
+        id: "1",
+        name: "John Doe",
+        email: "john@example.com",
+        address: "123 Main St",
+      },
+      deliveryInfo: {
+        firstName: "John",
+        lastName: "Doe",
+        address: "123 Main St",
+        city: "Anytown",
+        state: "CA",
+        postalCode: "12345",
+        phone: "555-1234",
+      },
+      delivery: {
+        id: "1",
+        status: "PENDING",
+        estimatedDays: 3,
+        carrier: "FedEx",
+      },
+      timeline: {
+        createdAt: "2024-01-01T00:00:00Z",
+      },
+    });
+
     describe("getAll", () => {
       it("should fetch all transactions successfully", async () => {
-        const mockTransactions: TransactionDTO[] = [
-          {
-            id: "1",
-            customerId: "1",
-            productId: "1",
-            quantity: 2,
-            amount: 1999.98,
-            status: "COMPLETED",
-            transactionNumber: "TXN001",
-            createdAt: "2024-01-01T00:00:00Z",
-            updatedAt: "2024-01-01T00:00:00Z",
-          },
-        ];
+        const mockTransactions: TransactionDTO[] = [getMockTransaction()];
 
-        (global.fetch as jest.Mock).mockResolvedValueOnce({
+        (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
           ok: true,
           json: async () => mockTransactions,
         });
@@ -157,14 +185,14 @@ describe("TechHaven API Client", () => {
         const result = await transactionsApi.getAll();
 
         expect(result).toEqual(mockTransactions);
-        expect(global.fetch).toHaveBeenCalledWith(
+        expect(globalThis.fetch).toHaveBeenCalledWith(
           "http://localhost:3001/api/transactions",
           expect.any(Object),
         );
       });
 
       it("should handle server error gracefully", async () => {
-        (global.fetch as jest.Mock).mockResolvedValueOnce({
+        (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
           ok: false,
           status: 503,
           json: async () => ({ message: "Service unavailable" }),
@@ -178,19 +206,9 @@ describe("TechHaven API Client", () => {
 
     describe("getById", () => {
       it("should fetch a transaction by ID successfully", async () => {
-        const mockTransaction: TransactionDTO = {
-          id: "1",
-          customerId: "1",
-          productId: "1",
-          quantity: 2,
-          amount: 1999.98,
-          status: "COMPLETED",
-          transactionNumber: "TXN001",
-          createdAt: "2024-01-01T00:00:00Z",
-          updatedAt: "2024-01-01T00:00:00Z",
-        };
+        const mockTransaction: TransactionDTO = getMockTransaction();
 
-        (global.fetch as jest.Mock).mockResolvedValueOnce({
+        (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
           ok: true,
           json: async () => mockTransaction,
         });
@@ -198,14 +216,14 @@ describe("TechHaven API Client", () => {
         const result = await transactionsApi.getById("1");
 
         expect(result).toEqual(mockTransaction);
-        expect(global.fetch).toHaveBeenCalledWith(
+        expect(globalThis.fetch).toHaveBeenCalledWith(
           "http://localhost:3001/api/transactions/1",
           expect.any(Object),
         );
       });
 
       it("should throw error when transaction not found", async () => {
-        (global.fetch as jest.Mock).mockResolvedValueOnce({
+        (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
           ok: false,
           status: 404,
           json: async () => ({ message: "Transaction not found" }),
@@ -223,23 +241,24 @@ describe("TechHaven API Client", () => {
           customerName: "John Doe",
           customerEmail: "john@example.com",
           customerAddress: "123 Main St",
-          productId: "1",
-          quantity: 2,
+          items: [{ productId: "1", quantity: 2 }],
+          deliveryInfo: {
+            firstName: "John",
+            lastName: "Doe",
+            address: "123 Main St",
+            city: "Anytown",
+            state: "CA",
+            postalCode: "12345",
+            phone: "555-1234",
+          },
         };
 
         const mockResponse: TransactionDTO = {
-          id: "1",
-          customerId: "1",
-          productId: "1",
-          quantity: 2,
-          amount: 1999.98,
+          ...getMockTransaction(),
           status: "PENDING",
-          transactionNumber: "TXN001",
-          createdAt: "2024-01-01T00:00:00Z",
-          updatedAt: "2024-01-01T00:00:00Z",
         };
 
-        (global.fetch as jest.Mock).mockResolvedValueOnce({
+        (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
           ok: true,
           json: async () => mockResponse,
         });
@@ -247,7 +266,7 @@ describe("TechHaven API Client", () => {
         const result = await transactionsApi.create(createData);
 
         expect(result).toEqual(mockResponse);
-        expect(global.fetch).toHaveBeenCalledWith(
+        expect(globalThis.fetch).toHaveBeenCalledWith(
           "http://localhost:3001/api/transactions",
           expect.objectContaining({
             method: "POST",
@@ -261,11 +280,19 @@ describe("TechHaven API Client", () => {
           customerName: "",
           customerEmail: "invalid-email",
           customerAddress: "",
-          productId: "",
-          quantity: 0,
+          items: [],
+          deliveryInfo: {
+            firstName: "",
+            lastName: "",
+            address: "",
+            city: "",
+            state: "",
+            postalCode: "",
+            phone: "",
+          },
         };
 
-        (global.fetch as jest.Mock).mockResolvedValueOnce({
+        (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
           ok: false,
           status: 400,
           json: async () => ({ message: "Invalid transaction data" }),
@@ -281,11 +308,19 @@ describe("TechHaven API Client", () => {
           customerName: "John Doe",
           customerEmail: "john@example.com",
           customerAddress: "123 Main St",
-          productId: "1",
-          quantity: 1000,
+          items: [{ productId: "1", quantity: 1000 }],
+          deliveryInfo: {
+            firstName: "John",
+            lastName: "Doe",
+            address: "123 Main St",
+            city: "Anytown",
+            state: "CA",
+            postalCode: "12345",
+            phone: "555-1234",
+          },
         };
 
-        (global.fetch as jest.Mock).mockResolvedValueOnce({
+        (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
           ok: false,
           status: 400,
           json: async () => ({ message: "Insufficient stock" }),
@@ -300,22 +335,19 @@ describe("TechHaven API Client", () => {
     describe("processPayment", () => {
       it("should process payment successfully", async () => {
         const paymentData: ProcessPaymentDto = {
-          status: "COMPLETED",
+          cardNumber: "4111111111111111",
+          expirationMonth: 12,
+          expirationYear: 2025,
+          cvv: "123",
+          cardholderName: "John Doe",
         };
 
         const mockResponse: TransactionDTO = {
-          id: "1",
-          customerId: "1",
-          productId: "1",
-          quantity: 2,
-          amount: 1999.98,
-          status: "COMPLETED",
-          transactionNumber: "TXN001",
-          createdAt: "2024-01-01T00:00:00Z",
-          updatedAt: "2024-01-01T00:00:00Z",
+          ...getMockTransaction(),
+          status: "APPROVED",
         };
 
-        (global.fetch as jest.Mock).mockResolvedValueOnce({
+        (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
           ok: true,
           json: async () => mockResponse,
         });
@@ -323,7 +355,7 @@ describe("TechHaven API Client", () => {
         const result = await transactionsApi.processPayment("1", paymentData);
 
         expect(result).toEqual(mockResponse);
-        expect(global.fetch).toHaveBeenCalledWith(
+        expect(globalThis.fetch).toHaveBeenCalledWith(
           "http://localhost:3001/api/transactions/1/process-payment",
           expect.objectContaining({
             method: "PUT",
@@ -334,23 +366,19 @@ describe("TechHaven API Client", () => {
 
       it("should handle payment failure", async () => {
         const paymentData: ProcessPaymentDto = {
-          status: "FAILED",
-          errorMessage: "Card declined",
+          cardNumber: "4111111111111111",
+          expirationMonth: 12,
+          expirationYear: 2025,
+          cvv: "123",
+          cardholderName: "John Doe",
         };
 
         const mockResponse: TransactionDTO = {
-          id: "1",
-          customerId: "1",
-          productId: "1",
-          quantity: 2,
-          amount: 1999.98,
+          ...getMockTransaction(),
           status: "FAILED",
-          transactionNumber: "TXN001",
-          createdAt: "2024-01-01T00:00:00Z",
-          updatedAt: "2024-01-01T00:00:00Z",
         };
 
-        (global.fetch as jest.Mock).mockResolvedValueOnce({
+        (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
           ok: true,
           json: async () => mockResponse,
         });
@@ -362,10 +390,14 @@ describe("TechHaven API Client", () => {
 
       it("should throw error when transaction not found for payment", async () => {
         const paymentData: ProcessPaymentDto = {
-          status: "COMPLETED",
+          cardNumber: "4111111111111111",
+          expirationMonth: 12,
+          expirationYear: 2025,
+          cvv: "123",
+          cardholderName: "John Doe",
         };
 
-        (global.fetch as jest.Mock).mockResolvedValueOnce({
+        (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
           ok: false,
           status: 404,
           json: async () => ({ message: "Transaction not found" }),
@@ -397,7 +429,7 @@ describe("TechHaven API Client", () => {
           },
         ];
 
-        (global.fetch as jest.Mock).mockResolvedValueOnce({
+        (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
           ok: true,
           json: async () => mockCustomers,
         });
@@ -405,14 +437,14 @@ describe("TechHaven API Client", () => {
         const result = await customersApi.getAll();
 
         expect(result).toEqual(mockCustomers);
-        expect(global.fetch).toHaveBeenCalledWith(
+        expect(globalThis.fetch).toHaveBeenCalledWith(
           "http://localhost:3001/api/customers",
           expect.any(Object),
         );
       });
 
       it("should handle empty customer list", async () => {
-        (global.fetch as jest.Mock).mockResolvedValueOnce({
+        (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
           ok: true,
           json: async () => [],
         });
@@ -433,7 +465,7 @@ describe("TechHaven API Client", () => {
           phone: "555-1234",
         };
 
-        (global.fetch as jest.Mock).mockResolvedValueOnce({
+        (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
           ok: true,
           json: async () => mockCustomer,
         });
@@ -441,14 +473,14 @@ describe("TechHaven API Client", () => {
         const result = await customersApi.getById("1");
 
         expect(result).toEqual(mockCustomer);
-        expect(global.fetch).toHaveBeenCalledWith(
+        expect(globalThis.fetch).toHaveBeenCalledWith(
           "http://localhost:3001/api/customers/1",
           expect.any(Object),
         );
       });
 
       it("should throw error when customer not found", async () => {
-        (global.fetch as jest.Mock).mockResolvedValueOnce({
+        (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
           ok: false,
           status: 404,
           json: async () => ({ message: "Customer not found" }),
@@ -474,7 +506,7 @@ describe("TechHaven API Client", () => {
           ...createData,
         };
 
-        (global.fetch as jest.Mock).mockResolvedValueOnce({
+        (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
           ok: true,
           json: async () => mockResponse,
         });
@@ -482,7 +514,7 @@ describe("TechHaven API Client", () => {
         const result = await customersApi.create(createData);
 
         expect(result).toEqual(mockResponse);
-        expect(global.fetch).toHaveBeenCalledWith(
+        expect(globalThis.fetch).toHaveBeenCalledWith(
           "http://localhost:3001/api/customers",
           expect.objectContaining({
             method: "POST",
@@ -498,7 +530,7 @@ describe("TechHaven API Client", () => {
           address: "",
         };
 
-        (global.fetch as jest.Mock).mockResolvedValueOnce({
+        (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
           ok: false,
           status: 400,
           json: async () => ({ message: "Invalid customer data" }),
@@ -516,7 +548,7 @@ describe("TechHaven API Client", () => {
           address: "123 Main St",
         };
 
-        (global.fetch as jest.Mock).mockResolvedValueOnce({
+        (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
           ok: false,
           status: 409,
           json: async () => ({ message: "Email already exists" }),
@@ -549,7 +581,7 @@ describe("TechHaven API Client", () => {
           },
         ];
 
-        (global.fetch as jest.Mock).mockResolvedValueOnce({
+        (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
           ok: true,
           json: async () => mockDeliveries,
         });
@@ -557,14 +589,14 @@ describe("TechHaven API Client", () => {
         const result = await deliveriesApi.getAll();
 
         expect(result).toEqual(mockDeliveries);
-        expect(global.fetch).toHaveBeenCalledWith(
+        expect(globalThis.fetch).toHaveBeenCalledWith(
           "http://localhost:3001/api/deliveries",
           expect.any(Object),
         );
       });
 
       it("should handle empty deliveries list", async () => {
-        (global.fetch as jest.Mock).mockResolvedValueOnce({
+        (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
           ok: true,
           json: async () => [],
         });
@@ -587,7 +619,7 @@ describe("TechHaven API Client", () => {
           },
         ];
 
-        (global.fetch as jest.Mock).mockResolvedValueOnce({
+        (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
           ok: true,
           json: async () => mockDeliveries,
         });
@@ -595,14 +627,14 @@ describe("TechHaven API Client", () => {
         const result = await deliveriesApi.getByTransactionId("1");
 
         expect(result).toEqual(mockDeliveries);
-        expect(global.fetch).toHaveBeenCalledWith(
+        expect(globalThis.fetch).toHaveBeenCalledWith(
           "http://localhost:3001/api/deliveries?transactionId=1",
           expect.any(Object),
         );
       });
 
       it("should return empty array when no deliveries found", async () => {
-        (global.fetch as jest.Mock).mockResolvedValueOnce({
+        (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
           ok: true,
           json: async () => [],
         });
@@ -613,7 +645,7 @@ describe("TechHaven API Client", () => {
       });
 
       it("should throw error on API failure", async () => {
-        (global.fetch as jest.Mock).mockResolvedValueOnce({
+        (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
           ok: false,
           status: 500,
           json: async () => ({ message: "Internal server error" }),
@@ -628,7 +660,7 @@ describe("TechHaven API Client", () => {
 
   describe("Error Handling", () => {
     it("should handle network errors", async () => {
-      (global.fetch as jest.Mock).mockRejectedValueOnce(
+      (globalThis.fetch as jest.Mock).mockRejectedValueOnce(
         new Error("Network error"),
       );
 
@@ -636,7 +668,7 @@ describe("TechHaven API Client", () => {
     });
 
     it("should handle timeout errors", async () => {
-      (global.fetch as jest.Mock).mockRejectedValueOnce(
+      (globalThis.fetch as jest.Mock).mockRejectedValueOnce(
         new Error("Request timeout"),
       );
 
@@ -644,14 +676,14 @@ describe("TechHaven API Client", () => {
     });
 
     it("should include custom headers in requests", async () => {
-      (global.fetch as jest.Mock).mockResolvedValueOnce({
+      (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
         ok: true,
         json: async () => [],
       });
 
       await customersApi.getAll();
 
-      expect(global.fetch).toHaveBeenCalledWith(
+      expect(globalThis.fetch).toHaveBeenCalledWith(
         expect.any(String),
         expect.objectContaining({
           headers: expect.objectContaining({
