@@ -1,29 +1,30 @@
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { useTranslation } from "react-i18next";
 import {
-  useWishlist,
-  useCartItems,
   useAppDispatch,
+  useCartItems,
+  useWishlist,
 } from "@/application/store/hooks";
-import { removeFromCart } from "@/application/store/slices/cartSlice";
 import {
   logout,
-  setUser,
   setToken,
+  setUser,
 } from "@/application/store/slices/authSlice";
+import { removeFromCart } from "@/application/store/slices/cartSlice";
 import { RootState } from "@/application/store/store";
 import TechHavenLogo from "@/assets/TechHavenLogo.svg";
 import "@/styles/components/Header.scss";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 
 const Header: React.FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { totalItems, total, items } = useCartItems();
   const { count: wishlistCount } = useWishlist();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state: RootState) => state.auth);
+  const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -31,6 +32,11 @@ const Header: React.FC = () => {
     setTimeout(() => {
       navigate("/");
     }, 100);
+  };
+
+  const handleLanguageChange = (lang: string) => {
+    i18n.changeLanguage(lang);
+    setCurrentLanguage(lang);
   };
 
   const handleMockLogin = async () => {
@@ -350,6 +356,47 @@ const Header: React.FC = () => {
                           </span>
                         </div>
                       </Link>
+
+                      {/* Language Selector */}
+                      <div
+                        className="dropdown d-flex align-items-center"
+                        style={{ minHeight: "44px" }}
+                      >
+                        <button
+                          className="btn btn-outline-secondary d-flex align-items-center justify-content-center py-2 px-2 px-lg-3"
+                          type="button"
+                          data-bs-toggle="dropdown"
+                          style={{
+                            minHeight: "44px",
+                            borderRadius: "8px",
+                            fontSize: "0.9rem",
+                          }}
+                          title="Select Language"
+                        >
+                          <i className="bi bi-globe me-1"></i>
+                          <span className="d-none d-lg-inline">
+                            {currentLanguage.toUpperCase()}
+                          </span>
+                        </button>
+                        <ul className="dropdown-menu">
+                          <li>
+                            <button
+                              className={`dropdown-item ${currentLanguage === "es" ? "active" : ""}`}
+                              onClick={() => handleLanguageChange("es")}
+                            >
+                              <i className="bi bi-check-lg me-2"></i> Español
+                            </button>
+                          </li>
+                          <li>
+                            <button
+                              className={`dropdown-item ${currentLanguage === "en" ? "active" : ""}`}
+                              onClick={() => handleLanguageChange("en")}
+                            >
+                              <i className="bi bi-check-lg me-2"></i> English
+                            </button>
+                          </li>
+                        </ul>
+                      </div>
 
                       {/* Shopping Cart */}
                       <div
