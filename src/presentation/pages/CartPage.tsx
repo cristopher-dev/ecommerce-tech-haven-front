@@ -14,9 +14,12 @@ const CartPage: React.FC = () => {
   const { items, total } = useCartItems();
   const dispatch = useAppDispatch();
 
-  const handleQuantityChange = (productId: number, quantity: number) => {
-    if (quantity > 0) {
-      dispatch(updateQuantity({ productId, quantity }));
+  const handleQuantityChange = (productId: string | number, quantity: number) => {
+    const newQuantity = Number(quantity);
+    if (newQuantity > 0) {
+      dispatch(updateQuantity({ productId, quantity: newQuantity }));
+    } else if (newQuantity === 0) {
+      dispatch(removeFromCart(productId));
     }
   };
 
@@ -69,9 +72,7 @@ const CartPage: React.FC = () => {
                           value={item.quantity}
                           onChange={(e) =>
                             handleQuantityChange(
-                              typeof item.product.id === "string"
-                                ? Number.parseInt(item.product.id, 10)
-                                : item.product.id,
+                              item.product.id,
                               Number.parseInt(e.target.value, 10) || 0,
                             )
                           }
