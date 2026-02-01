@@ -46,13 +46,16 @@ const Features: React.FC = () => {
       <div className="container">
         <div className="row">
           {features.map((feature) => (
-            <div
-              key={feature.id}
-              className="col-md-3 col-sm-6 mb-4"
-              onMouseEnter={() => setHoveredFeature(feature.id)}
-              onMouseLeave={() => setHoveredFeature(null)}
-            >
-              <div
+            <div key={feature.id} className="col-md-3 col-sm-6 mb-4">
+              <button
+                type="button"
+                onMouseEnter={() => setHoveredFeature(feature.id)}
+                onMouseLeave={() => setHoveredFeature(null)}
+                onClick={() =>
+                  setHoveredFeature(
+                    hoveredFeature === feature.id ? null : feature.id,
+                  )
+                }
                 style={{
                   textAlign: "center",
                   padding: "2rem 1.5rem",
@@ -68,6 +71,9 @@ const Features: React.FC = () => {
                     hoveredFeature === feature.id
                       ? `2px solid ${feature.color}`
                       : "2px solid transparent",
+                  width: "100%",
+                  cursor: "pointer",
+                  fontFamily: "inherit",
                 }}
               >
                 <div
@@ -101,7 +107,7 @@ const Features: React.FC = () => {
                 >
                   {feature.desc}
                 </p>
-              </div>
+              </button>
             </div>
           ))}
         </div>

@@ -12,6 +12,9 @@ const Footer: React.FC = () => {
     marginBottom: "0.75rem",
     textDecoration: "none",
     cursor: "pointer",
+    border: "none",
+    background: "none",
+    padding: 0,
   });
 
   return (
@@ -50,9 +53,10 @@ const Footer: React.FC = () => {
                 { icon: "instagram", color: "#E4405F" },
                 { icon: "youtube", color: "#FF0000" },
               ].map((social) => (
-                <a
+                <button
                   key={social.icon}
-                  href="#"
+                  type="button"
+                  aria-label={social.icon}
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -63,7 +67,9 @@ const Footer: React.FC = () => {
                     background: "rgba(255, 255, 255, 0.08)",
                     color: social.color,
                     transition: "all 0.3s ease",
-                    textDecoration: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    padding: 0,
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.background = social.color;
@@ -78,7 +84,7 @@ const Footer: React.FC = () => {
                   }}
                 >
                   <i className={`bi bi-${social.icon}`}></i>
-                </a>
+                </button>
               ))}
             </div>
           </div>
@@ -103,14 +109,14 @@ const Footer: React.FC = () => {
                 { label: t("footer.faq"), icon: "❓" },
               ].map((item) => (
                 <li key={item.label}>
-                  <a
-                    href="#"
+                  <button
+                    type="button"
                     style={linkStyle(item.label)}
                     onMouseEnter={() => setHoveredLink(item.label)}
                     onMouseLeave={() => setHoveredLink(null)}
                   >
                     {item.icon} {item.label}
-                  </a>
+                  </button>
                 </li>
               ))}
             </ul>
@@ -136,14 +142,14 @@ const Footer: React.FC = () => {
                 { label: t("footer.trackOrder"), icon: "📦" },
               ].map((item) => (
                 <li key={item.label}>
-                  <a
-                    href="#"
+                  <button
+                    type="button"
                     style={linkStyle(item.label)}
                     onMouseEnter={() => setHoveredLink(item.label)}
                     onMouseLeave={() => setHoveredLink(null)}
                   >
                     {item.icon} {item.label}
-                  </a>
+                  </button>
                 </li>
               ))}
             </ul>
@@ -168,8 +174,10 @@ const Footer: React.FC = () => {
                 { name: "PayPal", emoji: "📱" },
                 { name: "Apple Pay", emoji: "🍎" },
               ].map((payment) => (
-                <div
+                <button
                   key={payment.name}
+                  type="button"
+                  aria-label={payment.name}
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -179,6 +187,9 @@ const Footer: React.FC = () => {
                     borderRadius: "8px",
                     fontSize: "0.9rem",
                     transition: "all 0.3s ease",
+                    border: "none",
+                    cursor: "pointer",
+                    color: "white",
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.background = "rgba(0, 102, 255, 0.2)";
@@ -191,7 +202,7 @@ const Footer: React.FC = () => {
                 >
                   <span>{payment.emoji}</span>
                   {payment.name}
-                </div>
+                </button>
               ))}
             </div>
           </div>
@@ -223,22 +234,36 @@ const Footer: React.FC = () => {
             &copy; 2024 TechHaven. All rights reserved. | Built with ❤️
           </p>
           <div style={{ display: "flex", gap: "2rem" }}>
-            <a
-              href="#"
-              style={{ color: "#b0b0b0", textDecoration: "none" }}
+            <button
+              type="button"
+              style={{
+                color: "#b0b0b0",
+                textDecoration: "none",
+                border: "none",
+                background: "none",
+                cursor: "pointer",
+                padding: 0,
+              }}
               onMouseEnter={(e) => (e.currentTarget.style.color = "#0066ff")}
               onMouseLeave={(e) => (e.currentTarget.style.color = "#b0b0b0")}
             >
               {t("footer.privacyPolicy")}
-            </a>
-            <a
-              href="#"
-              style={{ color: "#b0b0b0", textDecoration: "none" }}
+            </button>
+            <button
+              type="button"
+              style={{
+                color: "#b0b0b0",
+                textDecoration: "none",
+                border: "none",
+                background: "none",
+                cursor: "pointer",
+                padding: 0,
+              }}
               onMouseEnter={(e) => (e.currentTarget.style.color = "#0066ff")}
               onMouseLeave={(e) => (e.currentTarget.style.color = "#b0b0b0")}
             >
               {t("footer.termsOfService")}
-            </a>
+            </button>
           </div>
         </div>
       </div>

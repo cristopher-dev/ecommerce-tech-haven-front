@@ -145,29 +145,54 @@ const Header: React.FC = () => {
                           </button>
                           <ul className="dropdown-menu">
                             <li>
-                              <a className="dropdown-item" href="#">
+                              <button
+                                className="dropdown-item"
+                                onClick={() =>
+                                  navigate("/product?category=all")
+                                }
+                              >
                                 {t("header.allCategories")}
-                              </a>
+                              </button>
                             </li>
                             <li>
-                              <a className="dropdown-item" href="#">
+                              <button
+                                className="dropdown-item"
+                                onClick={() =>
+                                  navigate("/product?category=electronics")
+                                }
+                              >
                                 {t("header.electronics")}
-                              </a>
+                              </button>
                             </li>
                             <li>
-                              <a className="dropdown-item" href="#">
+                              <button
+                                className="dropdown-item"
+                                onClick={() =>
+                                  navigate("/product?category=fashion")
+                                }
+                              >
                                 {t("header.fashion")}
-                              </a>
+                              </button>
                             </li>
                             <li>
-                              <a className="dropdown-item" href="#">
+                              <button
+                                className="dropdown-item"
+                                onClick={() =>
+                                  navigate("/product?category=home-garden")
+                                }
+                              >
                                 {t("header.homeGarden")}
-                              </a>
+                              </button>
                             </li>
                             <li>
-                              <a className="dropdown-item" href="#">
+                              <button
+                                className="dropdown-item"
+                                onClick={() =>
+                                  navigate("/product?category=sports")
+                                }
+                              >
                                 {t("header.sports")}
-                              </a>
+                              </button>
                             </li>
                           </ul>
                         </div>
