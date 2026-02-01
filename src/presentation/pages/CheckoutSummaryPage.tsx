@@ -256,11 +256,38 @@ const CheckoutSummaryPage: React.FC = () => {
       dispatch(clearCart());
       dispatch(clearCartState());
 
-      setTimeout(() => {
-        setIsProcessing(false);
-        dispatch(setLoading(false));
-        navigate("/checkout/final");
-      }, 1500);
+      // Manually persist the transaction ID and purchased items to localStorage
+      // This ensures they're available immediately when the confirmation page loads
+      try {
+        const checkoutState = {
+          lastTransactionId: JSON.stringify(paymentResponse.transactionId),
+          cartItems: JSON.stringify(checkout.cartItems || cartItems),
+          // Include other important checkout state
+          _persist: { version: -1, rehydrated: true },
+        };
+        localStorage.setItem("persist:checkout", JSON.stringify(checkoutState));
+
+        const purchasedItemsState = {
+          items: JSON.stringify(cartItems),
+          _persist: { version: -1, rehydrated: true },
+        };
+        localStorage.setItem(
+          "persist:purchasedItems",
+          JSON.stringify(purchasedItemsState),
+        );
+
+        console.log("✅ Transaction data manually persisted to localStorage:", {
+          transactionId: paymentResponse.transactionId,
+          itemsCount: cartItems.length,
+        });
+      } catch (storageError) {
+        console.warn("Failed to persist to localStorage:", storageError);
+      }
+
+      // Now navigate immediately - the data is already in localStorage
+      setIsProcessing(false);
+      dispatch(setLoading(false));
+      navigate("/checkout/final");
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Payment processing failed";

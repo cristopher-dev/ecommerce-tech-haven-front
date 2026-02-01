@@ -14,17 +14,34 @@ const CheckoutFinalStatusPage: React.FC = () => {
   const purchasedItems = useAppSelector((state) => state.purchasedItems.items);
 
   useEffect(() => {
-    if (checkout.lastTransactionId) {
-      console.log("CheckoutFinalStatusPage: Transaction successful", {
-        transactionId: checkout.lastTransactionId,
-        purchasedItemsCount: purchasedItems.length,
-      });
-    } else {
-      console.warn(
-        "CheckoutFinalStatusPage: No transaction ID found, redirecting to home",
+    console.log("CheckoutFinalStatusPage mounted", {
+      lastTransactionId: checkout.lastTransactionId,
+      purchasedItemsCount: purchasedItems.length,
+      hasCartItems: (checkout.cartItems?.length || 0) > 0,
+    });
+
+    // If we DON'T have transaction data, we need to redirect
+    // This catches cases where user directly navigated to this page
+    if (!checkout.lastTransactionId && purchasedItems.length === 0) {
+      console.log(
+        "⚠️ No transaction data found, checking if this is a recovery scenario...",
       );
-      navigate("/");
+
+      // Give redux-persist a moment to rehydrate from localStorage
+      const timer = setTimeout(() => {
+        // Check one more time after giving redux-persist time to sync
+        if (!checkout.lastTransactionId) {
+          console.log(
+            "❌ Still no transaction data after recovery window, redirecting to home",
+          );
+          navigate("/");
+        }
+      }, 500);
+
+      return () => clearTimeout(timer);
     }
+
+    console.log("✅ CheckoutFinalStatusPage: Valid transaction data present");
   }, [checkout.lastTransactionId, purchasedItems.length, navigate]);
 
   const handleReturnHome = () => {
