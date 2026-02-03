@@ -24,6 +24,25 @@ A responsive, feature-rich single-page application built with React 19, TypeScri
 
 ---
 
+## 🚀 Inicio Rápido
+
+### ⚡ 30 segundos para estar listo
+
+```bash
+# 1. Clonar
+git clone <repo> && cd ecommerce-tech-haven-front
+
+# 2. Instalar
+npm install
+
+# 3. Ejecutar
+npm run dev
+
+# 4. Acceder
+[api.cristopher-dev.com](https://api.cristopher-dev.com) 🌐 Aplicación Frontend
+
+```
+
 ## 🎯 Overview
 
 **TechHaven** is a premium e-commerce platform designed to provide a seamless purchasing experience. The frontend application manages the complete customer journey from product discovery through payment confirmation, with special focus on:
@@ -37,7 +56,7 @@ A responsive, feature-rich single-page application built with React 19, TypeScri
 ### Business Flow
 
 ```
-Product Catalog → Add to Cart → Delivery Info → Payment Method → 
+Product Catalog → Add to Cart → Delivery Info → Payment Method →
 Process Payment → Transaction Confirmation → Stock Update
 ```
 
@@ -46,6 +65,7 @@ Process Payment → Transaction Confirmation → Stock Update
 ## ✨ Features
 
 ### 1. **Product Management**
+
 - Dynamic product catalog from API
 - Product details with real-time stock information
 - Advanced filtering and search capabilities
@@ -53,6 +73,7 @@ Process Payment → Transaction Confirmation → Stock Update
 - Wishlist functionality
 
 ### 2. **Shopping Cart**
+
 - Add/remove items from cart
 - Quantity management
 - Persistent cart state (survives page refresh)
@@ -62,23 +83,27 @@ Process Payment → Transaction Confirmation → Stock Update
 ### 3. **Checkout Process (5-Step Flow)**
 
 **Step 1: Product Selection**
+
 - Browse and select products
 - View detailed product information
 - Check real-time inventory levels
 
 **Step 2: Delivery Information**
+
 - Enter shipping address
 - Select delivery options
 - View delivery fees
 - Input contact information
 
 **Step 3: Payment Method**
+
 - Credit/debit card input with validation
 - Card type detection (Visa, Mastercard, Amex)
 - Real-time card number validation (Luhn algorithm)
 - Security: CVV never stored locally
 
 **Step 4: Order Summary**
+
 - Review order details
 - Product subtotal
 - Base transaction fee
@@ -86,12 +111,14 @@ Process Payment → Transaction Confirmation → Stock Update
 - Final total calculation
 
 **Step 5: Transaction Status**
+
 - Real-time payment processing
 - Confirmation screen with transaction ID
 - Stock update confirmation
 - Order receipt and details
 
 ### 4. **User Management**
+
 - User registration with validation
 - Secure login system
 - Protected routes
@@ -99,11 +126,13 @@ Process Payment → Transaction Confirmation → Stock Update
 - Order history tracking
 
 ### 5. **Wishlist**
+
 - Add products to wishlist
 - Persistent wishlist storage
 - Quick checkout from wishlist
 
 ### 6. **Responsive UI**
+
 - Mobile-first design
 - Tested on iPhone SE 2020 (375x667px) and above
 - Adaptive layouts for tablets and desktops
@@ -201,22 +230,26 @@ src/
 ### Installation
 
 1. **Clone the repository**
+
 ```bash
 git clone git@github.com:cristopher-dev/ecommerce-tech-haven-front.git
 cd ecommerce-tech-haven-front
 ```
 
 2. **Install dependencies**
+
 ```bash
 npm install
 ```
 
 3. **Configure environment variables**
+
 ```bash
 cp .env.example .env.local
 ```
 
 Edit `.env.local`:
+
 ```env
 # TechHaven Backend API
 VITE_TECH_HAVEN_API_URL=http://localhost:3001/api
@@ -227,6 +260,7 @@ VITE_WOMPI_PUBLIC_KEY=pub_stagtest_g2u0HQd3ZMh05hsSgTS2lUV8t3s4mOt7
 ```
 
 4. **Start development server**
+
 ```bash
 npm run dev
 ```
@@ -268,14 +302,14 @@ The app will be available at `http://localhost:5173`
 
 ```typescript
 // In src/infrastructure/hooks/
-useCart()              // Cart operations
-useTechHavenApi()      // API calls
-useCheckout()          // Checkout flow
+useCart(); // Cart operations
+useTechHavenApi(); // API calls
+useCheckout(); // Checkout flow
 
 // In src/application/store/hooks.ts
-useAppDispatch()       // Redux dispatch
-useAppSelector()       // Redux selectors
-useAppState()          // Full state access
+useAppDispatch(); // Redux dispatch
+useAppSelector(); // Redux selectors
+useAppState(); // Full state access
 ```
 
 ---
@@ -288,10 +322,11 @@ The application maintains state across browser refreshes using `redux-persist`:
 
 ```typescript
 // Cart, checkout, and wishlist survive page reload
-whitelist: ["checkout", "cart", "wishlist"]
+whitelist: ['checkout', 'cart', 'wishlist'];
 ```
 
 **Benefits:**
+
 - Users can refresh without losing shopping progress
 - Checkout state recovers automatically
 - Seamless user experience even with network interruptions
@@ -311,11 +346,13 @@ Implements real-world card validation:
 ### 3. Responsive Design
 
 Mobile-first approach tested on:
+
 - **iPhone SE 2020**: 375x667px
 - **Tablets**: 768x1024px
 - **Desktops**: 1920x1080px+
 
 Breakpoints:
+
 ```scss
 // Bootstrap 5 breakpoints
 $sm: 576px
@@ -327,6 +364,7 @@ $xl: 1200px
 ### 4. Real-time Inventory
 
 Stock levels update in real-time:
+
 - Product page shows current availability
 - Cart validates item availability before checkout
 - Stock decreases after successful payment
@@ -335,12 +373,14 @@ Stock levels update in real-time:
 ### 5. Security Features
 
 **PCI Compliance:**
+
 - ✓ CVV never stored in localStorage
 - ✓ Card data only transmitted to Wompi
 - ✓ HTTPS enforced in production
 - ✓ Secure headers (CSP, X-Frame-Options, etc.)
 
 **Authentication:**
+
 - ✓ JWT token-based authentication
 - ✓ Protected routes with ProtectedRoute component
 - ✓ Secure session management
@@ -354,6 +394,7 @@ Stock levels update in real-time:
 **Base URL**: `https://api.yourdomain.com/api`
 
 #### Products
+
 ```
 GET    /products              → Get all products
 GET    /products/:id          → Get product details
@@ -361,6 +402,7 @@ GET    /products/stock/:id    → Check stock
 ```
 
 #### Authentication
+
 ```
 POST   /auth/register         → User registration
 POST   /auth/login            → User login
@@ -368,6 +410,7 @@ POST   /auth/refresh          → Refresh token
 ```
 
 #### Checkout
+
 ```
 POST   /deliveries            → Get delivery options
 POST   /transactions          → Create transaction (PENDING)
@@ -375,6 +418,7 @@ PATCH  /transactions/:id      → Update transaction status
 ```
 
 #### Stock Management
+
 ```
 PATCH  /products/:id/stock    → Update inventory
 GET    /products/:id/stock    → Get current stock
@@ -383,6 +427,7 @@ GET    /products/:id/stock    → Get current stock
 ### Wompi Payment Integration
 
 **Payment Flow:**
+
 ```
 1. Create Transaction (PENDING) in Backend
 2. Collect Card Data (Client-side validation)
@@ -393,6 +438,7 @@ GET    /products/:id/stock    → Get current stock
 ```
 
 **Wompi Endpoints Used:**
+
 - `POST /transactions` - Create payment transaction
 - `GET /transactions/:id` - Check transaction status
 
@@ -438,10 +484,11 @@ src/__tests__/
 ### Key Test Examples
 
 **Use Case Testing:**
+
 ```typescript
 // AddToCartUseCase.test.ts - Tests business logic
-describe("AddToCartUseCase", () => {
-  it("should add item to cart", () => {
+describe('AddToCartUseCase', () => {
+  it('should add item to cart', () => {
     const useCase = new AddToCartUseCase(mockRepository);
     useCase.execute(testItem);
     expect(mockRepository.addItem).toHaveBeenCalled();
@@ -450,6 +497,7 @@ describe("AddToCartUseCase", () => {
 ```
 
 **Component Testing:**
+
 ```typescript
 // CartPage.test.tsx - Tests UI integration
 describe("CartPage", () => {
@@ -527,16 +575,19 @@ serverless deploy
 ### Environment Configuration
 
 **Development:**
+
 ```env
 VITE_TECH_HAVEN_API_URL=http://localhost:3001/api
 ```
 
 **Staging:**
+
 ```env
 VITE_TECH_HAVEN_API_URL=https://api-staging.yourdomain.com/api
 ```
 
 **Production:**
+
 ```env
 VITE_TECH_HAVEN_API_URL=https://api.yourdomain.com/api
 ```
@@ -557,6 +608,7 @@ VITE_TECH_HAVEN_API_URL=https://api.yourdomain.com/api
 ### Security Best Practices
 
 **1. Environment Variables**
+
 ```bash
 # Use .env.local (git-ignored)
 VITE_WOMPI_PUBLIC_KEY=pub_xxxxx
@@ -564,6 +616,7 @@ VITE_API_URL=https://...
 ```
 
 **2. Card Data Handling**
+
 ```typescript
 // ✓ Validate card on client
 // ✓ Send directly to Wompi (never to your backend)
@@ -572,6 +625,7 @@ VITE_API_URL=https://...
 ```
 
 **3. API Security**
+
 ```typescript
 // ✓ HTTPS enforced
 // ✓ JWT token validation
@@ -588,16 +642,19 @@ See [docs/SECURITY.md](docs/SECURITY.md) for detailed security guidelines.
 ### Code Standards
 
 **TypeScript:**
+
 - Strict mode enabled
 - No `any` types without justification
 - Complete type annotations
 
 **React:**
+
 - Functional components only
 - Custom hooks for logic
 - Props interface defined explicitly
 
 **Testing:**
+
 - Write tests alongside features
 - Aim for >80% coverage
 - Test behavior, not implementation
@@ -657,25 +714,29 @@ npm run build -- --analyze
 ### Common Issues
 
 **Issue:** "Port 5173 already in use"
+
 ```bash
 # Solution: Kill process or use different port
 npm run dev -- --port 5174
 ```
 
 **Issue:** "API calls failing with CORS error"
+
 ```bash
 # Check .env.local has correct VITE_TECH_HAVEN_API_URL
 # Ensure backend CORS allows your frontend origin
 ```
 
 **Issue:** "Cart state not persisting"
+
 ```bash
 # Clear localStorage
 localStorage.clear()
 # Restart app
 ```
 
-**Issue:** "Tests failing with "Cannot find module" error**
+**Issue:** "Tests failing with "Cannot find module" error\*\*
+
 ```bash
 # Clear Jest cache
 npm run test -- --clearCache
@@ -684,10 +745,11 @@ npm run test -- --clearCache
 ### Debug Mode
 
 Enable verbose logging:
+
 ```typescript
 // src/main.tsx
 if (import.meta.env.DEV) {
-  console.log("Debug mode enabled");
+  console.log('Debug mode enabled');
 }
 ```
 
@@ -696,6 +758,7 @@ if (import.meta.env.DEV) {
 ## 📚 Additional Resources
 
 ### Documentation
+
 - [React 19 Docs](https://react.dev)
 - [Redux Toolkit Guide](https://redux-toolkit.js.org)
 - [Bootstrap 5 Components](https://getbootstrap.com/docs/5.3)
@@ -703,6 +766,7 @@ if (import.meta.env.DEV) {
 - [TypeScript Handbook](https://www.typescriptlang.org/docs)
 
 ### Useful Tools
+
 - **Redux DevTools**: [Browser Extension](https://github.com/reduxjs/redux-devtools)
 - **React DevTools**: [Browser Extension](https://react-devtools-tutorial.vercel.app/)
 - **Postman**: [API Testing](https://www.postman.com)
@@ -747,6 +811,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Support & Contact
 
 For issues, questions, or suggestions:
+
 - � **GitHub Repository**: [github.com/cristopher-dev/ecommerce-tech-haven-front](https://github.com/cristopher-dev/ecommerce-tech-haven-front)
 - 🐦 **Twitter/X**: [@cristopher_devs](https://x.com/cristopher_devs)
 - 💼 **LinkedIn**: [linkedin.com/in/cristopher-dev](https://www.linkedin.com/in/cristopher-dev/)
@@ -762,9 +827,8 @@ For issues, questions, or suggestions:
 
 ---
 
-**Last Updated**: January 30, 2026  
-**Version**: 1.0.0  
-**Status**: ✅ Production Ready  
-**Repository**: [github.com/cristopher-dev/ecommerce-tech-haven-front](https://github.com/cristopher-dev/ecommerce-tech-haven-front)  
+**Last Updated**: January 30, 2026
+**Version**: 1.0.0
+**Status**: ✅ Production Ready
+**Repository**: [github.com/cristopher-dev/ecommerce-tech-haven-front](https://github.com/cristopher-dev/ecommerce-tech-haven-front)
 **Developer**: [Cristopher Martinez](https://www.linkedin.com/in/cristopher-dev/)
-
