@@ -1,21 +1,13 @@
-import {
-  useAppDispatch,
-  useCartItems,
-  useWishlist,
-} from "@/application/store/hooks";
-import {
-  logout,
-  setToken,
-  setUser,
-} from "@/application/store/slices/authSlice";
-import { removeFromCart } from "@/application/store/slices/cartSlice";
-import { RootState } from "@/application/store/store";
-import TechHavenLogo from "@/assets/TechHavenLogo.svg";
-import "@/styles/components/Header.scss";
-import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useAppDispatch, useCartItems, useWishlist } from '@/application/store/hooks';
+import { logout, setToken, setUser } from '@/application/store/slices/authSlice';
+import { removeFromCart } from '@/application/store/slices/cartSlice';
+import { RootState } from '@/application/store/store';
+import TechHavenLogo from '@/assets/TechHavenLogo.svg';
+import '@/styles/components/Header.scss';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Header: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -29,7 +21,7 @@ const Header: React.FC = () => {
   const handleLogout = () => {
     dispatch(logout());
     setTimeout(() => {
-      navigate("/");
+      navigate('/');
     }, 100);
   };
 
@@ -40,14 +32,13 @@ const Header: React.FC = () => {
 
   const handleMockLogin = async () => {
     try {
-      const demoEmail =
-        import.meta.env.VITE_DEMO_EMAIL || "admin@techhaven.com";
-      const demoPassword = import.meta.env.VITE_DEMO_PASSWORD || "admin123";
+      const demoEmail = import.meta.env.VITE_DEMO_EMAIL || 'admin@techhaven.com';
+      const demoPassword = import.meta.env.VITE_DEMO_PASSWORD || 'admin123';
 
-      const response = await fetch("http://localhost:3000/api/auth/login", {
-        method: "POST",
+      const response = await fetch('http://localhost:3000/api/auth/login', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           email: demoEmail,
@@ -56,18 +47,18 @@ const Header: React.FC = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Login failed");
+        throw new Error('Login failed');
       }
 
       const data = await response.json();
 
       const userData = {
-        id: "admin-user",
+        id: 'admin-user',
         email: data.email,
-        firstName: "Admin",
-        lastName: "User",
-        role: data.role as "ADMIN" | "USER",
-        phone: "123456789",
+        firstName: 'Admin',
+        lastName: 'User',
+        role: data.role as 'ADMIN' | 'USER',
+        phone: '123456789',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
@@ -75,8 +66,8 @@ const Header: React.FC = () => {
       dispatch(setUser(userData));
       dispatch(setToken(data.token));
     } catch (error) {
-      console.error("Login error:", error);
-      alert(t("errors.loginFailed"));
+      console.error('Login error:', error);
+      alert(t('errors.loginFailed'));
     }
   };
 
@@ -101,15 +92,15 @@ const Header: React.FC = () => {
               <div className="header-main bg-white border-bottom">
                 <div className="row align-items-center py-2 py-md-3">
                   {/* Logo */}
-                  <div className="col-6 col-md-3 col-lg-2 d-flex justify-content-center align-items-center">
+                  <div className="col-12 d-flex justify-content-center align-items-center">
                     <Link className="navbar-brand d-block" to="/">
                       <img
                         alt="TechHaven"
                         className="img-fluid"
                         src={TechHavenLogo}
                         style={{
-                          width: "50px",
-                          height: "50px",
+                          width: '50px',
+                          height: '50px',
                         }}
                       />
                     </Link>
@@ -122,12 +113,10 @@ const Header: React.FC = () => {
                       onSubmit={(e) => {
                         e.preventDefault();
                         const searchInput = e.currentTarget.querySelector(
-                          'input[type="search"]',
+                          'input[type="search"]'
                         ) as HTMLInputElement;
                         if (searchInput?.value) {
-                          navigate(
-                            `/product?search=${encodeURIComponent(searchInput.value)}`,
-                          );
+                          navigate(`/product?search=${encodeURIComponent(searchInput.value)}`);
                         }
                       }}
                     >
@@ -138,58 +127,47 @@ const Header: React.FC = () => {
                             type="button"
                             data-bs-toggle="dropdown"
                           >
-                            <i className="bi bi-grid me-1"></i>{" "}
-                            {t("header.categories")}
+                            <i className="bi bi-grid me-1"></i> {t('header.categories')}
                           </button>
                           <ul className="dropdown-menu">
                             <li>
                               <button
                                 className="dropdown-item"
-                                onClick={() =>
-                                  navigate("/product?category=all")
-                                }
+                                onClick={() => navigate('/product?category=all')}
                               >
-                                {t("header.allCategories")}
+                                {t('header.allCategories')}
                               </button>
                             </li>
                             <li>
                               <button
                                 className="dropdown-item"
-                                onClick={() =>
-                                  navigate("/product?category=electronics")
-                                }
+                                onClick={() => navigate('/product?category=electronics')}
                               >
-                                {t("header.electronics")}
+                                {t('header.electronics')}
                               </button>
                             </li>
                             <li>
                               <button
                                 className="dropdown-item"
-                                onClick={() =>
-                                  navigate("/product?category=fashion")
-                                }
+                                onClick={() => navigate('/product?category=fashion')}
                               >
-                                {t("header.fashion")}
+                                {t('header.fashion')}
                               </button>
                             </li>
                             <li>
                               <button
                                 className="dropdown-item"
-                                onClick={() =>
-                                  navigate("/product?category=home-garden")
-                                }
+                                onClick={() => navigate('/product?category=home-garden')}
                               >
-                                {t("header.homeGarden")}
+                                {t('header.homeGarden')}
                               </button>
                             </li>
                             <li>
                               <button
                                 className="dropdown-item"
-                                onClick={() =>
-                                  navigate("/product?category=sports")
-                                }
+                                onClick={() => navigate('/product?category=sports')}
                               >
-                                {t("header.sports")}
+                                {t('header.sports')}
                               </button>
                             </li>
                           </ul>
@@ -197,19 +175,19 @@ const Header: React.FC = () => {
                         <input
                           type="search"
                           className="form-control border-start-0 border-end-0"
-                          placeholder={t("header.search")}
+                          placeholder={t('header.search')}
                         />
                         <button className="btn btn-primary" type="submit">
                           <i className="bi bi-search me-2"></i>
-                          {t("common.search")}
+                          {t('common.search')}
                         </button>
                       </div>
                     </form>
                   </div>
 
                   {/* User Actions - Better UI */}
-                  <div className="col-6 col-md-3 col-lg-5">
-                    <div className="header-actions d-flex justify-content-end align-items-center gap-1 gap-md-2">
+                  <div className="col-12">
+                    <div className="header-actions d-flex justify-content-around align-items-center gap-1 gap-md-2">
                       {/* My Account / Auth */}
                       {user ? (
                         <div className="dropdown">
@@ -218,28 +196,25 @@ const Header: React.FC = () => {
                             type="button"
                             data-bs-toggle="dropdown"
                             style={{
-                              minHeight: "44px",
-                              borderRadius: "8px",
-                              textDecoration: "none",
-                              transition: "background-color 0.3s",
-                              color: "inherit",
-                              background: "transparent",
-                              border: "none",
-                              cursor: "pointer",
+                              minHeight: '44px',
+                              borderRadius: '8px',
+                              textDecoration: 'none',
+                              transition: 'background-color 0.3s',
+                              color: 'inherit',
+                              background: 'transparent',
+                              border: 'none',
+                              cursor: 'pointer',
                             }}
                           >
                             <i className="bi bi-person-circle fs-5 text-primary"></i>
                             <div className="ms-2 d-none d-lg-block">
                               <small
                                 className="text-muted d-block lh-1"
-                                style={{ fontSize: "0.7rem" }}
+                                style={{ fontSize: '0.7rem' }}
                               >
-                                {t("common.account")}
+                                {t('common.account')}
                               </small>
-                              <span
-                                className="fw-600 d-block lh-1"
-                                style={{ fontSize: "0.85rem" }}
-                              >
+                              <span className="fw-600 d-block lh-1" style={{ fontSize: '0.85rem' }}>
                                 {user.firstName}
                               </span>
                             </div>
@@ -251,21 +226,16 @@ const Header: React.FC = () => {
                                   {user.firstName} {user.lastName}
                                 </strong>
                                 <br />
-                                <small className="text-muted">
-                                  {user.email}
-                                </small>
+                                <small className="text-muted">{user.email}</small>
                               </span>
                             </li>
                             <li>
                               <hr className="dropdown-divider" />
                             </li>
                             <li>
-                              <button
-                                className="dropdown-item"
-                                onClick={handleLogout}
-                              >
+                              <button className="dropdown-item" onClick={handleLogout}>
                                 <i className="bi bi-box-arrow-right me-2"></i>
-                                {t("common.logout")}
+                                {t('common.logout')}
                               </button>
                             </li>
                           </ul>
@@ -275,18 +245,15 @@ const Header: React.FC = () => {
                           onClick={handleMockLogin}
                           className="btn btn-outline-primary d-flex align-items-center justify-content-center justify-content-lg-start py-2 px-2 px-lg-3"
                           style={{
-                            minHeight: "44px",
-                            borderRadius: "8px",
+                            minHeight: '44px',
+                            borderRadius: '8px',
                           }}
                           title="Demo: Click to login as Admin"
                         >
                           <i className="bi bi-person-circle fs-5 text-primary"></i>
                           <div className="ms-2 d-none d-lg-block">
-                            <span
-                              className="fw-600 d-block lh-1"
-                              style={{ fontSize: "0.85rem" }}
-                            >
-                              {t("common.login")}
+                            <span className="fw-600 d-block lh-1" style={{ fontSize: '0.85rem' }}>
+                              {t('common.login')}
                             </span>
                           </div>
                         </button>
@@ -297,18 +264,15 @@ const Header: React.FC = () => {
                         to="/wishlist"
                         className="header-action d-flex align-items-center justify-content-center justify-content-lg-start py-2 px-2 px-lg-3 position-relative"
                         style={{
-                          minHeight: "44px",
-                          borderRadius: "8px",
-                          textDecoration: "none",
-                          transition: "background-color 0.3s",
-                          color: "inherit",
+                          minHeight: '44px',
+                          borderRadius: '8px',
+                          textDecoration: 'none',
+                          transition: 'background-color 0.3s',
+                          color: 'inherit',
                         }}
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.style.backgroundColor = "#f5f5f5")
-                        }
+                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f5f5f5')}
                         onMouseLeave={(e) =>
-                          (e.currentTarget.style.backgroundColor =
-                            "transparent")
+                          (e.currentTarget.style.backgroundColor = 'transparent')
                         }
                       >
                         <div className="position-relative">
@@ -317,13 +281,13 @@ const Header: React.FC = () => {
                             <span
                               className="badge bg-danger rounded-circle d-flex align-items-center justify-content-center"
                               style={{
-                                position: "absolute",
-                                top: "-6px",
-                                right: "-6px",
-                                width: "18px",
-                                height: "18px",
-                                fontSize: "0.6rem",
-                                padding: "0",
+                                position: 'absolute',
+                                top: '-6px',
+                                right: '-6px',
+                                width: '18px',
+                                height: '18px',
+                                fontSize: '0.6rem',
+                                padding: '0',
                               }}
                             >
                               {wishlistCount}
@@ -331,17 +295,11 @@ const Header: React.FC = () => {
                           )}
                         </div>
                         <div className="ms-2 d-none d-lg-block">
-                          <small
-                            className="text-muted d-block lh-1"
-                            style={{ fontSize: "0.7rem" }}
-                          >
-                            {t("common.favorites")}
+                          <small className="text-muted d-block lh-1" style={{ fontSize: '0.7rem' }}>
+                            {t('common.favorites')}
                           </small>
-                          <span
-                            className="fw-600 d-block lh-1"
-                            style={{ fontSize: "0.85rem" }}
-                          >
-                            {t("header.wishlist")}
+                          <span className="fw-600 d-block lh-1" style={{ fontSize: '0.85rem' }}>
+                            {t('header.wishlist')}
                           </span>
                         </div>
                       </Link>
@@ -351,35 +309,26 @@ const Header: React.FC = () => {
                         to="/purchases"
                         className="header-action d-flex align-items-center justify-content-center justify-content-lg-start py-2 px-2 px-lg-3 position-relative"
                         style={{
-                          minHeight: "44px",
-                          borderRadius: "8px",
-                          textDecoration: "none",
-                          transition: "background-color 0.3s",
-                          color: "inherit",
+                          minHeight: '44px',
+                          borderRadius: '8px',
+                          textDecoration: 'none',
+                          transition: 'background-color 0.3s',
+                          color: 'inherit',
                         }}
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.style.backgroundColor = "#f5f5f5")
-                        }
+                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f5f5f5')}
                         onMouseLeave={(e) =>
-                          (e.currentTarget.style.backgroundColor =
-                            "transparent")
+                          (e.currentTarget.style.backgroundColor = 'transparent')
                         }
                       >
                         <div className="position-relative">
                           <i className="bi bi-bag-check fs-5 text-success"></i>
                         </div>
                         <div className="ms-2 d-none d-lg-block">
-                          <small
-                            className="text-muted d-block lh-1"
-                            style={{ fontSize: "0.7rem" }}
-                          >
-                            {t("common.orders") || "Mis"}
+                          <small className="text-muted d-block lh-1" style={{ fontSize: '0.7rem' }}>
+                            {t('common.orders') || 'Mis'}
                           </small>
-                          <span
-                            className="fw-600 d-block lh-1"
-                            style={{ fontSize: "0.85rem" }}
-                          >
-                            {t("header.purchases") || "Compras"}
+                          <span className="fw-600 d-block lh-1" style={{ fontSize: '0.85rem' }}>
+                            {t('header.purchases') || 'Compras'}
                           </span>
                         </div>
                       </Link>
@@ -387,16 +336,16 @@ const Header: React.FC = () => {
                       {/* Language Selector */}
                       <div
                         className="dropdown d-flex align-items-center"
-                        style={{ minHeight: "44px" }}
+                        style={{ minHeight: '44px' }}
                       >
                         <button
                           className="btn btn-outline-secondary d-flex align-items-center justify-content-center py-2 px-2 px-lg-3"
                           type="button"
                           data-bs-toggle="dropdown"
                           style={{
-                            minHeight: "44px",
-                            borderRadius: "8px",
-                            fontSize: "0.9rem",
+                            minHeight: '44px',
+                            borderRadius: '8px',
+                            fontSize: '0.9rem',
                           }}
                           title="Select Language"
                         >
@@ -408,23 +357,19 @@ const Header: React.FC = () => {
                         <ul className="dropdown-menu">
                           <li>
                             <button
-                              className={`dropdown-item ${currentLanguage === "es" ? "active" : ""}`}
-                              onClick={() => handleLanguageChange("es")}
+                              className={`dropdown-item ${currentLanguage === 'es' ? 'active' : ''}`}
+                              onClick={() => handleLanguageChange('es')}
                             >
-                              {currentLanguage === "es" && (
-                                <i className="bi bi-check-lg me-2"></i>
-                              )}
+                              {currentLanguage === 'es' && <i className="bi bi-check-lg me-2"></i>}
                               Español
                             </button>
                           </li>
                           <li>
                             <button
-                              className={`dropdown-item ${currentLanguage === "en" ? "active" : ""}`}
-                              onClick={() => handleLanguageChange("en")}
+                              className={`dropdown-item ${currentLanguage === 'en' ? 'active' : ''}`}
+                              onClick={() => handleLanguageChange('en')}
                             >
-                              {currentLanguage === "en" && (
-                                <i className="bi bi-check-lg me-2"></i>
-                              )}
+                              {currentLanguage === 'en' && <i className="bi bi-check-lg me-2"></i>}
                               English
                             </button>
                           </li>
@@ -434,7 +379,7 @@ const Header: React.FC = () => {
                       {/* Shopping Cart */}
                       <div
                         className="header-action dropdown d-flex align-items-center"
-                        style={{ minHeight: "44px" }}
+                        style={{ minHeight: '44px' }}
                       >
                         <button
                           className="btn d-flex align-items-center justify-content-center justify-content-lg-start py-2 px-2 px-lg-3 position-relative"
@@ -442,19 +387,16 @@ const Header: React.FC = () => {
                           data-bs-toggle="dropdown"
                           aria-expanded="false"
                           style={{
-                            minHeight: "44px",
-                            borderRadius: "8px",
-                            border: "none",
-                            backgroundColor: "transparent",
-                            cursor: "pointer",
-                            transition: "background-color 0.3s",
+                            minHeight: '44px',
+                            borderRadius: '8px',
+                            border: 'none',
+                            backgroundColor: 'transparent',
+                            cursor: 'pointer',
+                            transition: 'background-color 0.3s',
                           }}
-                          onMouseEnter={(e) =>
-                            (e.currentTarget.style.backgroundColor = "#f5f5f5")
-                          }
+                          onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f5f5f5')}
                           onMouseLeave={(e) =>
-                            (e.currentTarget.style.backgroundColor =
-                              "transparent")
+                            (e.currentTarget.style.backgroundColor = 'transparent')
                           }
                         >
                           <div className="position-relative">
@@ -462,13 +404,13 @@ const Header: React.FC = () => {
                             <span
                               className="badge bg-success rounded-circle d-flex align-items-center justify-content-center"
                               style={{
-                                position: "absolute",
-                                top: "-6px",
-                                right: "-6px",
-                                width: "18px",
-                                height: "18px",
-                                fontSize: "0.6rem",
-                                padding: "0",
+                                position: 'absolute',
+                                top: '-6px',
+                                right: '-6px',
+                                width: '18px',
+                                height: '18px',
+                                fontSize: '0.6rem',
+                                padding: '0',
                               }}
                             >
                               {totalItems}
@@ -477,13 +419,13 @@ const Header: React.FC = () => {
                           <div className="ms-2 d-none d-lg-block">
                             <small
                               className="text-muted d-block lh-1"
-                              style={{ fontSize: "0.7rem" }}
+                              style={{ fontSize: '0.7rem' }}
                             >
-                              {t("cartPage.total")}
+                              {t('cartPage.total')}
                             </small>
                             <span
                               className="fw-600 d-block lh-1 text-success"
-                              style={{ fontSize: "0.85rem" }}
+                              style={{ fontSize: '0.85rem' }}
                             >
                               ${total.toFixed(2)}
                             </span>
@@ -494,10 +436,10 @@ const Header: React.FC = () => {
                         <ul
                           className="dropdown-menu dropdown-menu-end shadow-lg border-0"
                           style={{
-                            minWidth: "350px",
-                            maxHeight: "500px",
-                            overflowY: "auto",
-                            borderRadius: "8px",
+                            minWidth: '350px',
+                            maxHeight: '500px',
+                            overflowY: 'auto',
+                            borderRadius: '8px',
                           }}
                         >
                           <li
@@ -506,7 +448,7 @@ const Header: React.FC = () => {
                           >
                             <h6 className="mb-0 fw-bold">
                               <i className="bi bi-bag me-2 text-success"></i>
-                              {t("cartPage.title")}
+                              {t('cartPage.title')}
                             </h6>
                           </li>
 
@@ -514,9 +456,7 @@ const Header: React.FC = () => {
                             <li key="empty-cart">
                               <div className="p-4 text-center">
                                 <i className="bi bi-bag-x fs-1 text-muted mb-3 d-block"></i>
-                                <p className="text-muted mb-0">
-                                  {t("cartPage.emptyCart")}
-                                </p>
+                                <p className="text-muted mb-0">{t('cartPage.emptyCart')}</p>
                               </div>
                             </li>
                           ) : (
@@ -531,37 +471,28 @@ const Header: React.FC = () => {
                                       src={
                                         item.product.image ||
                                         item.product.imageUrl ||
-                                        "https://via.placeholder.com/50x50?text=Product"
+                                        'https://via.placeholder.com/50x50?text=Product'
                                       }
                                       alt={item.product.name}
                                       className="rounded"
                                       style={{
-                                        width: "50px",
-                                        height: "50px",
-                                        objectFit: "cover",
+                                        width: '50px',
+                                        height: '50px',
+                                        objectFit: 'cover',
                                       }}
                                     />
-                                    <div
-                                      className="flex-grow-1"
-                                      style={{ minWidth: "0" }}
-                                    >
-                                      <h6 className="mb-1 text-truncate">
-                                        {item.product.name}
-                                      </h6>
+                                    <div className="flex-grow-1" style={{ minWidth: '0' }}>
+                                      <h6 className="mb-1 text-truncate">{item.product.name}</h6>
                                       <p
                                         className="mb-0 text-success fw-bold"
-                                        style={{ fontSize: "0.9rem" }}
+                                        style={{ fontSize: '0.9rem' }}
                                       >
                                         ${item.product.price} × {item.quantity}
                                       </p>
                                     </div>
                                     <button
                                       className="btn btn-sm btn-outline-secondary"
-                                      onClick={() =>
-                                        dispatch(
-                                          removeFromCart(item.product.id),
-                                        )
-                                      }
+                                      onClick={() => dispatch(removeFromCart(item.product.id))}
                                     >
                                       <i className="bi bi-x"></i>
                                     </button>
@@ -571,23 +502,15 @@ const Header: React.FC = () => {
 
                               <li key="cart-totals" className="p-3">
                                 <div className="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
-                                  <strong>{t("cartPage.subtotal")}:</strong>
-                                  <span className="text-success fw-bold">
-                                    ${total.toFixed(2)}
-                                  </span>
+                                  <strong>{t('cartPage.subtotal')}:</strong>
+                                  <span className="text-success fw-bold">${total.toFixed(2)}</span>
                                 </div>
                                 <div className="d-flex gap-2">
-                                  <Link
-                                    className="btn btn-sm btn-primary flex-fill"
-                                    to="/cart"
-                                  >
-                                    {t("cartPage.title")}
+                                  <Link className="btn btn-sm btn-primary flex-fill" to="/cart">
+                                    {t('cartPage.title')}
                                   </Link>
-                                  <Link
-                                    className="btn btn-sm btn-success flex-fill"
-                                    to="/checkout"
-                                  >
-                                    {t("checkoutPage.title")}
+                                  <Link className="btn btn-sm btn-success flex-fill" to="/checkout">
+                                    {t('checkoutPage.title')}
                                   </Link>
                                 </div>
                               </li>
