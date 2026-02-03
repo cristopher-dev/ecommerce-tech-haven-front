@@ -1,4 +1,5 @@
 version: '3.8'
+name: docker
 
 services:
   frontend:
@@ -6,4 +7,11 @@ services:
       context: ..
       dockerfile: docker/Dockerfile
     ports:
-      - '80:80'
+      - '8080:80'
+    networks:
+      - tech-haven_network
+
+networks:
+  tech-haven_network:
+    external: true
+    name: docker_tech-haven_network
