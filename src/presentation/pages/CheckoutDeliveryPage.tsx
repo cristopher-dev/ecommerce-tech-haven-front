@@ -3,6 +3,7 @@ import {
   setDeliveryData,
   setPaymentData,
   setStep,
+  setToken,
 } from "@/application/store/slices/checkoutSlice";
 import { transactionsApi } from "@/infrastructure/api/techHavenApiClient";
 import React, { useState } from "react";
@@ -230,13 +231,14 @@ const CheckoutDeliveryPage: React.FC = () => {
   const handlePaymentSubmit = async (paymentData: PaymentFormData) => {
     setPaymentLoading(true);
     try {
-      await transactionsApi.tokenizeCard({
+      const response = await transactionsApi.tokenizeCard({
         cardNumber: paymentData.cardNumber,
-        expirationMonth: paymentData.expirationMonth,
+        expirationMonth: paymentData.expirationMonth.toString().padStart(2, '0'),
         expirationYear: paymentData.expirationYear % 100,
         cvv: paymentData.cvv,
         cardholderName: paymentData.cardholderName,
       });
+      dispatch(setToken(response.token));
       dispatch(
         setPaymentData({
           cardNumber: paymentData.cardNumber,

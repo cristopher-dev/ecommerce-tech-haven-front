@@ -336,7 +336,7 @@ describe("TechHaven API Client", () => {
       it("should process payment successfully", async () => {
         const paymentData: ProcessPaymentDto = {
           cardNumber: "4111111111111111",
-          expirationMonth: 12,
+          expirationMonth: "12",
           expirationYear: 2025,
           cvv: "123",
           cardholderName: "John Doe",
@@ -367,7 +367,7 @@ describe("TechHaven API Client", () => {
       it("should handle payment failure", async () => {
         const paymentData: ProcessPaymentDto = {
           cardNumber: "4111111111111111",
-          expirationMonth: 12,
+          expirationMonth: "12",
           expirationYear: 2025,
           cvv: "123",
           cardholderName: "John Doe",
@@ -391,7 +391,7 @@ describe("TechHaven API Client", () => {
       it("should throw error when transaction not found for payment", async () => {
         const paymentData: ProcessPaymentDto = {
           cardNumber: "4111111111111111",
-          expirationMonth: 12,
+          expirationMonth: "12",
           expirationYear: 2025,
           cvv: "123",
           cardholderName: "John Doe",

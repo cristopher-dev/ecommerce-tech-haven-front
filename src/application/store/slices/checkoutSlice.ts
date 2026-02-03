@@ -31,6 +31,7 @@ interface CheckoutState {
   step: "product" | "payment" | "summary" | "status";
   lastTransactionId: string | null;
   transactionItems: CartItem[];
+  token: string | null;
 }
 
 const initialState: CheckoutState = {
@@ -44,6 +45,7 @@ const initialState: CheckoutState = {
   step: "product",
   lastTransactionId: null,
   transactionItems: [],
+  token: null,
 };
 
 const ensureCartItemId = (item: CartItem): CartItem => {
@@ -123,6 +125,9 @@ export const checkoutSlice = createSlice({
     setTransactionItems: (state, action: PayloadAction<CartItem[]>) => {
       state.transactionItems = action.payload;
     },
+    setToken: (state, action: PayloadAction<string>) => {
+      state.token = action.payload;
+    },
     clearCheckout: (state) => {
       state.cartItems = [];
       state.paymentData = null;
@@ -130,6 +135,7 @@ export const checkoutSlice = createSlice({
       state.step = "product";
       state.lastTransactionId = null;
       state.transactionItems = [];
+      state.token = null;
       state.error = null;
     },
 
@@ -153,6 +159,7 @@ export const {
   setError,
   setLastTransactionId,
   setTransactionItems,
+  setToken,
   clearCheckout,
   setDeliveryFee,
 } = checkoutSlice.actions;

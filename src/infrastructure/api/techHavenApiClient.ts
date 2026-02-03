@@ -148,7 +148,7 @@ export type TransactionDTO = GetTransactionResponseDto;
 
 export interface ProcessPaymentDto {
   cardNumber: string;
-  expirationMonth: number;
+  expirationMonth: string;
   expirationYear: number;
   cvv: string;
   cardholderName: string;
