@@ -1,10 +1,6 @@
+@use 'responsive';
+@use 'pages/WishlistPage';
 @import 'bootstrap/dist/css/bootstrap.min.css';
-@import 'responsive';
-@import 'pages/WishlistPage';
-
-/* ======================= */
-/* GLOBAL STYLES MEJORADOS */
-/* ======================= */
 
 :root {
   --primary-color: #0066ff;
