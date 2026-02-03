@@ -74,6 +74,7 @@ const RowFormField: React.FC<
     disabled?: boolean;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onBlur: () => void;
+    autocomplete?: string;
   }
 > = ({
   name,
@@ -86,6 +87,7 @@ const RowFormField: React.FC<
   disabled,
   onChange,
   onBlur,
+  autocomplete,
 }) => (
   <div className={`${colClass} mb-3`}>
     <label htmlFor={name} className="form-label">
@@ -100,6 +102,7 @@ const RowFormField: React.FC<
       onChange={onChange}
       onBlur={onBlur}
       disabled={disabled}
+      autoComplete={autocomplete}
     />
     {touched && error && <div className="invalid-feedback">{error}</div>}
   </div>
@@ -115,6 +118,7 @@ const FullWidthFormField: React.FC<{
   disabled?: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur: () => void;
+  autocomplete?: string;
 }> = ({
   name,
   label,
@@ -125,6 +129,7 @@ const FullWidthFormField: React.FC<{
   disabled,
   onChange,
   onBlur,
+  autocomplete,
 }) => (
   <div className="mb-3">
     <label htmlFor={name} className="form-label">
@@ -139,6 +144,7 @@ const FullWidthFormField: React.FC<{
       onChange={onChange}
       onBlur={onBlur}
       disabled={disabled}
+      autoComplete={autocomplete}
     />
     {touched && error && <div className="invalid-feedback">{error}</div>}
   </div>
@@ -264,6 +270,7 @@ const CheckoutDeliveryPage: React.FC = () => {
               disabled={checkout.loading}
               onChange={handleChange}
               onBlur={() => setTouched({ ...touched, firstName: true })}
+              autocomplete="given-name"
             />
             <RowFormField
               name="lastName"
@@ -274,6 +281,7 @@ const CheckoutDeliveryPage: React.FC = () => {
               disabled={checkout.loading}
               onChange={handleChange}
               onBlur={() => setTouched({ ...touched, lastName: true })}
+              autocomplete="family-name"
             />
           </div>
           <FullWidthFormField
@@ -285,6 +293,7 @@ const CheckoutDeliveryPage: React.FC = () => {
             disabled={checkout.loading}
             onChange={handleChange}
             onBlur={() => setTouched({ ...touched, address: true })}
+            autocomplete="street-address"
           />
           <div className="row">
             <RowFormField
@@ -296,6 +305,7 @@ const CheckoutDeliveryPage: React.FC = () => {
               disabled={checkout.loading}
               onChange={handleChange}
               onBlur={() => setTouched({ ...touched, city: true })}
+              autocomplete="address-level2"
             />
             <RowFormField
               name="state"
@@ -306,6 +316,7 @@ const CheckoutDeliveryPage: React.FC = () => {
               disabled={checkout.loading}
               onChange={handleChange}
               onBlur={() => setTouched({ ...touched, state: true })}
+              autocomplete="address-level1"
             />
           </div>
           <div className="row">
@@ -319,6 +330,7 @@ const CheckoutDeliveryPage: React.FC = () => {
               disabled={checkout.loading}
               onChange={handleChange}
               onBlur={() => setTouched({ ...touched, zipCode: true })}
+              autocomplete="postal-code"
             />
           </div>
           <FullWidthFormField
@@ -331,6 +343,7 @@ const CheckoutDeliveryPage: React.FC = () => {
             disabled={checkout.loading}
             onChange={handleChange}
             onBlur={() => setTouched({ ...touched, email: true })}
+            autocomplete="email"
           />
           <FullWidthFormField
             name="phone"
@@ -342,6 +355,7 @@ const CheckoutDeliveryPage: React.FC = () => {
             disabled={checkout.loading}
             onChange={handleChange}
             onBlur={() => setTouched({ ...touched, phone: true })}
+            autocomplete="tel"
           />
           <div className="d-flex gap-2 justify-content-between mt-4">
             <Link to="/cart" className="btn btn-secondary">

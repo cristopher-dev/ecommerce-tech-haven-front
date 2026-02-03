@@ -285,6 +285,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                     onChange={handleCardNumberChange}
                     onBlur={() => handleBlur("cardNumber")}
                     disabled={loading}
+                    autoComplete="cc-number"
                   />
                   {cardType !== "UNKNOWN" && (
                     <span
@@ -315,6 +316,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                   onChange={handleCardholderNameChange}
                   onBlur={() => handleBlur("cardholderName")}
                   disabled={loading}
+                  autoComplete="cc-name"
                 />
                 {touched.cardholderName && errors.cardholderName && (
                   <div className="invalid-feedback d-block">
@@ -383,6 +385,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                     onChange={handleCVVChange}
                     onBlur={() => handleBlur("cvv")}
                     disabled={loading}
+                    autoComplete="cc-csc"
                   />
                   {touched.cvv && errors.cvv && (
                     <div className="invalid-feedback d-block">{errors.cvv}</div>
