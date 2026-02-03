@@ -290,6 +290,17 @@ export const transactionsApi = {
       body: JSON.stringify(paymentData),
     });
   },
+
+  /**
+   * Tokenize card for payment
+   * @param cardData Card tokenization information
+   */
+  async tokenizeCard(cardData: ProcessPaymentDto): Promise<{ token: string }> {
+    return apiRequest<{ token: string }>("/transactions/tokenize-card", {
+      method: "POST",
+      body: JSON.stringify(cardData),
+    });
+  },
 };
 
 /**

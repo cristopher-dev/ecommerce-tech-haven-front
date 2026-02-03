@@ -4,6 +4,7 @@ import {
   setPaymentData,
   setStep,
 } from "@/application/store/slices/checkoutSlice";
+import { transactionsApi } from "@/infrastructure/api/techHavenApiClient";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
@@ -160,7 +161,7 @@ const CheckoutDeliveryPage: React.FC = () => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
-
+  const [paymentLoading, setPaymentLoading] = useState(false);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -226,17 +227,32 @@ const CheckoutDeliveryPage: React.FC = () => {
     navigate("/checkout/summary");
   };
 
-  const handlePaymentSubmit = (paymentData: PaymentFormData) => {
-    dispatch(
-      setPaymentData({
+  const handlePaymentSubmit = async (paymentData: PaymentFormData) => {
+    setPaymentLoading(true);
+    try {
+      await transactionsApi.tokenizeCard({
         cardNumber: paymentData.cardNumber,
-        cardholderName: paymentData.cardholderName,
         expirationMonth: paymentData.expirationMonth,
-        expirationYear: paymentData.expirationYear,
+        expirationYear: paymentData.expirationYear % 100,
         cvv: paymentData.cvv,
-      }),
-    );
-    savPaymentDataAndProceed();
+        cardholderName: paymentData.cardholderName,
+      });
+      dispatch(
+        setPaymentData({
+          cardNumber: paymentData.cardNumber,
+          cardholderName: paymentData.cardholderName,
+          expirationMonth: paymentData.expirationMonth,
+          expirationYear: paymentData.expirationYear,
+          cvv: paymentData.cvv,
+        }),
+      );
+      savPaymentDataAndProceed();
+    } catch (error) {
+      console.error("Error tokenizing card:", error);
+      // Handle error - maybe show a toast or alert
+    } finally {
+      setPaymentLoading(false);
+    }
   };
   return (
     <div>
@@ -385,7 +401,7 @@ const CheckoutDeliveryPage: React.FC = () => {
           isOpen={showPaymentModal}
           onClose={() => setShowPaymentModal(false)}
           onSubmit={handlePaymentSubmit}
-          loading={checkout.loading}
+          loading={paymentLoading}
         />
       </main>
       <Footer />
