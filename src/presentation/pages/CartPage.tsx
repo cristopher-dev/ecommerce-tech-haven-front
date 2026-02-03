@@ -104,24 +104,25 @@ const CartPage: React.FC = () => {
 
             {/* Mobile/Tablet View */}
             <div className="d-lg-none">
-              <div className="row row-cols-1 row-cols-md-2 g-3">
+              <div className="row g-3">
                 {items.map((item, index) => (
                   <div key={`${item.product.id}-${index}`} className="col">
                     <div className="card h-100 shadow-sm">
-                      <div className="row g-0 h-100">
-                        <div className="col-5">
+                      {/* Stack image on xs, side-by-side on sm+ */}
+                      <div className="row g-0 h-100 flex-column flex-sm-row">
+                        <div className="col-12 col-sm-5">
                           <img
                             src={
                               item.product.imageUrl ||
-                              'https://via.placeholder.com/200x200?text=No+Image'
+                              'https://via.placeholder.com/400x300?text=No+Image'
                             }
                             alt={item.product.name}
-                            className="img-fluid h-100"
-                            style={{ objectFit: 'cover' }}
+                            className="img-fluid w-100"
+                            style={{ objectFit: 'cover', height: '180px' }}
                           />
                         </div>
-                        <div className="col-7">
-                          <div className="card-body p-2 p-sm-3 d-flex flex-column h-100">
+                        <div className="col-12 col-sm-7 d-flex">
+                          <div className="card-body p-2 p-sm-3 d-flex flex-column w-100">
                             <h6 className="card-title mb-2 text-truncate">{item.product.name}</h6>
 
                             <div className="mb-2">
@@ -131,7 +132,7 @@ const CartPage: React.FC = () => {
 
                             <div className="mb-2">
                               <small className="text-muted">{t('cartPage.quantity')}:</small>
-                              <div className="input-group input-group-sm mt-1">
+                              <div className="input-group input-group-sm mt-1 justify-content-center">
                                 <button
                                   className="btn btn-outline-secondary"
                                   onClick={() =>
@@ -151,6 +152,7 @@ const CartPage: React.FC = () => {
                                     )
                                   }
                                   min="1"
+                                  style={{ width: '70px' }}
                                 />
                                 <button
                                   className="btn btn-outline-secondary"
@@ -171,7 +173,7 @@ const CartPage: React.FC = () => {
                             </div>
 
                             <button
-                              className="btn btn-danger btn-sm mt-auto"
+                              className="btn btn-danger btn-sm mt-auto w-100"
                               onClick={() => dispatch(removeFromCart(item.product.id))}
                             >
                               {t('common.remove')}
