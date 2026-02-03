@@ -1,4 +1,6 @@
 @import 'bootstrap/dist/css/bootstrap.min.css';
+@import 'responsive';
+@import 'pages/WishlistPage';
 
 /* ======================= */
 /* GLOBAL STYLES MEJORADOS */
@@ -24,12 +26,15 @@
   box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
   scroll-behavior: smooth;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
+    sans-serif;
   background: linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%);
   color: var(--text-color);
   line-height: 1.6;
@@ -148,7 +153,12 @@ body {
 }
 
 /* Títulos y headings */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   color: var(--text-color);
   font-weight: 700;
   margin-bottom: 0.5rem;

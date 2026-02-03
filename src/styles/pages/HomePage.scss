@@ -1,0 +1,131 @@
+/* ======================== */
+/* HOME PAGE RESPONSIVE STYLES */
+/* ======================== */
+
+.home-page {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.home-main {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.home-main section {
+  width: 100%;
+  padding: var(--spacing-sm);
+  box-sizing: border-box;
+}
+
+/* ========== MOBILE (320px - 479px) ========== */
+@media screen and (min-width: 320px) and (max-width: 479px) {
+  .home-main section {
+    padding: var(--spacing-xs) 0;
+    margin-bottom: 0.5rem;
+  }
+
+  .home-main > section:first-child {
+    padding-top: 0;
+  }
+}
+
+/* ========== SMALL MOBILE (480px - 599px) ========== */
+@media screen and (min-width: 480px) and (max-width: 599px) {
+  .home-main section {
+    padding: var(--spacing-sm);
+    margin-bottom: 0.75rem;
+  }
+}
+
+/* ========== TABLET SMALL (600px - 767px) ========== */
+@media screen and (min-width: 600px) and (max-width: 767px) {
+  .home-main section {
+    padding: var(--spacing-md);
+    margin-bottom: 1rem;
+  }
+}
+
+/* ========== TABLET MEDIUM (768px - 1023px) ========== */
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .home-main section {
+    padding: var(--spacing-md) var(--spacing-lg);
+    margin-bottom: 1.5rem;
+  }
+}
+
+/* ========== LAPTOP/DESKTOP (1024px - 1439px) ========== */
+@media screen and (min-width: 1024px) and (max-width: 1439px) {
+  .home-main section {
+    padding: var(--spacing-lg) var(--spacing-xl);
+    margin-bottom: 2rem;
+  }
+}
+
+/* ========== FULL DESKTOP (1440px - 1919px) ========== */
+@media screen and (min-width: 1440px) and (max-width: 1919px) {
+  .home-main section {
+    padding: var(--spacing-xl) var(--spacing-2xl);
+    margin-bottom: 2.5rem;
+  }
+}
+
+/* ========== TV RESOLUTION (1920px - 2559px) ========== */
+@media screen and (min-width: 1920px) and (max-width: 2559px) {
+  .home-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .home-main {
+    flex: 1;
+  }
+
+  .home-main section {
+    padding: var(--spacing-2xl) 4rem;
+    margin-bottom: 3rem;
+  }
+}
+
+/* ========== 4K TV RESOLUTION (2560px+) ========== */
+@media screen and (min-width: 2560px) {
+  .home-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .home-main {
+    flex: 1;
+  }
+
+  .home-main section {
+    padding: 3.5rem 5rem;
+    margin-bottom: 4rem;
+  }
+}
+
+/* ========== LANDSCAPE MODE ========== */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  .home-main section {
+    margin-bottom: 0;
+    padding: var(--spacing-xs);
+  }
+}
+
+/* ========== PRINT ========== */
+@media print {
+  .home-page {
+    background: white;
+  }
+
+  .home-main section {
+    page-break-inside: avoid;
+    padding: 1rem 0;
+    margin-bottom: 1rem;
+  }
+}

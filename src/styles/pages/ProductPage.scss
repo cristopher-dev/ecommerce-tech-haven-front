@@ -1,0 +1,30 @@
+// ProductPage specific styles
+
+.product-page {
+  padding: 20px;
+}
+
+.product-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin: 20px 0;
+}
+
+.product-image {
+  width: 100%;
+  max-width: 500px;
+}
+
+.product-info {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+@media (max-width: 768px) {
+  .product-details {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}

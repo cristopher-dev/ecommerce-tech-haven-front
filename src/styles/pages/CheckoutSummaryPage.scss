@@ -1,0 +1,486 @@
+// Checkout Summary Page - Responsive Styles
+
+// ==========================================
+// Mobile First Approach (< 576px)
+// ==========================================
+
+.breadcrumb-sm {
+  font-size: 0.75rem;
+  padding: 0.5rem 0;
+
+  .breadcrumb-item {
+    margin-right: 0.25rem;
+
+    &::before {
+      content: '/';
+      margin: 0 0.25rem;
+    }
+  }
+}
+
+.sticky-top-responsive {
+  position: relative;
+}
+
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+// Progress bar
+.progress {
+  background-color: #e9ecef;
+  border-radius: 0.5rem;
+  overflow: hidden;
+
+  .progress-bar {
+    background-color: #0d6efd;
+    height: 100%;
+  }
+}
+
+// Card improvements
+.card {
+  border: 1px solid rgba(0, 0, 0, 0.125);
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+
+  .card-body {
+    p {
+      margin-bottom: 0.75rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+// Badge sizing
+.badge {
+  padding: 0.35rem 0.65rem;
+  font-size: 0.75rem;
+}
+
+// Buttons
+.btn {
+  transition: all 0.3s ease;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+}
+
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.2em;
+}
+
+// Table
+.table {
+  margin-bottom: 0;
+  font-size: 0.95rem;
+
+  thead {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+
+    th {
+      padding: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      color: #495057;
+    }
+  }
+
+  tbody tr {
+    border-bottom: 1px solid #dee2e6;
+
+    &:hover {
+      background-color: #f8f9fa;
+    }
+
+    td {
+      padding: 0.75rem;
+      vertical-align: middle;
+    }
+  }
+}
+
+// ==========================================
+// Small Devices (≥ 576px - sm)
+// ==========================================
+
+@media (min-width: 576px) {
+  .breadcrumb-sm {
+    font-size: 0.875rem;
+  }
+
+  .table {
+    font-size: 1rem;
+  }
+
+  .card .card-body {
+    padding: 1.25rem;
+  }
+
+  .progress {
+    height: 1.75rem;
+  }
+}
+
+// ==========================================
+// Tablets (≥ 768px - md)
+// ==========================================
+
+@media (min-width: 768px) {
+  .sticky-top-responsive {
+    position: sticky;
+    top: 2rem;
+  }
+
+  .breadcrumb-sm {
+    font-size: 1rem;
+    padding: 0.75rem 0;
+  }
+
+  .badge {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .table {
+    font-size: 1.05rem;
+
+    th {
+      font-size: 0.95rem;
+      padding: 1rem 0.75rem;
+    }
+
+    td {
+      padding: 1rem 0.75rem;
+    }
+  }
+
+  .card .card-body {
+    padding: 1.5rem;
+  }
+
+  .progress {
+    height: 2rem;
+  }
+
+  main {
+    padding: 1.5rem 1rem !important;
+  }
+}
+
+// ==========================================
+// Desktop (≥ 992px - lg)
+// ==========================================
+
+@media (min-width: 992px) {
+  .breadcrumb-sm {
+    font-size: 1.05rem;
+  }
+
+  .table {
+    font-size: 1.1rem;
+
+    th {
+      font-size: 1rem;
+      padding: 1.25rem 1rem;
+    }
+
+    td {
+      padding: 1.25rem 1rem;
+    }
+  }
+
+  .badge {
+    padding: 0.5rem 0.875rem;
+    font-size: 0.9rem;
+  }
+
+  .card .card-body {
+    padding: 2rem;
+  }
+
+  .btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.05rem;
+  }
+
+  .progress {
+    height: 2.25rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  main {
+    padding: 2rem 2rem !important;
+  }
+}
+
+// ==========================================
+// Large Desktop (≥ 1200px - xl)
+// ==========================================
+
+@media (min-width: 1200px) {
+  .breadcrumb-sm {
+    font-size: 1.125rem;
+  }
+
+  .table {
+    font-size: 1.15rem;
+
+    th {
+      font-size: 1.05rem;
+      padding: 1.5rem 1.25rem;
+    }
+
+    td {
+      padding: 1.5rem 1.25rem;
+    }
+  }
+
+  .card .card-body {
+    padding: 2.5rem;
+  }
+
+  .btn {
+    padding: 0.875rem 2rem;
+    font-size: 1.1rem;
+  }
+
+  h1 {
+    font-size: 2.25rem;
+  }
+
+  h2 {
+    font-size: 1.75rem;
+  }
+
+  main {
+    padding: 3rem 4rem !important;
+  }
+}
+
+// ==========================================
+// TV / Extra Large (≥ 1400px - xxl)
+// ==========================================
+
+@media (min-width: 1400px) {
+  .breadcrumb-sm {
+    font-size: 1.25rem;
+    padding: 1rem 0;
+  }
+
+  .table {
+    font-size: 1.25rem;
+
+    th {
+      font-size: 1.15rem;
+      padding: 1.75rem 1.5rem;
+    }
+
+    td {
+      padding: 1.75rem 1.5rem;
+    }
+  }
+
+  .badge {
+    padding: 0.75rem 1.25rem;
+    font-size: 1.1rem;
+  }
+
+  .card .card-body {
+    padding: 3rem;
+  }
+
+  .btn {
+    padding: 1rem 2.5rem;
+    font-size: 1.25rem;
+    min-height: 3.5rem;
+  }
+
+  .progress {
+    height: 3rem;
+  }
+
+  .btn-close {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  h1 {
+    font-size: 2.75rem;
+    margin-bottom: 2rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+  }
+
+  p,
+  label,
+  .alert {
+    font-size: 1.2rem;
+    line-height: 1.8;
+  }
+
+  main {
+    padding: 4rem 6rem !important;
+  }
+
+  .container-fluid {
+    max-width: 1800px;
+    margin: 0 auto;
+  }
+}
+
+// ==========================================
+// Accessibility & Touch Targets
+// ==========================================
+
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  }
+
+  .table tbody tr:hover {
+    background-color: #e9ecef;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  // Touch devices
+  .btn,
+  .card,
+  a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .btn {
+    padding: 0.625rem 1rem;
+  }
+}
+
+// ==========================================
+// Print Styles
+// ==========================================
+
+@media print {
+  .btn,
+  .breadcrumb,
+  .progress,
+  .btn-close {
+    display: none;
+  }
+
+  .table {
+    page-break-inside: avoid;
+  }
+
+  .card {
+    page-break-inside: avoid;
+  }
+}
+
+// ==========================================
+// Dark Mode Support (Optional)
+// ==========================================
+
+@media (prefers-color-scheme: dark) {
+  .table {
+    color: #e9ecef;
+    background-color: #212529;
+
+    thead {
+      background-color: #343a40;
+      border-bottom-color: #495057;
+    }
+
+    tbody tr {
+      border-bottom-color: #495057;
+
+      &:hover {
+        background-color: #343a40;
+      }
+    }
+  }
+
+  .card {
+    background-color: #212529;
+    border-color: #495057;
+    color: #e9ecef;
+  }
+
+  .breadcrumb {
+    background-color: #343a40;
+  }
+
+  .progress {
+    background-color: #495057;
+  }
+}
+
+// ==========================================
+// Utilities Classes
+// ==========================================
+
+.fw-500 {
+  font-weight: 500;
+}
+
+.text-muted-dark {
+  color: #6c757d;
+}
+
+// Responsive font sizes
+.fs-md-5 {
+  @media (min-width: 768px) {
+    font-size: 1.25rem !important;
+  }
+}
+
+.fs-lg-4 {
+  @media (min-width: 992px) {
+    font-size: 1.5rem !important;
+  }
+}
+
+.h1-xl {
+  @media (min-width: 1200px) {
+    font-size: 2.5rem !important;
+  }
+}
+
+.h2-lg {
+  @media (min-width: 992px) {
+    font-size: 1.75rem !important;
+  }
+}
+
+.h3-md {
+  @media (min-width: 768px) {
+    font-size: 1.5rem !important;
+  }
+}

@@ -1,18 +1,16 @@
-import { useAppDispatch } from "@/application/store/hooks";
-import {
-  addToWishlist,
-  removeFromWishlist,
-} from "@/application/store/slices/wishlistSlice";
-import { RootState } from "@/application/store/store";
-import { TechHavenApiProductRepository } from "@/infrastructure/adapters/TechHavenApiRepositories";
-import type { ProductDTO } from "@/infrastructure/api/techHavenApiClient";
-import React, { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { useCart } from "../../infrastructure/hooks/useCart";
-import Footer from "../components/Footer";
-import Header from "../components/Header";
+import { useAppDispatch } from '@/application/store/hooks';
+import { addToWishlist, removeFromWishlist } from '@/application/store/slices/wishlistSlice';
+import { RootState } from '@/application/store/store';
+import { TechHavenApiProductRepository } from '@/infrastructure/adapters/TechHavenApiRepositories';
+import type { ProductDTO } from '@/infrastructure/api/techHavenApiClient';
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useCart } from '../../infrastructure/hooks/useCart';
+import Footer from '../components/Footer';
+import Header from '../components/Header';
+import '../../styles/pages/ProductPage.scss';
 
 const LoadingView: React.FC = () => {
   const { t } = useTranslation();
@@ -22,7 +20,7 @@ const LoadingView: React.FC = () => {
       <main className="container my-4">
         <div className="text-center">
           <output className="spinner-border">
-            <span className="visually-hidden">{t("common.loading")}</span>
+            <span className="visually-hidden">{t('common.loading')}</span>
           </output>
         </div>
       </main>
@@ -38,7 +36,7 @@ const NotFoundView: React.FC = () => {
       <Header />
       <main className="container my-4">
         <div className="alert alert-danger">
-          {t("productPage.notFound")} <Link to="/">{t("common.back")}</Link>
+          {t('productPage.notFound')} <Link to="/">{t('common.back')}</Link>
         </div>
       </main>
       <Footer />
@@ -51,10 +49,7 @@ interface SearchResultsViewProps {
   searchQuery: string | null;
 }
 
-const SearchResultsView: React.FC<SearchResultsViewProps> = ({
-  products,
-  searchQuery,
-}) => {
+const SearchResultsView: React.FC<SearchResultsViewProps> = ({ products, searchQuery }) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { addToCart } = useCart();
@@ -89,83 +84,52 @@ const SearchResultsView: React.FC<SearchResultsViewProps> = ({
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
-              <Link to="/">{t("header.home")}</Link>
+              <Link to="/">{t('header.home')}</Link>
             </li>
-            <li className="breadcrumb-item active">
-              {t("productPage.searchResults")}
-            </li>
+            <li className="breadcrumb-item active">{t('productPage.searchResults')}</li>
           </ol>
         </nav>
 
         <h2 className="mb-4">
-          {t("productPage.searchFor")} "{searchQuery}"
+          {t('productPage.searchFor')} "{searchQuery}"
           {products.length > 0 && (
             <span className="text-muted ms-2">
-              ({products.length} {t("productPage.found")})
+              ({products.length} {t('productPage.found')})
             </span>
           )}
         </h2>
 
         {products.length === 0 ? (
           <div className="alert alert-info">
-            {t("productPage.noFound")} "{searchQuery}".{" "}
-            <Link to="/">{t("common.back")}</Link>
+            {t('productPage.noFound')} "{searchQuery}". <Link to="/">{t('common.back')}</Link>
           </div>
         ) : (
           <div className="row">
             {products.map((p) => (
-              <div key={p.id} className="col-md-4 mb-4">
-                <div className="card h-100">
-                  <div style={{ position: "relative", overflow: "hidden" }}>
-                    <img
-                      src={p.imageUrl}
-                      className="card-img-top"
-                      alt={p.name}
-                      style={{ height: "200px", objectFit: "cover" }}
-                    />
+              <div key={p.id} className="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                <div className="card h-100 product-card">
+                  <div className="product-image-wrapper">
+                    <img src={p.imageUrl} className="card-img-top product-image" alt={p.name} />
                     <button
-                      className="btn btn-sm"
-                      style={{
-                        position: "absolute",
-                        top: "10px",
-                        right: "10px",
-                        background: isInWishlist(p.id)
-                          ? "#ff6b6b"
-                          : "rgba(255,255,255,0.9)",
-                        color: isInWishlist(p.id) ? "white" : "#333",
-                        border: "none",
-                        borderRadius: "50%",
-                        width: "40px",
-                        height: "40px",
-                        padding: "0",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
+                      className="btn btn-wishlist"
                       onClick={() => handleWishlistToggle(p)}
                       title={
                         isInWishlist(p.id)
-                          ? t("productPage.removeFromWishlist")
-                          : t("productPage.addToWishlist")
+                          ? t('productPage.removeFromWishlist')
+                          : t('productPage.addToWishlist')
                       }
                     >
-                      <i
-                        className={`bi ${
-                          isInWishlist(p.id) ? "bi-heart-fill" : "bi-heart"
-                        }`}
-                        style={{ fontSize: "18px" }}
-                      ></i>
+                      <i className={`bi ${isInWishlist(p.id) ? 'bi-heart-fill' : 'bi-heart'}`}></i>
                     </button>
                   </div>
-                  <div className="card-body">
-                    <h5 className="card-title">{p.name}</h5>
-                    <p className="text-muted small">{p.description}</p>
-                    <p className="card-text text-success fw-bold">
+                  <div className="card-body d-flex flex-column">
+                    <h5 className="card-title product-title">{p.name}</h5>
+                    <p className="text-muted small product-description">{p.description}</p>
+                    <p className="card-text text-success fw-bold product-price">
                       ${(p.price / 100).toFixed(2)}
                     </p>
-                    <small className="text-muted">
-                      {t("productPage.stock")}: {p.stock}{" "}
-                      {t("productPage.units")}
+                    <small className="text-muted product-stock">
+                      {t('productPage.stock')}: {p.stock} {t('productPage.units')}
                     </small>
                   </div>
                   <div className="card-footer bg-transparent d-grid gap-2">
@@ -180,14 +144,12 @@ const SearchResultsView: React.FC<SearchResultsViewProps> = ({
                             image: p.imageUrl,
                             discount: 0,
                           },
-                          1,
+                          1
                         );
                       }}
                       disabled={p.stock === 0}
                     >
-                      {p.stock === 0
-                        ? t("productPage.outOfStock")
-                        : t("common.add")}
+                      {p.stock === 0 ? t('productPage.outOfStock') : t('common.add')}
                     </button>
                     <button
                       className="btn btn-sm btn-success"
@@ -200,22 +162,19 @@ const SearchResultsView: React.FC<SearchResultsViewProps> = ({
                             image: p.imageUrl,
                             discount: 0,
                           },
-                          1,
+                          1
                         );
                         setTimeout(() => {
-                          navigate("/cart");
+                          navigate('/cart');
                         }, 300);
                       }}
                       disabled={p.stock === 0}
                     >
                       <i className="bi bi-cart-check me-1"></i>
-                      {t("productPage.buyNow")}
+                      {t('productPage.buyNow')}
                     </button>
-                    <Link
-                      to={`/product?id=${p.id}`}
-                      className="btn btn-sm btn-outline-secondary"
-                    >
-                      {t("productPage.viewDetails")}
+                    <Link to={`/product?id=${p.id}`} className="btn btn-sm btn-outline-secondary">
+                      {t('productPage.viewDetails')}
                     </Link>
                   </div>
                 </div>
@@ -232,7 +191,7 @@ const SearchResultsView: React.FC<SearchResultsViewProps> = ({
 interface ButtonContentParams {
   isAdding: boolean;
   isOutOfStock: boolean;
-  t: ReturnType<typeof useTranslation>["t"];
+  t: ReturnType<typeof useTranslation>['t'];
   isBuyButton?: boolean;
 }
 
@@ -242,13 +201,13 @@ const getButtonContent = ({
   t,
   isBuyButton,
 }: ButtonContentParams): React.ReactNode => {
-  let label = "";
+  let label = '';
   if (isAdding) {
-    label = isBuyButton ? t("common.loading") : t("productPage.adding");
+    label = isBuyButton ? t('common.loading') : t('productPage.adding');
   } else if (isOutOfStock) {
-    label = t("productPage.outOfStock");
+    label = t('productPage.outOfStock');
   } else if (!isAdding && !isOutOfStock) {
-    label = isBuyButton ? t("productPage.buyNow") : t("productPage.addToCart");
+    label = isBuyButton ? t('productPage.buyNow') : t('productPage.addToCart');
   }
 
   if (isAdding) {
@@ -284,11 +243,9 @@ const ProductPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [isSearchMode, setIsSearchMode] = useState(false);
 
-  const rawProductId = searchParams.get("id") || "1";
-  const searchQuery = searchParams.get("search");
-  const productId = /^\d+$/.test(rawProductId)
-    ? `prod-${rawProductId}`
-    : rawProductId;
+  const rawProductId = searchParams.get('id') || '1';
+  const searchQuery = searchParams.get('search');
+  const productId = /^\d+$/.test(rawProductId) ? `prod-${rawProductId}` : rawProductId;
 
   useEffect(() => {
     const loadData = async () => {
@@ -308,7 +265,7 @@ const ProductPage: React.FC = () => {
           setProducts([]);
         }
       } catch (err) {
-        console.error("Error loading data:", err);
+        console.error('Error loading data:', err);
       } finally {
         setLoading(false);
       }
@@ -329,13 +286,13 @@ const ProductPage: React.FC = () => {
         image: product.imageUrl,
         discount: 0,
       },
-      1,
+      1
     );
     setShowToast(true);
     setTimeout(() => setShowToast(false), 4000);
     setTimeout(() => {
       setIsAdding(false);
-      navigate("/cart");
+      navigate('/cart');
     }, 500);
   };
 
@@ -351,11 +308,11 @@ const ProductPage: React.FC = () => {
         image: product.imageUrl,
         discount: 0,
       },
-      1,
+      1
     );
     setTimeout(() => {
       setIsAdding(false);
-      navigate("/cart");
+      navigate('/cart');
     }, 300);
   };
 
@@ -394,34 +351,34 @@ const ProductPage: React.FC = () => {
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
-              <Link to="/">{t("header.home")}</Link>
+              <Link to="/">{t('header.home')}</Link>
             </li>
             <li className="breadcrumb-item active" aria-current="page">
-              {t("productPage.title")}
+              {t('productPage.title')}
             </li>
           </ol>
         </nav>
-        <div className="row">
-          <div className="col-md-6">
-            <img src={product.imageUrl} alt="Product" className="img-fluid" />
+        <div className="row product-detail-row">
+          <div className="col-12 col-md-6 mb-4 mb-md-0">
+            <img src={product.imageUrl} alt="Product" className="img-fluid product-detail-image" />
           </div>
-          <div className="col-md-6">
-            <h1>{product.name}</h1>
-            <p className="text-muted">${(product.price / 100).toFixed(2)}</p>
-            <p className="text-success">
-              {t("productPage.stock")}: {product.stock} {t("productPage.units")}
+          <div className="col-12 col-md-6 product-detail-content">
+            <h1 className="product-detail-title">{product.name}</h1>
+            <p className="product-detail-price">${(product.price / 100).toFixed(2)}</p>
+            <p className="product-detail-stock text-success">
+              {t('productPage.stock')}: {product.stock} {t('productPage.units')}
             </p>
-            <p>{product.description}</p>
-            <div className="d-flex gap-2 flex-wrap">
+            <p className="product-detail-description">{product.description}</p>
+            <div className="d-flex gap-2 flex-wrap product-actions">
               <button
-                className="btn btn-primary"
+                className="btn btn-primary btn-action"
                 onClick={handleAddToCart}
                 disabled={isAdding || product.stock === 0}
               >
                 {addToCartButtonContent}
               </button>
               <button
-                className="btn btn-success"
+                className="btn btn-success btn-action"
                 onClick={handleBuyNow}
                 disabled={isAdding || product.stock === 0}
               >
@@ -432,18 +389,15 @@ const ProductPage: React.FC = () => {
         </div>
       </main>
       {showToast && (
-        <div
-          className="toast-container position-fixed bottom-0 end-0 p-3"
-          style={{ zIndex: 1050 }}
-        >
+        <div className="toast-container position-fixed bottom-0 end-0 p-3" style={{ zIndex: 1050 }}>
           <div
             className="toast show bg-success text-white"
             role="alert"
-            style={{ animation: "slideInRight 0.5s ease-out" }}
+            style={{ animation: 'slideInRight 0.5s ease-out' }}
           >
             <div className="toast-header bg-success text-white">
               <i className="bi bi-check-circle-fill me-2"></i>
-              <strong className="me-auto">{t("success.addedToCart")}</strong>
+              <strong className="me-auto">{t('success.addedToCart')}</strong>
               <button
                 type="button"
                 className="btn-close btn-close-white"
@@ -451,9 +405,9 @@ const ProductPage: React.FC = () => {
               ></button>
             </div>
             <div className="toast-body">
-              <strong>{product.name}</strong> {t("productPage.addedToCartMsg")}
+              <strong>{product.name}</strong> {t('productPage.addedToCartMsg')}
               <br />
-              <small>{t("productPage.redirectingToCart")}</small>
+              <small>{t('productPage.redirectingToCart')}</small>
             </div>
           </div>
         </div>

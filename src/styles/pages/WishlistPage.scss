@@ -1,0 +1,595 @@
+/* ================================================= */
+/* WISHLIST PAGE - RESPONSIVE STYLES */
+/* ================================================= */
+
+/* Utility for text truncation to 2 lines */
+.text-truncate-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ========== MOBILE FIRST (320px - 479px) ========== */
+@media screen and (min-width: 320px) and (max-width: 479px) {
+  .wishlist-container {
+    margin: 0 -5px;
+
+    & > * {
+      padding: 0 5px;
+    }
+  }
+
+  .card {
+    border-radius: 0.5rem;
+
+    &-body {
+      padding: 0.75rem;
+    }
+  }
+
+  .table {
+    font-size: 0.85rem;
+
+    th,
+    td {
+      padding: 0.5rem 0.25rem;
+    }
+  }
+
+  .btn-sm {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.75rem;
+  }
+
+  .badge {
+    padding: 0.35rem 0.5rem;
+    font-size: 0.7rem;
+  }
+
+  .sticky-lg-top {
+    position: sticky;
+    top: 70px;
+    z-index: 10;
+  }
+}
+
+/* ========== MOBILE REGULAR (480px - 599px) ========== */
+@media screen and (min-width: 480px) and (max-width: 599px) {
+  .wishlist-container {
+    margin: 0 -6px;
+
+    & > * {
+      padding: 0 6px;
+    }
+  }
+
+  .card {
+    border-radius: 0.6rem;
+
+    &-body {
+      padding: 0.875rem;
+    }
+  }
+
+  .table {
+    font-size: 0.9rem;
+
+    th,
+    td {
+      padding: 0.6rem 0.3rem;
+    }
+  }
+
+  .btn-sm {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.8rem;
+  }
+
+  .badge {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.75rem;
+  }
+
+  .sticky-lg-top {
+    position: sticky;
+    top: 75px;
+    z-index: 10;
+  }
+}
+
+/* ========== TABLET SMALL (600px - 767px) ========== */
+@media screen and (min-width: 600px) and (max-width: 767px) {
+  .wishlist-container {
+    margin: 0 -8px;
+
+    & > * {
+      padding: 0 8px;
+    }
+  }
+
+  .card {
+    border-radius: 0.75rem;
+
+    &-body {
+      padding: 1rem;
+    }
+  }
+
+  .table {
+    font-size: 0.95rem;
+
+    th,
+    td {
+      padding: 0.75rem 0.5rem;
+    }
+  }
+
+  .btn-sm {
+    padding: 0.45rem 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .badge {
+    padding: 0.45rem 0.65rem;
+    font-size: 0.8rem;
+  }
+
+  .sticky-lg-top {
+    position: sticky;
+    top: 80px;
+    z-index: 10;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* ========== TABLET MEDIUM (768px - 1023px) ========== */
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .wishlist-container {
+    margin: 0 -10px;
+
+    & > * {
+      padding: 0 10px;
+    }
+  }
+
+  .card {
+    border-radius: 0.75rem;
+
+    &-body {
+      padding: 1.125rem;
+    }
+  }
+
+  .table {
+    font-size: 0.95rem;
+
+    th,
+    td {
+      padding: 0.75rem;
+    }
+
+    &-responsive {
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+
+  .btn-sm {
+    padding: 0.5rem 0.9rem;
+    font-size: 0.9rem;
+  }
+
+  .badge {
+    padding: 0.5rem 0.7rem;
+    font-size: 0.85rem;
+  }
+
+  .sticky-lg-top {
+    position: sticky;
+    top: 90px;
+    z-index: 10;
+  }
+
+  .breadcrumb {
+    font-size: 0.95rem;
+  }
+}
+
+/* ========== DESKTOP (1024px - 1439px) ========== */
+@media screen and (min-width: 1024px) and (max-width: 1439px) {
+  .wishlist-container {
+    margin: 0 -12px;
+
+    & > * {
+      padding: 0 12px;
+    }
+  }
+
+  .card {
+    border-radius: 0.875rem;
+
+    &-body {
+      padding: 1.25rem;
+    }
+  }
+
+  .table {
+    font-size: 1rem;
+
+    th,
+    td {
+      padding: 0.875rem;
+    }
+
+    &-hover tbody tr:hover {
+      background-color: #f8f9fa;
+    }
+  }
+
+  .btn-sm {
+    padding: 0.55rem 1rem;
+    font-size: 0.95rem;
+    min-height: 42px;
+  }
+
+  .badge {
+    padding: 0.55rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .sticky-lg-top {
+    position: sticky;
+    top: 100px;
+    z-index: 10;
+  }
+
+  .breadcrumb {
+    font-size: 1rem;
+  }
+
+  img {
+    transition: transform 0.2s ease-in-out;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}
+
+/* ========== DESKTOP COMPLETO (1440px - 1919px) ========== */
+@media screen and (min-width: 1440px) and (max-width: 1919px) {
+  .wishlist-container {
+    margin: 0 -15px;
+
+    & > * {
+      padding: 0 15px;
+    }
+  }
+
+  .card {
+    border-radius: 1rem;
+
+    &-body {
+      padding: 1.5rem;
+    }
+  }
+
+  .table {
+    font-size: 1.05rem;
+
+    th,
+    td {
+      padding: 1rem;
+    }
+
+    &-hover tbody tr:hover {
+      background-color: #f8f9fa;
+      transition: background-color 0.2s ease-in-out;
+    }
+  }
+
+  .btn-sm {
+    padding: 0.6rem 1.1rem;
+    font-size: 1rem;
+    min-height: 44px;
+  }
+
+  .badge {
+    padding: 0.6rem 0.9rem;
+    font-size: 0.95rem;
+  }
+
+  .sticky-lg-top {
+    position: sticky;
+    top: 110px;
+    z-index: 10;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+  }
+
+  h5 {
+    font-size: 1.4rem;
+  }
+
+  .breadcrumb {
+    font-size: 1.05rem;
+  }
+}
+
+/* ========== TV (1920px - 2559px) ========== */
+@media screen and (min-width: 1920px) and (max-width: 2559px) {
+  .wishlist-container {
+    margin: 0 -20px;
+
+    & > * {
+      padding: 0 20px;
+    }
+  }
+
+  .card {
+    border-radius: 1.25rem;
+
+    &-body {
+      padding: 2rem;
+    }
+  }
+
+  .table {
+    font-size: 1.2rem;
+
+    th,
+    td {
+      padding: 1.25rem;
+    }
+
+    &-hover tbody tr:hover {
+      background-color: #f8f9fa;
+      transition: background-color 0.3s ease-in-out;
+    }
+  }
+
+  .btn-sm {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+    min-height: 50px;
+    border-radius: 0.5rem;
+  }
+
+  .btn {
+    min-height: 55px;
+  }
+
+  .badge {
+    padding: 0.75rem 1.1rem;
+    font-size: 1.1rem;
+  }
+
+  .sticky-lg-top {
+    position: sticky;
+    top: 150px;
+    z-index: 10;
+  }
+
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+  }
+
+  h5 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+  }
+
+  h6 {
+    font-size: 1.3rem;
+  }
+
+  .breadcrumb {
+    font-size: 1.2rem;
+    padding: 1.5rem;
+  }
+
+  img {
+    transition: transform 0.3s ease-in-out;
+
+    &:hover {
+      transform: scale(1.08);
+    }
+  }
+
+  small {
+    font-size: 0.95rem;
+  }
+}
+
+/* ========== TV 4K (2560px+) ========== */
+@media screen and (min-width: 2560px) {
+  .wishlist-container {
+    margin: 0 -25px;
+
+    & > * {
+      padding: 0 25px;
+    }
+  }
+
+  .card {
+    border-radius: 1.5rem;
+
+    &-body {
+      padding: 2.5rem;
+    }
+  }
+
+  .table {
+    font-size: 1.4rem;
+
+    th,
+    td {
+      padding: 1.5rem;
+    }
+
+    &-hover tbody tr:hover {
+      background-color: #f8f9fa;
+    }
+  }
+
+  .btn-sm {
+    padding: 1rem 2rem;
+    font-size: 1.3rem;
+    min-height: 65px;
+    border-radius: 0.75rem;
+  }
+
+  .btn {
+    min-height: 70px;
+    font-size: 1.4rem;
+  }
+
+  .badge {
+    padding: 1rem 1.5rem;
+    font-size: 1.3rem;
+  }
+
+  .sticky-lg-top {
+    position: sticky;
+    top: 180px;
+    z-index: 10;
+  }
+
+  h1 {
+    font-size: 3.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  h5 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  h6 {
+    font-size: 1.6rem;
+  }
+
+  .breadcrumb {
+    font-size: 1.4rem;
+    padding: 2rem;
+  }
+
+  img {
+    border-radius: 0.75rem;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+
+  small {
+    font-size: 1.1rem;
+  }
+
+  .container {
+    max-width: 100%;
+    padding: 0 40px;
+  }
+}
+
+/* ========== LANDSCAPE ORIENTATION ========== */
+@media screen and (orientation: landscape) and (max-height: 600px) {
+  .card {
+    &-body {
+      padding: 0.75rem;
+    }
+  }
+
+  .table {
+    font-size: 0.85rem;
+
+    th,
+    td {
+      padding: 0.4rem 0.25rem;
+    }
+  }
+
+  .btn-sm {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.75rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .breadcrumb {
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* ========== TOUCH DEVICES ========== */
+@media (hover: none) and (pointer: coarse) {
+  .btn-sm,
+  .btn {
+    min-height: 44px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .table tbody tr {
+    cursor: pointer;
+  }
+
+  img {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+}
+
+/* ========== HIGH DPI DISPLAYS ========== */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  img {
+    image-rendering: -webkit-optimize-contrast;
+  }
+}
+
+/* ========== DARK MODE ========== */
+@media (prefers-color-scheme: dark) {
+  .table-hover tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  .card {
+    background-color: #1e1e1e;
+    border-color: #333;
+  }
+
+  .breadcrumb {
+    background-color: #2a2a2a;
+  }
+}
+
+/* ========== PRINT STYLES ========== */
+@media print {
+  .btn,
+  .btn-sm,
+  .sticky-lg-top,
+  .breadcrumb {
+    display: none !important;
+  }
+
+  .table {
+    font-size: 0.9rem;
+  }
+
+  .card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}

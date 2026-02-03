@@ -1,0 +1,643 @@
+/* ================================================= */
+/* RESPONSIVE DESIGN - MOBILE, TABLET, DESKTOP, TV */
+/* ================================================= */
+
+/* ========== MOBILE FIRST APPROACH ========== */
+
+/* ========== EXTRA SMALL DEVICES (320px - 479px) ========== */
+@media screen and (min-width: 320px) and (max-width: 479px) {
+  :root {
+    --spacing-md: 0.75rem;
+    --spacing-lg: 1rem;
+  }
+
+  html {
+    font-size: 14px;
+  }
+
+  body {
+    padding: 0;
+    margin: 0;
+  }
+
+  h1 {
+    font-size: 1.5rem !important;
+  }
+
+  h2 {
+    font-size: 1.25rem !important;
+  }
+
+  h3 {
+    font-size: 1.1rem !important;
+  }
+
+  p {
+    font-size: 0.9rem;
+  }
+
+  .container {
+    padding: 0 10px;
+  }
+
+  .container-fluid {
+    padding: 0 8px;
+  }
+
+  .btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    min-height: 36px;
+  }
+
+  .card {
+    margin-bottom: 0.75rem;
+  }
+
+  .card-body {
+    padding: 0.75rem;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* ========== SMALL DEVICES - MOBILE (480px - 599px) ========== */
+@media screen and (min-width: 480px) and (max-width: 599px) {
+  :root {
+    --spacing-md: 0.875rem;
+    --spacing-lg: 1.125rem;
+  }
+
+  html {
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: 1.75rem !important;
+  }
+
+  h2 {
+    font-size: 1.4rem !important;
+  }
+
+  h3 {
+    font-size: 1.2rem !important;
+  }
+
+  .container {
+    padding: 0 12px;
+  }
+
+  .btn {
+    padding: 0.45rem 0.9rem;
+    font-size: 0.9rem;
+    min-height: 38px;
+  }
+
+  .row {
+    margin-right: -0.625rem;
+    margin-left: -0.625rem;
+
+    & > * {
+      padding-right: 0.625rem;
+      padding-left: 0.625rem;
+    }
+  }
+}
+
+/* ========== TABLET SMALL (600px - 767px) ========== */
+@media screen and (min-width: 600px) and (max-width: 767px) {
+  :root {
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+  }
+
+  html {
+    font-size: 15px;
+  }
+
+  h1 {
+    font-size: 2rem !important;
+  }
+
+  h2 {
+    font-size: 1.6rem !important;
+  }
+
+  h3 {
+    font-size: 1.3rem !important;
+  }
+
+  .container {
+    max-width: 540px;
+    padding: 0 15px;
+  }
+
+  .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.95rem;
+    min-height: 40px;
+  }
+
+  .row {
+    margin-right: -0.75rem;
+    margin-left: -0.75rem;
+
+    & > * {
+      padding-right: 0.75rem;
+      padding-left: 0.75rem;
+    }
+  }
+
+  .col-sm-6,
+  .col-md-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+
+  .col-sm-4,
+  .col-md-4 {
+    flex: 0 0 33.333%;
+    max-width: 33.333%;
+  }
+}
+
+/* ========== TABLET MEDIUM (768px - 1023px) ========== */
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  :root {
+    --spacing-md: 1.125rem;
+    --spacing-lg: 1.75rem;
+  }
+
+  html {
+    font-size: 15px;
+  }
+
+  h1 {
+    font-size: 2.25rem !important;
+  }
+
+  h2 {
+    font-size: 1.75rem !important;
+  }
+
+  h3 {
+    font-size: 1.4rem !important;
+  }
+
+  .container {
+    max-width: 720px;
+    padding: 0 20px;
+  }
+
+  .btn {
+    padding: 0.55rem 1.1rem;
+    font-size: 1rem;
+    min-height: 42px;
+  }
+
+  .row {
+    margin-right: -1rem;
+    margin-left: -1rem;
+
+    & > * {
+      padding-right: 1rem;
+      padding-left: 1rem;
+    }
+  }
+
+  .col-md-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+
+  .col-md-4 {
+    flex: 0 0 33.333%;
+    max-width: 33.333%;
+  }
+
+  .col-md-3 {
+    flex: 0 0 25%;
+    max-width: 25%;
+  }
+
+  /* Products grid */
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+
+  .carousel-inner {
+    max-height: 400px;
+  }
+}
+
+/* ========== LAPTOP/DESKTOP (1024px - 1439px) ========== */
+@media screen and (min-width: 1024px) and (max-width: 1439px) {
+  :root {
+    --spacing-md: 1.25rem;
+    --spacing-lg: 2rem;
+  }
+
+  html {
+    font-size: 16px;
+  }
+
+  h1 {
+    font-size: 2.5rem !important;
+  }
+
+  h2 {
+    font-size: 2rem !important;
+  }
+
+  h3 {
+    font-size: 1.5rem !important;
+  }
+
+  .container {
+    max-width: 960px;
+    padding: 0 30px;
+  }
+
+  .btn {
+    padding: 0.6rem 1.5rem;
+    font-size: 1rem;
+    min-height: 44px;
+  }
+
+  .row {
+    margin-right: -1.25rem;
+    margin-left: -1.25rem;
+
+    & > * {
+      padding-right: 1.25rem;
+      padding-left: 1.25rem;
+    }
+  }
+
+  .col-lg-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+
+  .col-lg-4 {
+    flex: 0 0 33.333%;
+    max-width: 33.333%;
+  }
+
+  .col-lg-3 {
+    flex: 0 0 25%;
+    max-width: 25%;
+  }
+
+  .col-lg-2 {
+    flex: 0 0 16.666%;
+    max-width: 16.666%;
+  }
+
+  /* Products grid */
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .carousel-inner {
+    max-height: 600px;
+  }
+}
+
+/* ========== FULL DESKTOP (1440px - 1919px) ========== */
+@media screen and (min-width: 1440px) and (max-width: 1919px) {
+  :root {
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2.5rem;
+  }
+
+  html {
+    font-size: 16px;
+  }
+
+  h1 {
+    font-size: 3rem !important;
+  }
+
+  h2 {
+    font-size: 2.25rem !important;
+  }
+
+  h3 {
+    font-size: 1.75rem !important;
+  }
+
+  .container {
+    max-width: 1200px;
+    padding: 0 40px;
+  }
+
+  .btn {
+    padding: 0.7rem 1.8rem;
+    font-size: 1.05rem;
+    min-height: 46px;
+  }
+
+  .row {
+    margin-right: -1.5rem;
+    margin-left: -1.5rem;
+
+    & > * {
+      padding-right: 1.5rem;
+      padding-left: 1.5rem;
+    }
+  }
+
+  .col-xl-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+
+  .col-xl-4 {
+    flex: 0 0 33.333%;
+    max-width: 33.333%;
+  }
+
+  .col-xl-3 {
+    flex: 0 0 25%;
+    max-width: 25%;
+  }
+
+  .col-xl-2 {
+    flex: 0 0 16.666%;
+    max-width: 16.666%;
+  }
+
+  /* Products grid */
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 2rem;
+  }
+
+  .carousel-inner {
+    max-height: 700px;
+  }
+}
+
+/* ========== TV RESOLUTION (1920px - 2559px) ========== */
+@media screen and (min-width: 1920px) and (max-width: 2559px) {
+  :root {
+    --spacing-md: 2rem;
+    --spacing-lg: 3rem;
+  }
+
+  html {
+    font-size: 18px;
+  }
+
+  h1 {
+    font-size: 3.5rem !important;
+  }
+
+  h2 {
+    font-size: 2.75rem !important;
+  }
+
+  h3 {
+    font-size: 2rem !important;
+  }
+
+  body {
+    line-height: 1.8;
+  }
+
+  .container {
+    max-width: 1400px;
+    padding: 0 60px;
+  }
+
+  .btn {
+    padding: 0.9rem 2.2rem;
+    font-size: 1.15rem;
+    min-height: 52px;
+  }
+
+  .row {
+    margin-right: -2rem;
+    margin-left: -2rem;
+
+    & > * {
+      padding-right: 2rem;
+      padding-left: 2rem;
+    }
+  }
+
+  .col-tv-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+
+  .col-tv-4 {
+    flex: 0 0 33.333%;
+    max-width: 33.333%;
+  }
+
+  .col-tv-3 {
+    flex: 0 0 25%;
+    max-width: 25%;
+  }
+
+  /* Products grid */
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 2.5rem;
+  }
+
+  .carousel-inner {
+    max-height: 900px;
+  }
+
+  .card {
+    padding: 1.5rem;
+  }
+
+  .card-body {
+    padding: 1.5rem;
+  }
+
+  /* Larger touch targets for TV remotes */
+  button,
+  .btn,
+  input,
+  select,
+  .form-control {
+    min-height: 50px;
+  }
+
+  a {
+    padding: 0.5rem;
+  }
+}
+
+/* ========== 4K TV RESOLUTION (2560px+) ========== */
+@media screen and (min-width: 2560px) {
+  :root {
+    --spacing-md: 2.5rem;
+    --spacing-lg: 3.5rem;
+  }
+
+  html {
+    font-size: 20px;
+  }
+
+  h1 {
+    font-size: 4rem !important;
+  }
+
+  h2 {
+    font-size: 3.25rem !important;
+  }
+
+  h3 {
+    font-size: 2.5rem !important;
+  }
+
+  body {
+    line-height: 2;
+  }
+
+  .container {
+    max-width: 1800px;
+    padding: 0 80px;
+  }
+
+  .btn {
+    padding: 1rem 2.5rem;
+    font-size: 1.3rem;
+    min-height: 60px;
+  }
+
+  .row {
+    margin-right: -2.5rem;
+    margin-left: -2.5rem;
+
+    & > * {
+      padding-right: 2.5rem;
+      padding-left: 2.5rem;
+    }
+  }
+
+  /* Products grid */
+  .products-grid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 3rem;
+  }
+
+  .carousel-inner {
+    max-height: 1000px;
+  }
+
+  .card {
+    padding: 2rem;
+  }
+
+  .card-body {
+    padding: 2rem;
+  }
+
+  /* Extra large touch targets for 4K */
+  button,
+  .btn,
+  input,
+  select,
+  .form-control {
+    min-height: 65px;
+  }
+
+  a {
+    padding: 1rem;
+  }
+}
+
+/* ========== ORIENTATION SPECIFIC ========== */
+
+/* Landscape orientation adjustments */
+@media screen and (orientation: landscape) {
+  @media (max-width: 768px) {
+    body {
+      padding-top: 60px;
+    }
+
+    .carousel-inner {
+      max-height: 300px;
+    }
+
+    h1 {
+      font-size: 1.5rem !important;
+    }
+
+    h2 {
+      font-size: 1.25rem !important;
+    }
+  }
+}
+
+/* Portrait orientation adjustments */
+@media screen and (orientation: portrait) {
+  @media (max-width: 768px) {
+    .products-grid {
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+  }
+}
+
+/* ========== TOUCH DEVICE OPTIMIZATIONS ========== */
+@media (hover: none) and (pointer: coarse) {
+  /* Increase touch target sizes */
+  button,
+  .btn,
+  a {
+    min-height: 48px;
+    min-width: 48px;
+  }
+
+  /* Disable hover effects on touch devices */
+  .card:hover,
+  .btn:hover,
+  a:hover {
+    transform: none;
+  }
+
+  /* Optimize for touch interactions */
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+/* ========== HIGH DPI DISPLAYS ========== */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  body {
+    border-width: 0.5px;
+  }
+}
+
+/* ========== PRINT STYLES ========== */
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+
+  .btn,
+  nav,
+  footer {
+    display: none;
+  }
+
+  .container {
+    max-width: 100%;
+  }
+}
