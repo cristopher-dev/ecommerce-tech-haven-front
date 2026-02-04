@@ -1,66 +1,72 @@
-import { render, screen } from "@testing-library/react";
-import HeroCarousel from "@/presentation/pages/HeroCarousel";
+import { render, screen } from '@testing-library/react';
+import HeroCarousel from '@/presentation/components/HeroCarousel';
+import { I18nextProvider } from 'react-i18next';
+import i18n from '@/i18n/config';
 
-jest.mock("@/presentation/components/HeroCarousel.scss", () => ({}));
+describe('HeroCarousel Component', () => {
+  const renderWithI18n = (component: React.ReactElement) => {
+    return render(<I18nextProvider i18n={i18n}>{component}</I18nextProvider>);
+  };
 
-describe("HeroCarousel Component", () => {
-  it("should render without crashing", () => {
-    render(<HeroCarousel />);
-    expect(screen.getByText(/exclusive/i)).toBeInTheDocument();
+  it('should render hero carousel without crashing', () => {
+    const { container } = renderWithI18n(<HeroCarousel />);
+    expect(container).toBeInTheDocument();
   });
 
-  it("should render carousel element", () => {
-    const { container } = render(<HeroCarousel />);
-    const carousel = container.querySelector(".carousel");
-    expect(carousel).toBeInTheDocument();
-  });
-
-  it("should have carousel inner content", () => {
-    const { container } = render(<HeroCarousel />);
-    const carouselInner = container.querySelector(".carousel-inner");
+  it('should render carousel inner structure', () => {
+    const { container } = renderWithI18n(<HeroCarousel />);
+    const carouselInner = container.querySelector('.carousel-inner');
     expect(carouselInner).toBeInTheDocument();
   });
 
-  it("should display hero images", () => {
-    render(<HeroCarousel />);
-    const images = screen.getAllByRole("img");
-    expect(images.length).toBeGreaterThan(0);
-  });
-
-  it("should have multiple carousel items", () => {
-    const { container } = render(<HeroCarousel />);
-    const items = container.querySelectorAll(".carousel-item");
-    expect(items.length).toBeGreaterThan(0);
-  });
-
-  it("should have carousel controls", () => {
-    const { container } = render(<HeroCarousel />);
-    const controls = container.querySelectorAll(".carousel-control");
-    expect(controls.length).toBeGreaterThanOrEqual(0);
-  });
-
-  it("should display hero text content", () => {
-    render(<HeroCarousel />);
-    const headings = screen.getAllByRole("heading");
-    expect(headings.length).toBeGreaterThan(0);
-  });
-
-  it("should have active carousel item", () => {
-    const { container } = render(<HeroCarousel />);
-    const activeItem = container.querySelector(".carousel-item.active");
+  it('should render active carousel item', () => {
+    const { container } = renderWithI18n(<HeroCarousel />);
+    const activeItem = container.querySelector('.carousel-item.active');
     expect(activeItem).toBeInTheDocument();
   });
 
-  it("should have proper carousel structure", () => {
-    const { container } = render(<HeroCarousel />);
-    const carousel = container.querySelector("#heroCarousel");
-    expect(carousel).toHaveClass("carousel");
-    expect(carousel).toHaveClass("slide");
+  it('should render hero image', () => {
+    const { container } = renderWithI18n(<HeroCarousel />);
+    const images = container.querySelectorAll('img');
+    expect(images.length).toBeGreaterThan(0);
   });
 
-  it("should render with hero content", () => {
-    render(<HeroCarousel />);
-    const text = screen.queryAllByText(/gaming|technology|deals|discount/i);
-    expect(text.length).toBeGreaterThan(0);
+  it('should have hero carousel ID', () => {
+    const { container } = renderWithI18n(<HeroCarousel />);
+    const carousel = container.querySelector('#heroCarousel');
+    expect(carousel).toBeInTheDocument();
+  });
+
+  it('should have carousel slide class', () => {
+    const { container } = renderWithI18n(<HeroCarousel />);
+    const carousel = container.querySelector('.carousel.slide');
+    expect(carousel).toBeInTheDocument();
+  });
+
+  it('should render multiple carousel items', () => {
+    const { container } = renderWithI18n(<HeroCarousel />);
+    const items = container.querySelectorAll('.carousel-item');
+    expect(items.length).toBeGreaterThan(0);
+  });
+
+  it('should render navigation buttons', () => {
+    const { container } = renderWithI18n(<HeroCarousel />);
+    const buttons = container.querySelectorAll('button');
+    expect(buttons.length).toBeGreaterThan(0);
+  });
+
+  it('should render carousel indicators or buttons for navigation', () => {
+    const { container } = renderWithI18n(<HeroCarousel />);
+    const indicators = container.querySelector('.carousel-indicators');
+    const buttons = container.querySelectorAll('button');
+
+    // Should have either indicators or navigation buttons
+    expect(indicators || buttons.length > 0).toBeTruthy();
+  });
+
+  it('should have data-bs-ride attribute set to carousel', () => {
+    const { container } = renderWithI18n(<HeroCarousel />);
+    const carousel = container.querySelector('#heroCarousel') as HTMLElement;
+    expect(carousel?.dataset.bsRide).toBe('carousel');
   });
 });

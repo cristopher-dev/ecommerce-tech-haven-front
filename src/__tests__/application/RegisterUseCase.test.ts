@@ -1,5 +1,4 @@
 import { RegisterUseCase, IAuthRepository } from "@/application/useCases/RegisterUseCase";
-import { User } from "@/domain/entities/User";
 
 describe("RegisterUseCase", () => {
   let registerUseCase: RegisterUseCase;
@@ -38,7 +37,7 @@ describe("RegisterUseCase", () => {
 
     const result = await registerUseCase.execute(request);
 
-    expect(result).toBeInstanceOf(User);
+    expect(result).toEqual(mockUserProfile);
     expect(result.email).toBe(request.email);
     expect(mockAuthRepository.register).toHaveBeenCalledWith(request);
   });
@@ -57,35 +56,7 @@ describe("RegisterUseCase", () => {
     );
   });
 
-  it("should throw error when passwords do not match", async () => {
-    const request = {
-      email: "test@example.com",
-      firstName: "John",
-      lastName: "Doe",
-      password: "password123",
-      confirmPassword: "password456",
-    };
-
-    await expect(registerUseCase.execute(request)).rejects.toThrow(
-      "Passwords do not match",
-    );
-  });
-
-  it("should throw error for short password", async () => {
-    const request = {
-      email: "test@example.com",
-      firstName: "John",
-      lastName: "Doe",
-      password: "pass",
-      confirmPassword: "pass",
-    };
-
-    await expect(registerUseCase.execute(request)).rejects.toThrow(
-      "Password must be at least 6 characters",
-    );
-  });
-
-  it("should throw error when firstName is missing", async () => {
+  it("should throw error for missing names", async () => {
     const request = {
       email: "test@example.com",
       firstName: "",
@@ -96,6 +67,34 @@ describe("RegisterUseCase", () => {
 
     await expect(registerUseCase.execute(request)).rejects.toThrow(
       "First name and last name are required",
+    );
+  });
+
+  it("should throw error for short password", async () => {
+    const request = {
+      email: "test@example.com",
+      firstName: "John",
+      lastName: "Doe",
+      password: "short",
+      confirmPassword: "short",
+    };
+
+    await expect(registerUseCase.execute(request)).rejects.toThrow(
+      "Password must be at least 6 characters",
+    );
+  });
+
+  it("should throw error for mismatched passwords", async () => {
+    const request = {
+      email: "test@example.com",
+      firstName: "John",
+      lastName: "Doe",
+      password: "password123",
+      confirmPassword: "different",
+    };
+
+    await expect(registerUseCase.execute(request)).rejects.toThrow(
+      "Passwords do not match",
     );
   });
 });

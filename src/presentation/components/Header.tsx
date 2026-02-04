@@ -32,8 +32,11 @@ const Header: React.FC = () => {
 
   const handleMockLogin = async () => {
     try {
-      const demoEmail = import.meta.env.VITE_DEMO_EMAIL || 'admin@techhaven.com';
-      const demoPassword = import.meta.env.VITE_DEMO_PASSWORD || 'admin123';
+      const demoEmail =
+        (typeof process !== 'undefined' ? process.env.VITE_DEMO_EMAIL : undefined) ||
+        'admin@techhaven.com';
+      const demoPassword =
+        (typeof process !== 'undefined' ? process.env.VITE_DEMO_PASSWORD : undefined) || 'admin123';
 
       const response = await fetch('http://localhost:3000/api/auth/login', {
         method: 'POST',
