@@ -253,7 +253,7 @@ const CheckoutDeliveryPage: React.FC = () => {
           <progress value={33} max={100} className="w-100 progress" />
         </div>
         <h2 className="checkout-title">{t('checkoutDelivery.title')}</h2>
-        <form onSubmit={handleDeliverySubmit} className="checkout-form">
+        <form onSubmit={handleDeliverySubmit} className="checkout-form" noValidate>
           <div className="form-row">
             <RowFormField
               name="firstName"
