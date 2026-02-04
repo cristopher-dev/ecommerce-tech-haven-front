@@ -9,9 +9,9 @@ services:
     ports:
       - '8080:80'
     networks:
-      nginx_network:
+      docker_nginx_network:
         ipv4_address: 172.22.0.14
 
 networks:
-  nginx_network:
+  docker_nginx_network:
     external: true
