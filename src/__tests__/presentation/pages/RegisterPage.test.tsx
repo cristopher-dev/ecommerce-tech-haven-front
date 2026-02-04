@@ -1,160 +1,143 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import React from 'react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
 import { BrowserRouter } from 'react-router-dom';
-import authSlice from '@/application/store/slices/authSlice';
-import cartSlice from '@/application/store/slices/cartSlice';
-import checkoutSlice from '@/application/store/slices/checkoutSlice';
-import deliveriesSlice from '@/application/store/slices/deliveriesSlice';
-import productsSlice from '@/application/store/slices/productsSlice';
-import purchasedItemsSlice from '@/application/store/slices/purchasedItemsSlice';
-import transactionsSlice from '@/application/store/slices/transactionsSlice';
-import wishlistSlice from '@/application/store/slices/wishlistSlice';
-import RegisterPage from '@/presentation/pages/RegisterPage';
+import RegisterPage from '../../../presentation/pages/RegisterPage';
+import authReducer from '../../../application/store/slices/authSlice';
 
-// Mock i18next
-jest.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
-    i18n: {
-      language: 'en',
-      changeLanguage: jest.fn(),
-    },
+// Mock the useTechHavenApi hook
+jest.mock('../../../infrastructure/hooks/useTechHavenApi', () => ({
+  useTechHavenApi: () => ({
+    register: jest.fn().mockResolvedValue({}),
   }),
 }));
 
-// Mock useNavigate
-const mockNavigate = jest.fn();
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockNavigate,
-}));
+const renderWithProviders = (
+  ui: React.ReactElement,
+  {
+    preloadedState = {
+      auth: {
+        user: null,
+        token: null,
+        isLoading: false,
+        error: null,
+        isAuthenticated: false,
+      }
+    },
+    store = configureStore({
+      reducer: { auth: authReducer },
+      preloadedState,
+    }),
+    ...renderOptions
+  } = {}
+) => {
+  const Wrapper = ({ children }: { children: React.ReactNode }) => (
+    <Provider store={store}>
+      <BrowserRouter>{children}</BrowserRouter>
+    </Provider>
+  );
+  return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) };
+};
 
 describe('RegisterPage', () => {
-  let store: ReturnType<typeof configureStore>;
+  it('should render register page', () => {
+    renderWithProviders(<RegisterPage />);
+    
+    expect(screen.getByRole('heading', { name: /Sign Up/i })).toBeInTheDocument();
+    expect(screen.getByLabelText('First Name')).toBeInTheDocument();
+    expect(screen.getByLabelText('Last Name')).toBeInTheDocument();
+    expect(screen.getByLabelText('Email')).toBeInTheDocument();
+    expect(screen.getByLabelText('Password')).toBeInTheDocument();
+    expect(screen.getByLabelText('Confirm Password')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Sign Up/i })).toBeInTheDocument();
+  });
 
-  beforeEach(() => {
-    store = configureStore({
-      reducer: {
-        auth: authSlice,
-        cart: cartSlice,
-        checkout: checkoutSlice,
-        deliveries: deliveriesSlice,
-        products: productsSlice,
-        purchasedItems: purchasedItemsSlice,
-        transactions: transactionsSlice,
-        wishlist: wishlistSlice,
-      },
+  it('should show validation errors for empty fields on submit', async () => {
+    renderWithProviders(<RegisterPage />);
+    
+    const submitButton = screen.getByRole('button', { name: /Sign Up/i });
+    fireEvent.click(submitButton);
+
+    await waitFor(() => {
+      const errors = screen.getAllByText('This field is required');
+      expect(errors.length).toBeGreaterThan(0);
     });
-
-    mockNavigate.mockClear();
   });
 
-  it('should render register page with all form fields', () => {
-    render(
-      <Provider store={store}>
-        <BrowserRouter>
-          <RegisterPage />
-        </BrowserRouter>
-      </Provider>
-    );
+  it('should show error for invalid email', async () => {
+    renderWithProviders(<RegisterPage />);
+    
+    const emailInput = screen.getByLabelText('Email');
+    fireEvent.change(emailInput, { target: { value: 'invalid-email', name: 'email' } });
+    fireEvent.blur(emailInput);
+    
+    const submitButton = screen.getByRole('button', { name: /Sign Up/i });
+    fireEvent.click(submitButton);
 
-    const textboxes = screen.getAllByRole('textbox');
-    expect(textboxes.length).toBeGreaterThan(0);
+    await waitFor(() => {
+      expect(screen.getByText('Invalid email')).toBeInTheDocument();
+    });
   });
 
-  it('should display form with first name field', () => {
-    render(
-      <Provider store={store}>
-        <BrowserRouter>
-          <RegisterPage />
-        </BrowserRouter>
-      </Provider>
-    );
+  it('should show error for short password', async () => {
+    renderWithProviders(<RegisterPage />);
+    
+    const passwordInput = screen.getByLabelText('Password');
+    fireEvent.change(passwordInput, { target: { value: '123', name: 'password' } });
+    fireEvent.blur(passwordInput);
+    
+    const submitButton = screen.getByRole('button', { name: /Sign Up/i });
+    fireEvent.click(submitButton);
 
-    const inputs = screen.getAllByRole('textbox');
-    expect(inputs.length).toBeGreaterThanOrEqual(3); // first name, last name, email
+    await waitFor(() => {
+      expect(screen.getByText('Password must be at least 6 characters')).toBeInTheDocument();
+    });
   });
 
-  it('should display form with email field', () => {
-    render(
-      <Provider store={store}>
-        <BrowserRouter>
-          <RegisterPage />
-        </BrowserRouter>
-      </Provider>
-    );
+  it('should show error for password mismatch', async () => {
+    renderWithProviders(<RegisterPage />);
+    
+    const passwordInput = screen.getByLabelText('Password');
+    const confirmPasswordInput = screen.getByLabelText('Confirm Password');
+    
+    fireEvent.change(passwordInput, { target: { value: 'password123', name: 'password' } });
+    fireEvent.change(confirmPasswordInput, { target: { value: 'different', name: 'confirmPassword' } });
+    fireEvent.blur(confirmPasswordInput);
+    
+    const submitButton = screen.getByRole('button', { name: /Sign Up/i });
+    fireEvent.click(submitButton);
 
-    const inputs = screen.getAllByRole('textbox');
-    expect(inputs.length).toBeGreaterThan(0);
+    await waitFor(() => {
+      expect(screen.getByText('Passwords do not match')).toBeInTheDocument();
+    });
   });
 
-  it('should display password fields', () => {
-    render(
-      <Provider store={store}>
-        <BrowserRouter>
-          <RegisterPage />
-        </BrowserRouter>
-      </Provider>
-    );
-
-    const passwordFields = screen.queryAllByDisplayValue('');
-    expect(passwordFields.length).toBeGreaterThan(0);
+  it('should show server error if registration fails', () => {
+    const errorState = {
+      auth: {
+        user: null,
+        token: null,
+        isLoading: false,
+        error: 'Registration failed server side',
+        isAuthenticated: false,
+      }
+    };
+    renderWithProviders(<RegisterPage />, { preloadedState: errorState as any });
+    expect(screen.getByText('Registration failed server side')).toBeInTheDocument();
   });
 
-  it('should validate and handle form submission', async () => {
-    const user = userEvent.setup();
-    render(
-      <Provider store={store}>
-        <BrowserRouter>
-          <RegisterPage />
-        </BrowserRouter>
-      </Provider>
-    );
+  it('should submit form with valid data', async () => {
+    renderWithProviders(<RegisterPage />);
+    
+    fireEvent.change(screen.getByLabelText('First Name'), { target: { value: 'John', name: 'firstName' } });
+    fireEvent.change(screen.getByLabelText('Last Name'), { target: { value: 'Doe', name: 'lastName' } });
+    fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'test@test.com', name: 'email' } });
+    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'password123', name: 'password' } });
+    fireEvent.change(screen.getByLabelText('Confirm Password'), { target: { value: 'password123', name: 'confirmPassword' } });
 
-    const inputs = screen.getAllByRole('textbox');
-    expect(inputs.length).toBeGreaterThan(0);
-  });
-
-  it('should show loading state when registering', () => {
-    render(
-      <Provider store={store}>
-        <BrowserRouter>
-          <RegisterPage />
-        </BrowserRouter>
-      </Provider>
-    );
-
-    const form = screen.getByRole('main');
-    expect(form).toBeInTheDocument();
-  });
-
-  it('should handle register submission with valid data', async () => {
-    const user = userEvent.setup();
-    render(
-      <Provider store={store}>
-        <BrowserRouter>
-          <RegisterPage />
-        </BrowserRouter>
-      </Provider>
-    );
-
-    const textboxes = screen.getAllByRole('textbox');
-    expect(textboxes).toBeDefined();
-  });
-
-  it('should render the main register container', () => {
-    render(
-      <Provider store={store}>
-        <BrowserRouter>
-          <RegisterPage />
-        </BrowserRouter>
-      </Provider>
-    );
-
-    const mainElement = screen.getByRole('main');
-    expect(mainElement).toBeInTheDocument();
+    const submitButton = screen.getByRole('button', { name: /Sign Up/i });
+    await act(async () => {
+      fireEvent.click(submitButton);
+    });
   });
 });

@@ -12,9 +12,9 @@ export default {
   },
   moduleNameMapper: {
     '^@/styles/.*\\.s?css$': 'identity-obj-proxy',
-    '^@/(.*)$': '<rootDir>/src/$1',
     '\\.(css|scss|sass)$': 'identity-obj-proxy',
     '\\.(jpg|jpeg|png|gif|svg)$': '<rootDir>/__mocks__/fileMock.js',
+    '^@/(.*)$': '<rootDir>/src/$1',
   },
   setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
   testEnvironmentOptions: {
@@ -44,4 +44,12 @@ export default {
     '!src/main.tsx',
     '!src/__tests__/**',
   ],
+  coverageThreshold: {
+    global: {
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80,
+    },
+  },
 };

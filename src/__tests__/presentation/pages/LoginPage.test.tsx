@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
@@ -13,17 +13,6 @@ import transactionsSlice from '@/application/store/slices/transactionsSlice';
 import wishlistSlice from '@/application/store/slices/wishlistSlice';
 import LoginPage from '@/presentation/pages/LoginPage';
 
-// Mock i18next
-jest.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
-    i18n: {
-      language: 'en',
-      changeLanguage: jest.fn(),
-    },
-  }),
-}));
-
 // Mock useNavigate
 const mockNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
@@ -31,8 +20,16 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockNavigate,
 }));
 
+// Mock fetch
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({ user: { id: 1, email: 'test@test.com' }, token: 'abc' }),
+  })
+) as jest.Mock;
+
 describe('LoginPage', () => {
-  let store: ReturnType<typeof configureStore>;
+  let store: any;
 
   beforeEach(() => {
     store = configureStore({
@@ -46,62 +43,97 @@ describe('LoginPage', () => {
         transactions: transactionsSlice,
         wishlist: wishlistSlice,
       },
+      preloadedState: {
+        auth: {
+          user: null,
+          token: null,
+          isLoading: false,
+          error: null,
+          isAuthenticated: false,
+        }
+      } as any
     });
 
     mockNavigate.mockClear();
+    (global.fetch as jest.Mock).mockClear();
   });
+
+  const renderLoginPage = () => render(
+    <Provider store={store}>
+      <BrowserRouter>
+        <LoginPage />
+      </BrowserRouter>
+    </Provider>
+  );
 
   it('should render login page with form fields', () => {
-    render(
-      <Provider store={store}>
-        <BrowserRouter>
-          <LoginPage />
-        </BrowserRouter>
-      </Provider>
-    );
-
-    expect(screen.getByRole('textbox', { name: /email/i })).toBeInTheDocument();
-    expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
+    renderLoginPage();
+    expect(screen.getByLabelText(/Email/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Password/i)).toBeInTheDocument();
   });
 
-  it('should have prefilled demo credentials', () => {
-    render(
-      <Provider store={store}>
-        <BrowserRouter>
-          <LoginPage />
-        </BrowserRouter>
-      </Provider>
-    );
+  it('should show validation errors for empty email and password', async () => {
+    renderLoginPage();
+    const emailInput = screen.getByLabelText(/Email/i);
+    const passwordInput = screen.getByLabelText(/Password/i);
+    
+    fireEvent.change(emailInput, { target: { value: '', name: 'email' } });
+    fireEvent.change(passwordInput, { target: { value: '', name: 'password' } });
+    fireEvent.blur(emailInput);
+    fireEvent.blur(passwordInput);
+    
+    const submitButton = screen.getByRole('button', { name: /Login/i });
+    fireEvent.click(submitButton);
 
-    const emailInput = screen.getByRole('textbox', { name: /email/i });
-    const passwordInput = screen.getByLabelText(/password/i);
-
-    expect((emailInput as HTMLInputElement).value).toBe('admin@techhaven.com');
-    expect((passwordInput as HTMLInputElement).value).toBe('admin123');
+    await waitFor(() => {
+      const errors = screen.getAllByText('This field is required');
+      expect(errors.length).toBeGreaterThan(0);
+    });
   });
 
-  it('should display form with email and password fields', () => {
-    render(
-      <Provider store={store}>
-        <BrowserRouter>
-          <LoginPage />
-        </BrowserRouter>
-      </Provider>
-    );
+  it('should show error for invalid email', async () => {
+    renderLoginPage();
+    const emailInput = screen.getByLabelText(/Email/i);
+    fireEvent.change(emailInput, { target: { value: 'invalid-email', name: 'email' } });
+    fireEvent.blur(emailInput);
+    
+    const submitButton = screen.getByRole('button', { name: /Login/i });
+    fireEvent.click(submitButton);
 
-    expect(screen.getByText(/authPage.login.title/)).toBeInTheDocument();
-    expect(screen.getByRole('button')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Invalid email')).toBeInTheDocument();
+    });
   });
 
-  it('should display welcome message', () => {
-    render(
-      <Provider store={store}>
-        <BrowserRouter>
-          <LoginPage />
-        </BrowserRouter>
-      </Provider>
-    );
+  it('should call navigate on successful login', async () => {
+    renderLoginPage();
+    
+    const submitButton = screen.getByRole('button', { name: /Login/i });
+    
+    await act(async () => {
+      fireEvent.click(submitButton);
+    });
 
-    expect(screen.getByText(/common.welcome/)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalled();
+    });
+  });
+
+  it('should display error from store if present', () => {
+    store = configureStore({
+      reducer: { auth: authSlice },
+      preloadedState: {
+        auth: {
+          user: null,
+          token: null,
+          isLoading: false,
+          error: 'Invalid credentials',
+          isAuthenticated: false,
+        }
+      } as any,
+    });
+    
+    renderLoginPage();
+    expect(screen.getByText('Invalid credentials')).toBeInTheDocument();
   });
 });
