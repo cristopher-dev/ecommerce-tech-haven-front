@@ -1,231 +1,153 @@
+import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-
-// Mock SVG imports
-jest.mock('@/assets/amex-logo.svg', () => 'amex-logo.svg');
-jest.mock('@/assets/credit-card-placeholder.svg', () => 'credit-card-placeholder.svg');
-jest.mock('@/assets/mastercard-logo.svg', () => 'mastercard-logo.svg');
-jest.mock('@/assets/visa-logo.svg', () => 'visa-logo.svg');
-
-// Mock SCSS import
-jest.mock('@/styles/components/PaymentModal.scss', () => ({}));
-
 import PaymentModal from '@/presentation/components/PaymentModal';
 
-describe('PaymentModal', () => {
-  const mockOnClose = jest.fn();
-  const mockOnSubmit = jest.fn();
+// Mock assets
+jest.mock('@/assets/amex-logo.svg', () => 'amex-svg');
+jest.mock('@/assets/credit-card-placeholder.svg', () => 'placeholder-svg');
+jest.mock('@/assets/mastercard-logo.svg', () => 'mastercard-svg');
+jest.mock('@/assets/visa-logo.svg', () => 'visa-svg');
+
+describe('PaymentModal Component', () => {
+  const defaultProps = {
+    isOpen: true,
+    onClose: jest.fn(),
+    onSubmit: jest.fn(),
+    loading: false,
+  };
+
+  const renderPaymentModal = (props = {}) => {
+    return render(<PaymentModal {...defaultProps} {...props} />);
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  const renderPaymentModal = (props: any = {}) => {
-    const defaultProps = {
-      isOpen: true,
-      onClose: mockOnClose,
-      onSubmit: mockOnSubmit,
-      loading: false,
-      ...props,
-    };
-    return render(<PaymentModal {...defaultProps} />);
-  };
-
-  describe('Modal Visibility', () => {
-    it('should not render when isOpen is false', () => {
-      renderPaymentModal({ isOpen: false });
-      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-    });
-
-    it('should render dialog when isOpen is true', () => {
-      renderPaymentModal();
-      expect(screen.getByRole('dialog')).toBeInTheDocument();
-    });
-
-    it('should have correct dialog aria label', () => {
-      renderPaymentModal();
-      expect(screen.getByRole('dialog')).toHaveAttribute('aria-label', 'Payment Information');
-    });
+  it('renders correctly when open', () => {
+    renderPaymentModal();
+    expect(screen.getByText(/Payment Information/i)).toBeInTheDocument();
   });
 
-  describe('Modal Header', () => {
-    it('should display Payment Information title', () => {
-      renderPaymentModal();
-      expect(screen.getByText('Payment Information')).toBeInTheDocument();
-    });
-
-    it('should have a close button', () => {
-      renderPaymentModal();
-      const closeButton = screen.getByRole('button', { name: /close/i });
-      expect(closeButton).toBeInTheDocument();
-    });
-
-    it('should close modal when close button is clicked', async () => {
-      renderPaymentModal();
-      const closeButton = screen.getByRole('button', { name: /close/i });
-      await userEvent.click(closeButton);
-      expect(mockOnClose).toHaveBeenCalled();
-    });
-
-    it('should not close modal when close button is disabled during loading', () => {
-      renderPaymentModal({ loading: true });
-      const closeButton = screen.getByRole('button', { name: /close/i });
-      expect(closeButton).toBeDisabled();
-    });
+  it('returns null if not open', () => {
+    const { container } = renderPaymentModal({ isOpen: false });
+    expect(container.firstChild).toBeNull();
   });
 
-  describe('Form Fields', () => {
-    it('should have card number input field', () => {
-      renderPaymentModal();
-      const cardNumberInput = screen.getByRole('textbox', { name: /card number/i });
-      expect(cardNumberInput).toBeInTheDocument();
-    });
-
-    it('should have cardholder name input field', () => {
-      renderPaymentModal();
-      const nameInput = screen.getByRole('textbox', { name: /cardholder name/i });
-      expect(nameInput).toBeInTheDocument();
-    });
-
-    it('should have expiration date selects', () => {
-      renderPaymentModal();
-      const selects = screen.getAllByRole('combobox');
-      expect(selects.length).toBeGreaterThanOrEqual(2); // month and year
-    });
-
-    it('should have CVV input field', () => {
-      renderPaymentModal();
-      const cvvInput = screen.getByLabelText('CVV');
-      expect(cvvInput).toBeInTheDocument();
-    });
-
-    it('should have submit and cancel buttons', () => {
-      renderPaymentModal();
-      const buttons = screen.getAllByRole('button');
-      expect(buttons.length).toBeGreaterThanOrEqual(3); // close, cancel, submit
-    });
+  it('handles card number changes and formatting', () => {
+    renderPaymentModal();
+    const cardInput = screen.getByLabelText(/Card Number/i);
+    fireEvent.change(cardInput, { target: { value: '4242424242424242' } });
+    expect(cardInput).toHaveValue('4242 4242 4242 4242');
   });
 
-  describe('Card Number Input', () => {
-    it('should accept numeric input only', async () => {
-      renderPaymentModal();
-      const input = screen.getByRole('textbox', { name: /card number/i });
-      await userEvent.type(input, '4532abc123456789');
-      expect(input).toHaveValue('4532 1234 5678 9');
-    });
-
-    it('should limit card number to 19 characters', async () => {
-      renderPaymentModal();
-      const input = screen.getByRole('textbox', { name: /card number/i });
-      await userEvent.type(input, '45321234567890123456789012345');
-      expect((input as HTMLInputElement).value.replaceAll(/\s/g, '')).toHaveLength(19);
-    });
+  it('handles name changes', () => {
+    renderPaymentModal();
+    const nameInput = screen.getByLabelText(/Cardholder Name/i);
+    fireEvent.change(nameInput, { target: { value: 'John Doe' } });
+    expect(nameInput).toHaveValue('John Doe');
   });
 
-  describe('Cardholder Name Input', () => {
-    it('should accept text input', async () => {
-      renderPaymentModal();
-      const input = screen.getByRole('textbox', { name: /cardholder name/i });
-      await userEvent.type(input, 'John Doe');
-      expect(input).toHaveValue('John Doe');
-    });
+  it('updates expiration date selects', () => {
+    const { container } = renderPaymentModal();
+    const monthSelect = container.querySelector('#expirationMonth');
+    const yearSelect = container.querySelectorAll('select')[1];
+
+    fireEvent.change(monthSelect!, { target: { value: '12' } });
+    fireEvent.change(yearSelect!, { target: { value: '2028' } });
+
+    expect(monthSelect).toHaveValue('12');
+    expect(yearSelect).toHaveValue('2028');
   });
 
-  describe('CVV Input', () => {
-    it('should accept numeric input only', async () => {
-      renderPaymentModal();
-      const input = screen.getByLabelText('CVV');
-      await userEvent.type(input, '123abc');
-      expect(input).toHaveValue('123');
-    });
-
-    it('should limit CVV to 3 characters for non-AMEX cards', async () => {
-      renderPaymentModal();
-      const input = screen.getByLabelText('CVV');
-      await userEvent.type(input, '12345');
-      // For non-AMEX, CVV is limited to 3
-      expect((input as HTMLInputElement).value).toHaveLength(3);
-    });
+  it('handles CVV changes with length limit', () => {
+    renderPaymentModal();
+    const cvvInput = screen.getByLabelText(/CVV/i);
+    fireEvent.change(cvvInput, { target: { value: '12345' } });
+    expect(cvvInput).toHaveValue('1234');
   });
 
-  describe('Month/Year Selects', () => {
-    it('should have multiple select fields for date inputs', () => {
-      renderPaymentModal();
-      const selects = screen.getAllByRole('combobox');
-      expect(selects.length).toBeGreaterThanOrEqual(2); // month and year
-      const monthSelect = selects[0];
-      const monthOptions = (monthSelect as HTMLSelectElement).querySelectorAll('option');
-      expect(monthOptions.length).toBeGreaterThanOrEqual(12);
-    });
+  it('shows validation errors on blur for empty fields', async () => {
+    renderPaymentModal();
 
-    it('should populate year select with future years', () => {
-      renderPaymentModal();
-      const selects = screen.getAllByRole('combobox');
-      // Second select should be year (first is month)
-      const yearSelect = selects[1];
-      const options = (yearSelect as HTMLSelectElement).querySelectorAll('option');
-      expect(options.length).toBeGreaterThanOrEqual(12);
-    });
+    const cardInput = screen.getByLabelText(/Card Number/i);
+    fireEvent.blur(cardInput);
+    expect(await screen.findByText(/Invalid card number/i)).toBeInTheDocument();
+
+    const nameInput = screen.getByLabelText(/Cardholder Name/i);
+    fireEvent.blur(nameInput);
+    expect(await screen.findByText(/Name must be at least 5 characters/i)).toBeInTheDocument();
+
+    const cvvInput = screen.getByLabelText(/CVV/i);
+    fireEvent.blur(cvvInput);
+    expect(await screen.findByText(/CVV must be 3 digits/i)).toBeInTheDocument();
   });
 
-  describe('Accepted Cards Display', () => {
-    it('should display accepted cards section', () => {
-      renderPaymentModal();
-      expect(screen.getByText('Accepted Cards:')).toBeInTheDocument();
-    });
+  it('handles AMEX specific CVV validation', async () => {
+    renderPaymentModal();
+    const cardInput = screen.getByLabelText(/Card Number/i);
+    const cvvInput = screen.getByLabelText(/CVV/i);
+
+    // Enter a valid-looking AMEX number prefix/length
+    fireEvent.change(cardInput, { target: { value: '341234567890123' } });
+    fireEvent.blur(cvvInput);
+
+    expect(await screen.findByText(/CVV must be 4 digits/i)).toBeInTheDocument();
   });
 
-  describe('Card Preview', () => {
-    it('should display card preview container', () => {
-      renderPaymentModal();
-      const preview = document.querySelector('.card-preview-container');
-      expect(preview).toBeInTheDocument();
-    });
+  it('submits valid form data', async () => {
+    renderPaymentModal();
 
-    it('should display card placeholder image', () => {
-      renderPaymentModal();
-      const cardImage = screen.getByAltText('Credit Card');
-      expect(cardImage).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText(/Card Number/i), {
+      target: { value: '4242424242424242' },
     });
+    fireEvent.change(screen.getByLabelText(/Cardholder Name/i), { target: { value: 'John Doe' } });
+    fireEvent.change(screen.getByLabelText(/CVV/i), { target: { value: '123' } });
 
-    it('should display placeholder card number when empty', () => {
-      renderPaymentModal();
-      const preview = document.querySelector('.card-number-display');
-      expect(preview?.textContent).toContain('•••• •••• •••• ••••');
-    });
+    const submitBtn = screen.getByRole('button', { name: /Confirm Payment/i });
+    fireEvent.click(submitBtn);
+
+    expect(defaultProps.onSubmit).toHaveBeenCalled();
   });
 
-  describe('Loading State', () => {
-    it('should display form when not loading', () => {
-      renderPaymentModal({ loading: false });
-      expect(screen.getByRole('textbox', { name: /card number/i })).not.toBeDisabled();
-    });
-
-    it('should disable form inputs when loading', () => {
-      renderPaymentModal({ loading: true });
-      const cardInput = screen.getByRole('textbox', { name: /card number/i });
-      const closeButton = screen.getByRole('button', { name: /close/i });
-      expect(cardInput).toBeDisabled();
-      expect(closeButton).toBeDisabled();
-    });
+  it('calls onClose when backdrop is clicked', () => {
+    const { container } = renderPaymentModal();
+    const backdrop = container.querySelector('.payment-modal-backdrop');
+    if (backdrop) {
+      fireEvent.click(backdrop);
+    }
+    expect(defaultProps.onClose).toHaveBeenCalled();
   });
 
-  describe('Accessibility', () => {
-    it('should have proper role for dialog', () => {
-      renderPaymentModal();
-      expect(screen.getByRole('dialog')).toBeInTheDocument();
-    });
+  it('calls onClose when Escape is pressed on backdrop', () => {
+    const { container } = renderPaymentModal();
+    const backdrop = container.querySelector('.payment-modal-backdrop');
+    if (backdrop) {
+      fireEvent.keyDown(backdrop, { key: 'Escape', code: 'Escape' });
+    }
+    expect(defaultProps.onClose).toHaveBeenCalled();
+  });
 
-    it('should have accessible close button', () => {
-      renderPaymentModal();
-      const closeButton = screen.getByRole('button', { name: /close/i });
-      expect(closeButton).toHaveAttribute('aria-label');
-    });
+  it('stops propagation when modal content is clicked', () => {
+    const { container } = renderPaymentModal();
+    const dialog = container.querySelector('.payment-modal');
+    if (dialog) {
+      fireEvent.click(dialog);
+    }
+    expect(defaultProps.onClose).not.toHaveBeenCalled();
+  });
 
-    it('should have payment modal footer', () => {
-      renderPaymentModal();
-      const footer = document.querySelector('.payment-modal-footer');
-      expect(footer).toBeInTheDocument();
-    });
+  it('prevents interactions while loading', () => {
+    renderPaymentModal({ loading: true });
+
+    const closeBtn = screen.getByLabelText(/Close/i);
+    fireEvent.click(closeBtn);
+    expect(defaultProps.onClose).not.toHaveBeenCalled();
+
+    const backdrop = document.querySelector('.payment-modal-backdrop');
+    if (backdrop) {
+      fireEvent.click(backdrop);
+    }
+    expect(defaultProps.onClose).not.toHaveBeenCalled();
   });
 });

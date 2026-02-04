@@ -1,7 +1,7 @@
-import amexLogo from "@/assets/amex-logo.svg";
-import cardPlaceholder from "@/assets/credit-card-placeholder.svg";
-import mastercardLogo from "@/assets/mastercard-logo.svg";
-import visaLogo from "@/assets/visa-logo.svg";
+import amexLogo from '@/assets/amex-logo.svg';
+import cardPlaceholder from '@/assets/credit-card-placeholder.svg';
+import mastercardLogo from '@/assets/mastercard-logo.svg';
+import visaLogo from '@/assets/visa-logo.svg';
 import {
   formatCardNumber,
   getCardType,
@@ -11,9 +11,9 @@ import {
   isValidExpirationDate,
   validateCardInfo,
   type CardType,
-} from "@/shared/utils/cardValidation";
-import "@/styles/components/PaymentModal.scss";
-import React, { useState } from "react";
+} from '@/shared/utils/cardValidation';
+import '@/styles/components/PaymentModal.scss';
+import React, { useState } from 'react';
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -38,11 +38,11 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
 }: PaymentModalProps) => {
   const currentDate = new Date();
   const [formData, setFormData] = useState<PaymentFormData>({
-    cardNumber: "",
-    cardholderName: "",
+    cardNumber: '',
+    cardholderName: '',
     expirationMonth: currentDate.getMonth() + 1,
     expirationYear: currentDate.getFullYear(),
-    cvv: "",
+    cvv: '',
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -52,82 +52,71 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
 
   const getCardTypeStyles = (type: CardType): string => {
     switch (type) {
-      case "VISA":
-        return "visa";
-      case "MASTERCARD":
-        return "mastercard";
-      case "AMEX":
-        return "amex";
+      case 'VISA':
+        return 'visa';
+      case 'MASTERCARD':
+        return 'mastercard';
+      case 'AMEX':
+        return 'amex';
       default:
-        return "unknown";
+        return 'unknown';
     }
   };
 
   const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replaceAll(/\D/g, "").slice(0, 19);
+    const value = e.target.value.replaceAll(/\D/g, '').slice(0, 19);
     setFormData({ ...formData, cardNumber: value });
-    validateField("cardNumber", value);
+    validateField('cardNumber', value);
   };
 
-  const handleCardholderNameChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleCardholderNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setFormData({ ...formData, cardholderName: value });
-    validateField("cardholderName", value);
+    validateField('cardholderName', value);
   };
 
-  const handleExpirationMonthChange = (
-    e: React.ChangeEvent<HTMLSelectElement>,
-  ) => {
+  const handleExpirationMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = Number.parseInt(e.target.value, 10);
     setFormData({ ...formData, expirationMonth: value });
-    validateField("expirationDate", `${value}/${formData.expirationYear}`);
+    validateField('expirationDate', `${value}/${formData.expirationYear}`);
   };
 
-  const handleExpirationYearChange = (
-    e: React.ChangeEvent<HTMLSelectElement>,
-  ) => {
+  const handleExpirationYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = Number.parseInt(e.target.value, 10);
     setFormData({ ...formData, expirationYear: value });
-    validateField("expirationDate", `${formData.expirationMonth}/${value}`);
+    validateField('expirationDate', `${formData.expirationMonth}/${value}`);
   };
 
   const handleCVVChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replaceAll(/\D/g, "").slice(0, 4);
+    const value = e.target.value.replaceAll(/\D/g, '').slice(0, 4);
     setFormData({ ...formData, cvv: value });
-    validateField("cvv", value);
+    validateField('cvv', value);
   };
 
   const validateField = (fieldName: string, value: string | number) => {
     const newErrors = { ...errors };
     let isValid: boolean;
-    let errorMessage = "";
+    let errorMessage = '';
 
     switch (fieldName) {
-      case "cardNumber":
+      case 'cardNumber':
         isValid = !!(value && isValidCardNumber(value as string));
-        errorMessage = "Invalid card number";
+        errorMessage = 'Invalid card number';
         break;
 
-      case "cardholderName":
+      case 'cardholderName':
         isValid = !!(value && isValidCardholderName(value as string));
-        errorMessage =
-          "Name must be at least 5 characters with first and last name";
+        errorMessage = 'Name must be at least 5 characters with first and last name';
         break;
 
-      case "expirationDate":
-        isValid = isValidExpirationDate(
-          formData.expirationMonth,
-          formData.expirationYear,
-        );
-        errorMessage = "Invalid or expired date";
+      case 'expirationDate':
+        isValid = isValidExpirationDate(formData.expirationMonth, formData.expirationYear);
+        errorMessage = 'Invalid or expired date';
         break;
 
-      case "cvv":
+      case 'cvv':
         isValid = !!(value && isValidCVV(value as string, cardType));
-        errorMessage =
-          cardType === "AMEX" ? "CVV must be 4 digits" : "CVV must be 3 digits";
+        errorMessage = cardType === 'AMEX' ? 'CVV must be 4 digits' : 'CVV must be 3 digits';
         break;
 
       default:
@@ -144,8 +133,9 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
     setErrors(newErrors);
   };
 
-  const handleBlur = (fieldName: string) => {
+  const handleBlur = (fieldName: string, value: string | number) => {
     setTouched({ ...touched, [fieldName]: true });
+    validateField(fieldName, value);
   };
 
   const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
@@ -156,7 +146,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
       formData.cardholderName,
       formData.expirationMonth,
       formData.expirationYear,
-      formData.cvv,
+      formData.cvv
     );
 
     setErrors(validation.errors);
@@ -194,7 +184,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
           className="payment-modal-backdrop"
           onClick={handleClose}
           onKeyDown={(e) => {
-            if (e.key === "Escape") handleClose();
+            if (e.key === 'Escape') handleClose();
           }}
           role="button"
           tabIndex={0}
@@ -220,25 +210,18 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
               {/* Credit Card Preview */}
               <div className="card-preview-container mb-4">
                 <div className="card-preview">
-                  <img
-                    src={cardPlaceholder}
-                    alt="Credit Card"
-                    className="card-preview-image"
-                  />
+                  <img src={cardPlaceholder} alt="Credit Card" className="card-preview-image" />
                   <div className="card-preview-info">
                     <div className="card-number-display">
-                      {formData.cardNumber.replaceAll(/\s/g, "").length > 0
+                      {formData.cardNumber.replaceAll(/\s/g, '').length > 0
                         ? formatCardNumber(formData.cardNumber)
-                            .split(" ")
+                            .split(' ')
                             .map((group, i) => (
-                              <span
-                                key={`${group}-${i}`}
-                                className="card-digit-group"
-                              >
+                              <span key={`${group}-${i}`} className="card-digit-group">
                                 {group}
                               </span>
                             ))
-                        : "•••• •••• •••• ••••"}
+                        : '•••• •••• •••• ••••'}
                     </div>
                   </div>
                 </div>
@@ -252,18 +235,10 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                     <img src={visaLogo} alt="Visa" title="Visa" />
                   </div>
                   <div className="card-logo">
-                    <img
-                      src={mastercardLogo}
-                      alt="Mastercard"
-                      title="Mastercard"
-                    />
+                    <img src={mastercardLogo} alt="Mastercard" title="Mastercard" />
                   </div>
                   <div className="card-logo">
-                    <img
-                      src={amexLogo}
-                      alt="American Express"
-                      title="American Express"
-                    />
+                    <img src={amexLogo} alt="American Express" title="American Express" />
                   </div>
                 </div>
               </div>
@@ -273,32 +248,24 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                 <label htmlFor="cardNumber" className="form-label">
                   Card Number
                 </label>
-                <div
-                  className={`input-group card-input-group ${getCardTypeStyles(cardType)}`}
-                >
+                <div className={`input-group card-input-group ${getCardTypeStyles(cardType)}`}>
                   <input
                     type="text"
                     id="cardNumber"
-                    className={`form-control ${touched.cardNumber && errors.cardNumber ? "is-invalid" : ""}`}
+                    className={`form-control ${touched.cardNumber && errors.cardNumber ? 'is-invalid' : ''}`}
                     placeholder="1234 5678 9012 3456"
                     value={formatCardNumber(formData.cardNumber)}
                     onChange={handleCardNumberChange}
-                    onBlur={() => handleBlur("cardNumber")}
+                    onBlur={() => handleBlur('cardNumber', formData.cardNumber)}
                     disabled={loading}
                     autoComplete="cc-number"
                   />
-                  {cardType !== "UNKNOWN" && (
-                    <span
-                      className={`card-type-badge ${cardType.toLowerCase()}`}
-                    >
-                      {cardType}
-                    </span>
+                  {cardType !== 'UNKNOWN' && (
+                    <span className={`card-type-badge ${cardType.toLowerCase()}`}>{cardType}</span>
                   )}
                 </div>
                 {touched.cardNumber && errors.cardNumber && (
-                  <div className="invalid-feedback d-block">
-                    {errors.cardNumber}
-                  </div>
+                  <div className="invalid-feedback d-block">{errors.cardNumber}</div>
                 )}
               </div>
 
@@ -310,18 +277,16 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                 <input
                   type="text"
                   id="cardholderName"
-                  className={`form-control ${touched.cardholderName && errors.cardholderName ? "is-invalid" : ""}`}
+                  className={`form-control ${touched.cardholderName && errors.cardholderName ? 'is-invalid' : ''}`}
                   placeholder="John Doe"
                   value={formData.cardholderName}
                   onChange={handleCardholderNameChange}
-                  onBlur={() => handleBlur("cardholderName")}
+                  onBlur={() => handleBlur('cardholderName', formData.cardholderName)}
                   disabled={loading}
                   autoComplete="cc-name"
                 />
                 {touched.cardholderName && errors.cardholderName && (
-                  <div className="invalid-feedback d-block">
-                    {errors.cardholderName}
-                  </div>
+                  <div className="invalid-feedback d-block">{errors.cardholderName}</div>
                 )}
               </div>
 
@@ -335,25 +300,35 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                     <div className="col-6">
                       <select
                         id="expirationMonth"
-                        className={`form-select ${touched.expirationDate && errors.expirationDate ? "is-invalid" : ""}`}
+                        className={`form-select ${touched.expirationDate && errors.expirationDate ? 'is-invalid' : ''}`}
                         value={formData.expirationMonth}
                         onChange={handleExpirationMonthChange}
-                        onBlur={() => handleBlur("expirationDate")}
+                        onBlur={() =>
+                          handleBlur(
+                            'expirationDate',
+                            `${formData.expirationMonth}/${formData.expirationYear}`
+                          )
+                        }
                         disabled={loading}
                       >
                         {months.map((month) => (
                           <option key={`month-${month}`} value={month}>
-                            {String(month).padStart(2, "0")}
+                            {String(month).padStart(2, '0')}
                           </option>
                         ))}
                       </select>
                     </div>
                     <div className="col-6">
                       <select
-                        className={`form-select ${touched.expirationDate && errors.expirationDate ? "is-invalid" : ""}`}
+                        className={`form-select ${touched.expirationDate && errors.expirationDate ? 'is-invalid' : ''}`}
                         value={formData.expirationYear}
                         onChange={handleExpirationYearChange}
-                        onBlur={() => handleBlur("expirationDate")}
+                        onBlur={() =>
+                          handleBlur(
+                            'expirationDate',
+                            `${formData.expirationMonth}/${formData.expirationYear}`
+                          )
+                        }
                         disabled={loading}
                       >
                         {years.map((year) => (
@@ -365,9 +340,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                     </div>
                   </div>
                   {touched.expirationDate && errors.expirationDate && (
-                    <div className="invalid-feedback d-block">
-                      {errors.expirationDate}
-                    </div>
+                    <div className="invalid-feedback d-block">{errors.expirationDate}</div>
                   )}
                 </div>
 
@@ -378,12 +351,12 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                   <input
                     type="password"
                     id="cvv"
-                    className={`form-control ${touched.cvv && errors.cvv ? "is-invalid" : ""}`}
-                    placeholder={cardType === "AMEX" ? "1234" : "123"}
-                    maxLength={cardType === "AMEX" ? 4 : 3}
+                    className={`form-control ${touched.cvv && errors.cvv ? 'is-invalid' : ''}`}
+                    placeholder={cardType === 'AMEX' ? '1234' : '123'}
+                    maxLength={cardType === 'AMEX' ? 4 : 3}
                     value={formData.cvv}
                     onChange={handleCVVChange}
-                    onBlur={() => handleBlur("cvv")}
+                    onBlur={() => handleBlur('cvv', formData.cvv)}
                     disabled={loading}
                     autoComplete="cc-csc"
                   />
@@ -403,18 +376,14 @@ const PaymentModal: React.FC<PaymentModalProps> = ({
                 >
                   Cancel
                 </button>
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  disabled={loading}
-                >
+                <button type="submit" className="btn btn-primary" disabled={loading}>
                   {loading ? (
                     <>
                       <output className="spinner-border spinner-border-sm me-2" />
                       Processing...
                     </>
                   ) : (
-                    "Confirm Payment"
+                    'Confirm Payment'
                   )}
                 </button>
               </div>

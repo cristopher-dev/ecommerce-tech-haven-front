@@ -6,6 +6,16 @@ import purchasedItemsReducer, {
   setError,
   fetchUserTransactions,
 } from '@/application/store/slices/purchasedItemsSlice';
+import { productsApi, transactionsApi } from '@/infrastructure/api/techHavenApiClient';
+
+jest.mock('@/infrastructure/api/techHavenApiClient', () => ({
+  productsApi: {
+    getAll: jest.fn(),
+  },
+  transactionsApi: {
+    getAll: jest.fn(),
+  },
+}));
 
 describe('purchasedItemsSlice', () => {
   const initialState = {
@@ -253,5 +263,118 @@ describe('purchasedItemsSlice', () => {
 
     expect(state.items).toHaveLength(1);
     expect(state.totalPurchases).toBe(2);
+  });
+
+  describe('fetchUserTransactions thunk', () => {
+    it('should fetch transactions and products and filter for user', async () => {
+      const mockTransactions = [
+        {
+          id: 'tx1',
+          customerId: 'user1',
+          items: [{ productId: 'p1', quantity: 1 }],
+          subtotal: 100,
+          createdAt: '2024-01-01',
+        },
+      ];
+      const mockProducts = [
+        {
+          id: 'p1',
+          name: 'Product 1',
+          price: 100,
+          imageUrl: 'img1',
+          stock: 10,
+          description: 'desc1',
+        },
+      ];
+
+      (transactionsApi.getAll as jest.Mock).mockResolvedValue(mockTransactions);
+      (productsApi.getAll as jest.Mock).mockResolvedValue(mockProducts);
+
+      const dispatch = jest.fn();
+      const thunk = fetchUserTransactions('user1');
+      await thunk(dispatch, () => ({}), undefined);
+
+      const fulfilledAction = dispatch.mock.calls.find(
+        (call) => call[0].type === fetchUserTransactions.fulfilled.type
+      );
+      expect(fulfilledAction[0].payload).toHaveLength(1);
+      expect(fulfilledAction[0].payload[0].product.id).toBe('p1');
+    });
+
+    it('should use fallback if no transactions found for user', async () => {
+      const mockTransactions = [
+        {
+          id: 'tx1',
+          customerId: 'other',
+          items: [{ productId: 'p1', quantity: 1 }],
+          subtotal: 100,
+          createdAt: '2024-01-01',
+        },
+      ];
+      const mockProducts = [];
+
+      (transactionsApi.getAll as jest.Mock).mockResolvedValue(mockTransactions);
+      (productsApi.getAll as jest.Mock).mockResolvedValue(mockProducts);
+
+      const dispatch = jest.fn();
+      const thunk = fetchUserTransactions('user1');
+      await thunk(dispatch, () => ({}), undefined);
+
+      const fulfilledAction = dispatch.mock.calls.find(
+        (call) => call[0].type === fetchUserTransactions.fulfilled.type
+      );
+      expect(fulfilledAction[0].payload).toHaveLength(1); // Fallback uses slice(0, 10)
+    });
+
+    it('should handle product not found for transaction item', async () => {
+      const mockTransactions = [
+        {
+          id: 'tx1',
+          customerId: 'user1',
+          items: [{ productId: 'missing', quantity: 1 }],
+          subtotal: 100,
+          createdAt: '2024-01-01',
+        },
+      ];
+      const mockProducts = [];
+
+      (transactionsApi.getAll as jest.Mock).mockResolvedValue(mockTransactions);
+      (productsApi.getAll as jest.Mock).mockResolvedValue(mockProducts);
+
+      const dispatch = jest.fn();
+      const thunk = fetchUserTransactions('user1');
+      await thunk(dispatch, () => ({}), undefined);
+
+      const fulfilledAction = dispatch.mock.calls.find(
+        (call) => call[0].type === fetchUserTransactions.fulfilled.type
+      );
+      expect(fulfilledAction[0].payload[0].product.name).toBe('Product missing');
+    });
+
+    it('should handle errors in thunk', async () => {
+      (transactionsApi.getAll as jest.Mock).mockRejectedValue(new Error('API Error'));
+
+      const dispatch = jest.fn();
+      const thunk = fetchUserTransactions('user1');
+      await thunk(dispatch, () => ({}), undefined);
+
+      const rejectedAction = dispatch.mock.calls.find(
+        (call) => call[0].type === fetchUserTransactions.rejected.type
+      );
+      expect(rejectedAction[0].payload).toBe('API Error');
+    });
+
+    it('should handle non-Error catch', async () => {
+      (transactionsApi.getAll as jest.Mock).mockRejectedValue('String Error');
+
+      const dispatch = jest.fn();
+      const thunk = fetchUserTransactions('user1');
+      await thunk(dispatch, () => ({}), undefined);
+
+      const rejectedAction = dispatch.mock.calls.find(
+        (call) => call[0].type === fetchUserTransactions.rejected.type
+      );
+      expect(rejectedAction[0].payload).toBe('Failed to fetch transactions');
+    });
   });
 });

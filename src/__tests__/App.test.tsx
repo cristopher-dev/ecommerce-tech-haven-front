@@ -149,5 +149,45 @@ describe('App', () => {
         <App />
       </Provider>
     );
+    expect(screen.getByText('Register Page')).toBeInTheDocument();
+  });
+
+  it('redirects to login when accessing home page without auth', () => {
+    const store = createMockStore({
+      auth: {
+        user: null,
+        token: null,
+        isLoading: false,
+        error: null,
+        isAuthenticated: false,
+      },
+    });
+    window.history.pushState({}, 'Home', '/');
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
+    expect(screen.getByText('Login Page')).toBeInTheDocument();
+  });
+
+  it('renders home page when authenticated', () => {
+    localStorage.setItem('authToken', 'fake-token');
+    const store = createMockStore({
+      auth: {
+        user: { id: '1', email: 'test@test.com' } as any,
+        token: 'fake-token',
+        isLoading: false,
+        error: null,
+        isAuthenticated: true,
+      },
+    });
+    window.history.pushState({}, 'Home', '/');
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
+    expect(screen.getByText('Home Page')).toBeInTheDocument();
   });
 });

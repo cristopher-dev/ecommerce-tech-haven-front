@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import Newsletter from '@/presentation/components/Newsletter';
 import { I18nextProvider } from 'react-i18next';
 import i18n from '@/i18n/config';
@@ -11,6 +11,30 @@ describe('Newsletter Component', () => {
       </I18nextProvider>
     );
   };
+
+  it('should handle form submission', () => {
+    i18n.changeLanguage('en');
+    renderNewsletter();
+
+    const input = screen.getByPlaceholderText(/Email/i);
+    const submitButton = screen.getByRole('button');
+
+    fireEvent.change(input, { target: { value: 'test@example.com' } });
+    fireEvent.click(submitButton);
+
+    expect(screen.getByText(/Thank you for subscribing/i)).toBeInTheDocument();
+  });
+
+  it('should apply hover effects to button', () => {
+    renderNewsletter();
+    const button = screen.getByRole('button');
+
+    fireEvent.mouseEnter(button);
+    expect(button.style.transform).toBe('translateX(2px)');
+
+    fireEvent.mouseLeave(button);
+    expect(button.style.transform).toBe('translateX(0)');
+  });
 
   it('should render newsletter section', () => {
     const { container } = renderNewsletter();

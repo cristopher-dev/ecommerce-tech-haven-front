@@ -1,15 +1,12 @@
-import { ValidationErrors } from "@/shared/types/auth";
-import { ChangeEvent, FocusEvent, useState } from "react";
+import { ValidationErrors } from '@/shared/types/auth';
+import { ChangeEvent, FocusEvent, useState } from 'react';
 
 interface UseFormValidationProps<T> {
   initialFormData: T;
   validateForm: (formData: T) => ValidationErrors;
 }
 
-export function useFormValidation<T>({
-  initialFormData,
-  validateForm,
-}: UseFormValidationProps<T>) {
+export function useFormValidation<T>({ initialFormData, validateForm }: UseFormValidationProps<T>) {
   const [formData, setFormData] = useState<T>(initialFormData);
   const [errors, setErrors] = useState<ValidationErrors>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
@@ -18,18 +15,32 @@ export function useFormValidation<T>({
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (touched[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
+      setErrors((prev) => ({ ...prev, [name]: '' }));
     }
   };
 
   const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
     const { name } = e.target;
     setTouched((prev) => ({ ...prev, [name]: true }));
+
+    // Validate on blur too
+    const newErrors = validateForm(formData);
+    setErrors(newErrors);
   };
 
   const handleValidate = () => {
     const newErrors = validateForm(formData);
     setErrors(newErrors);
+
+    // Mark all fields as touched to show errors after validation
+    setTouched((prev) => {
+      const allTouched = { ...prev };
+      for (const key of Object.keys(formData as object)) {
+        allTouched[key] = true;
+      }
+      return allTouched;
+    });
+
     return Object.keys(newErrors).length === 0;
   };
 

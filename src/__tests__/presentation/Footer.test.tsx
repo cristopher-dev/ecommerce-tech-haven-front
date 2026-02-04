@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import Footer from '@/presentation/components/Footer';
 import { BrowserRouter } from 'react-router-dom';
 import { I18nextProvider } from 'react-i18next';
@@ -20,43 +20,50 @@ describe('Footer Component', () => {
     expect(container.querySelector('footer')).toBeInTheDocument();
   });
 
-  it('should display footer links', () => {
+  it('should cover social media hover effects', () => {
     renderFooter();
-    const footer = screen.getByRole('contentinfo');
-    expect(footer).toBeInTheDocument();
+    const facebookButton = screen.getByLabelText('facebook');
+
+    fireEvent.mouseEnter(facebookButton);
+    expect(facebookButton.style.background).toBe('rgb(10, 102, 194)'); // #0A66C2 in RGB
+
+    fireEvent.mouseLeave(facebookButton);
+    expect(facebookButton.style.background).toBe('rgba(255, 255, 255, 0.08)');
   });
 
-  it('should render footer sections or structure', () => {
-    const { container } = renderFooter();
-    const footer = container.querySelector('footer');
-    // Check that footer has content/children
-    expect(footer?.children.length || footer?.textContent?.length).toBeGreaterThan(0);
+  it('should cover link hover state', () => {
+    renderFooter();
+    // Use a link that we know exists from i18n
+    const contactUsLabel = i18n.t('footer.contactUs');
+    const contactBtn = screen.getByText(new RegExp(contactUsLabel, 'i'));
+
+    fireEvent.mouseEnter(contactBtn);
+    fireEvent.mouseLeave(contactBtn);
   });
 
-  it('should render content with footer structure', () => {
-    const { container } = renderFooter();
-    const footer = container.querySelector('footer');
-    // Footer should have content
-    expect(footer).toBeInTheDocument();
-    expect(footer?.textContent?.length || 0).toBeGreaterThan(0);
+  it('should cover payment methods hover effects', () => {
+    renderFooter();
+    const visaBtn = screen.getByLabelText('Visa');
+
+    fireEvent.mouseEnter(visaBtn);
+    expect(visaBtn.style.background).toBe('rgba(0, 102, 255, 0.2)');
+
+    fireEvent.mouseLeave(visaBtn);
+    expect(visaBtn.style.background).toBe('rgba(255, 255, 255, 0.08)');
   });
 
-  it('should have footer element with or without styling', () => {
-    const { container } = renderFooter();
-    const footer = container.querySelector('footer');
-    // Footer should exist, styling is optional
-    expect(footer).toBeInTheDocument();
-  });
+  it('should cover privacy policy and terms hover effects', () => {
+    renderFooter();
+    const privacyBtn = screen.getByText(i18n.t('footer.privacyPolicy'));
+    const termsBtn = screen.getByText(i18n.t('footer.termsOfService'));
 
-  it('should render footer with proper structure', () => {
-    const { container } = renderFooter();
-    const footer = container.querySelector('footer');
-    expect(footer).toBeInTheDocument();
-  });
+    fireEvent.mouseEnter(privacyBtn);
+    expect(privacyBtn.style.color).toBe('rgb(0, 102, 255)');
 
-  it('should contain multiple columns or sections', () => {
-    const { container } = renderFooter();
-    const divs = container.querySelectorAll('div');
-    expect(divs.length).toBeGreaterThan(0);
+    fireEvent.mouseLeave(privacyBtn);
+    expect(privacyBtn.style.color).toBe('rgb(176, 176, 176)'); // #b0b0b0
+
+    fireEvent.mouseEnter(termsBtn);
+    fireEvent.mouseLeave(termsBtn);
   });
 });

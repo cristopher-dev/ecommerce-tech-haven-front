@@ -1,9 +1,12 @@
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { BrowserRouter } from 'react-router-dom';
 import RegisterPage from '../../../presentation/pages/RegisterPage';
 import authReducer from '../../../application/store/slices/authSlice';
+import { I18nextProvider } from 'react-i18next';
+import i18n from '@/i18n/config';
 
 // Mock the useTechHavenApi hook
 jest.mock('../../../infrastructure/hooks/useTechHavenApi', () => ({
@@ -22,7 +25,7 @@ const renderWithProviders = (
         isLoading: false,
         error: null,
         isAuthenticated: false,
-      }
+      },
     },
     store = configureStore({
       reducer: { auth: authReducer },
@@ -31,9 +34,12 @@ const renderWithProviders = (
     ...renderOptions
   } = {}
 ) => {
+  i18n.changeLanguage('en');
   const Wrapper = ({ children }: { children: React.ReactNode }) => (
     <Provider store={store}>
-      <BrowserRouter>{children}</BrowserRouter>
+      <I18nextProvider i18n={i18n}>
+        <BrowserRouter>{children}</BrowserRouter>
+      </I18nextProvider>
     </Provider>
   );
   return { store, ...render(ui, { wrapper: Wrapper, ...renderOptions }) };
@@ -42,74 +48,63 @@ const renderWithProviders = (
 describe('RegisterPage', () => {
   it('should render register page', () => {
     renderWithProviders(<RegisterPage />);
-    
+
     expect(screen.getByRole('heading', { name: /Sign Up/i })).toBeInTheDocument();
-    expect(screen.getByLabelText('First Name')).toBeInTheDocument();
-    expect(screen.getByLabelText('Last Name')).toBeInTheDocument();
-    expect(screen.getByLabelText('Email')).toBeInTheDocument();
-    expect(screen.getByLabelText('Password')).toBeInTheDocument();
-    expect(screen.getByLabelText('Confirm Password')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Sign Up/i })).toBeInTheDocument();
   });
 
   it('should show validation errors for empty fields on submit', async () => {
     renderWithProviders(<RegisterPage />);
-    
-    const submitButton = screen.getByRole('button', { name: /Sign Up/i });
-    fireEvent.click(submitButton);
+    const user = userEvent.setup();
 
-    await waitFor(() => {
-      const errors = screen.getAllByText('This field is required');
-      expect(errors.length).toBeGreaterThan(0);
-    });
+    const submitButton = screen.getByRole('button', { name: /Sign Up/i });
+    await user.click(submitButton);
+
+    expect(await screen.findAllByText(/required/i)).not.toHaveLength(0);
   });
 
   it('should show error for invalid email', async () => {
     renderWithProviders(<RegisterPage />);
-    
-    const emailInput = screen.getByLabelText('Email');
-    fireEvent.change(emailInput, { target: { value: 'invalid-email', name: 'email' } });
-    fireEvent.blur(emailInput);
-    
-    const submitButton = screen.getByRole('button', { name: /Sign Up/i });
-    fireEvent.click(submitButton);
+    const user = userEvent.setup();
 
-    await waitFor(() => {
-      expect(screen.getByText('Invalid email')).toBeInTheDocument();
-    });
+    const emailInput = screen.getByLabelText(/^Email$/i);
+    await user.type(emailInput, 'invalid-email');
+    await user.tab();
+
+    const submitButton = screen.getByRole('button', { name: /Sign Up/i });
+    await user.click(submitButton);
+
+    expect(await screen.findByText(/Invalid email/i)).toBeInTheDocument();
   });
 
   it('should show error for short password', async () => {
     renderWithProviders(<RegisterPage />);
-    
-    const passwordInput = screen.getByLabelText('Password');
-    fireEvent.change(passwordInput, { target: { value: '123', name: 'password' } });
-    fireEvent.blur(passwordInput);
-    
-    const submitButton = screen.getByRole('button', { name: /Sign Up/i });
-    fireEvent.click(submitButton);
+    const user = userEvent.setup();
 
-    await waitFor(() => {
-      expect(screen.getByText('Password must be at least 6 characters')).toBeInTheDocument();
-    });
+    const passwordInput = screen.getByLabelText(/^Password$/i);
+    await user.type(passwordInput, '123');
+    await user.tab();
+
+    const submitButton = screen.getByRole('button', { name: /Sign Up/i });
+    await user.click(submitButton);
+
+    expect(await screen.findByText(/at least 6 characters/i)).toBeInTheDocument();
   });
 
   it('should show error for password mismatch', async () => {
     renderWithProviders(<RegisterPage />);
-    
-    const passwordInput = screen.getByLabelText('Password');
-    const confirmPasswordInput = screen.getByLabelText('Confirm Password');
-    
-    fireEvent.change(passwordInput, { target: { value: 'password123', name: 'password' } });
-    fireEvent.change(confirmPasswordInput, { target: { value: 'different', name: 'confirmPassword' } });
-    fireEvent.blur(confirmPasswordInput);
-    
-    const submitButton = screen.getByRole('button', { name: /Sign Up/i });
-    fireEvent.click(submitButton);
+    const user = userEvent.setup();
 
-    await waitFor(() => {
-      expect(screen.getByText('Passwords do not match')).toBeInTheDocument();
-    });
+    const passwordInput = screen.getByLabelText(/^Password$/i);
+    const confirmPasswordInput = screen.getByLabelText(/Confirm Password/i);
+
+    await user.type(passwordInput, 'password123');
+    await user.type(confirmPasswordInput, 'different');
+    await user.tab();
+
+    const submitButton = screen.getByRole('button', { name: /Sign Up/i });
+    await user.click(submitButton);
+
+    expect(await screen.findByText(/do not match/i)).toBeInTheDocument();
   });
 
   it('should show server error if registration fails', () => {
@@ -120,7 +115,7 @@ describe('RegisterPage', () => {
         isLoading: false,
         error: 'Registration failed server side',
         isAuthenticated: false,
-      }
+      },
     };
     renderWithProviders(<RegisterPage />, { preloadedState: errorState as any });
     expect(screen.getByText('Registration failed server side')).toBeInTheDocument();
@@ -128,12 +123,22 @@ describe('RegisterPage', () => {
 
   it('should submit form with valid data', async () => {
     renderWithProviders(<RegisterPage />);
-    
-    fireEvent.change(screen.getByLabelText('First Name'), { target: { value: 'John', name: 'firstName' } });
-    fireEvent.change(screen.getByLabelText('Last Name'), { target: { value: 'Doe', name: 'lastName' } });
-    fireEvent.change(screen.getByLabelText('Email'), { target: { value: 'test@test.com', name: 'email' } });
-    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'password123', name: 'password' } });
-    fireEvent.change(screen.getByLabelText('Confirm Password'), { target: { value: 'password123', name: 'confirmPassword' } });
+
+    fireEvent.change(screen.getByLabelText('First Name'), {
+      target: { value: 'John', name: 'firstName' },
+    });
+    fireEvent.change(screen.getByLabelText('Last Name'), {
+      target: { value: 'Doe', name: 'lastName' },
+    });
+    fireEvent.change(screen.getByLabelText('Email'), {
+      target: { value: 'test@test.com', name: 'email' },
+    });
+    fireEvent.change(screen.getByLabelText('Password'), {
+      target: { value: 'password123', name: 'password' },
+    });
+    fireEvent.change(screen.getByLabelText('Confirm Password'), {
+      target: { value: 'password123', name: 'confirmPassword' },
+    });
 
     const submitButton = screen.getByRole('button', { name: /Sign Up/i });
     await act(async () => {

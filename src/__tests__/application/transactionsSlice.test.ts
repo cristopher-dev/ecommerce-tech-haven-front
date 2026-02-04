@@ -7,27 +7,27 @@ import transactionsReducer, {
   setProcessingPayment,
   setTransactions,
   updateTransactionStatus,
-} from "@/application/store/slices/transactionsSlice";
-import type { TransactionDTO } from "../../../infrastructure/api/techHavenApiClient";
+} from '@/application/store/slices/transactionsSlice';
+import type { TransactionDTO } from '../../../infrastructure/api/techHavenApiClient';
 
-describe("transactionsSlice", () => {
+describe('transactionsSlice', () => {
   const mockTransaction: TransactionDTO = {
-    id: "TXN001",
-    orderId: "ORD001",
+    id: 'TXN001',
+    orderId: 'ORD001',
     amount: 299.99,
-    currency: "USD",
-    status: "PENDING",
-    paymentMethod: "CREDIT_CARD",
+    currency: 'USD',
+    status: 'PENDING',
+    paymentMethod: 'CREDIT_CARD',
     createdAt: new Date().toISOString(),
   };
 
   const mockTransaction2: TransactionDTO = {
-    id: "TXN002",
-    orderId: "ORD002",
+    id: 'TXN002',
+    orderId: 'ORD002',
     amount: 199.99,
-    currency: "USD",
-    status: "COMPLETED",
-    paymentMethod: "DEBIT_CARD",
+    currency: 'USD',
+    status: 'COMPLETED',
+    paymentMethod: 'DEBIT_CARD',
     createdAt: new Date().toISOString(),
   };
 
@@ -40,33 +40,31 @@ describe("transactionsSlice", () => {
     processingPayment: false,
   };
 
-  it("should return the initial state", () => {
-    expect(transactionsReducer(undefined, { type: "unknown" } as any)).toEqual(
-      initialState,
-    );
+  it('should return the initial state', () => {
+    expect(transactionsReducer(undefined, { type: 'unknown' } as any)).toEqual(initialState);
   });
 
-  it("should set loading state", () => {
+  it('should set loading state', () => {
     const action = setLoading(true);
     const result = transactionsReducer(initialState, action);
 
     expect(result.loading).toBe(true);
   });
 
-  it("should set error message", () => {
-    const errorMessage = "Transaction failed";
+  it('should set error message', () => {
+    const errorMessage = 'Transaction failed';
     const action = setError(errorMessage);
     const result = transactionsReducer(initialState, action);
 
     expect(result.error).toBe(errorMessage);
   });
 
-  it("should clear error by setting to null", () => {
+  it('should clear error by setting to null', () => {
     const state = {
       currentTransaction: null,
       transactions: [],
       loading: false,
-      error: "Previous error",
+      error: 'Previous error',
       creatingTransaction: false,
       processingPayment: false,
     };
@@ -77,13 +75,13 @@ describe("transactionsSlice", () => {
     expect(result.error).toBeNull();
   });
 
-  it("should set transactions list and clear error", () => {
+  it('should set transactions list and clear error', () => {
     const transactions = [mockTransaction, mockTransaction2];
     const state = {
       currentTransaction: null,
       transactions: [],
       loading: false,
-      error: "Previous error",
+      error: 'Previous error',
       creatingTransaction: false,
       processingPayment: false,
     };
@@ -95,7 +93,7 @@ describe("transactionsSlice", () => {
     expect(result.error).toBeNull();
   });
 
-  it("should set current transaction and clear error", () => {
+  it('should set current transaction and clear error', () => {
     const action = setCurrentTransaction(mockTransaction);
     const result = transactionsReducer(initialState, action);
 
@@ -103,12 +101,12 @@ describe("transactionsSlice", () => {
     expect(result.error).toBeNull();
   });
 
-  it("should clear current transaction and keep previous error", () => {
+  it('should clear current transaction and keep previous error', () => {
     const state = {
       currentTransaction: mockTransaction,
       transactions: [],
       loading: false,
-      error: "Previous error",
+      error: 'Previous error',
       creatingTransaction: false,
       processingPayment: false,
     };
@@ -117,24 +115,24 @@ describe("transactionsSlice", () => {
     const result = transactionsReducer(state, action);
 
     expect(result.currentTransaction).toBeNull();
-    expect(result.error).toBe("Previous error");
+    expect(result.error).toBe('Previous error');
   });
 
-  it("should set creating transaction state", () => {
+  it('should set creating transaction state', () => {
     const action = setCreatingTransaction(true);
     const result = transactionsReducer(initialState, action);
 
     expect(result.creatingTransaction).toBe(true);
   });
 
-  it("should set processing payment state", () => {
+  it('should set processing payment state', () => {
     const action = setProcessingPayment(true);
     const result = transactionsReducer(initialState, action);
 
     expect(result.processingPayment).toBe(true);
   });
 
-  it("should update transaction status in current transaction", () => {
+  it('should update transaction status in current transaction', () => {
     const state = {
       currentTransaction: mockTransaction,
       transactions: [],
@@ -145,15 +143,15 @@ describe("transactionsSlice", () => {
     };
 
     const action = updateTransactionStatus({
-      transactionId: "TXN001",
-      status: "COMPLETED",
+      transactionId: 'TXN001',
+      status: 'COMPLETED',
     });
     const result = transactionsReducer(state, action);
 
-    expect(result.currentTransaction?.status).toBe("COMPLETED");
+    expect(result.currentTransaction?.status).toBe('COMPLETED');
   });
 
-  it("should update transaction status in transactions list", () => {
+  it('should update transaction status in transactions list', () => {
     const state = {
       currentTransaction: null,
       transactions: [mockTransaction, mockTransaction2],
@@ -164,16 +162,16 @@ describe("transactionsSlice", () => {
     };
 
     const action = updateTransactionStatus({
-      transactionId: "TXN001",
-      status: "FAILED",
+      transactionId: 'TXN001',
+      status: 'FAILED',
     });
     const result = transactionsReducer(state, action);
 
-    expect(result.transactions[0].status).toBe("FAILED");
-    expect(result.transactions[1].status).toBe("COMPLETED");
+    expect(result.transactions[0].status).toBe('FAILED');
+    expect(result.transactions[1].status).toBe('COMPLETED');
   });
 
-  it("should update transaction status in both current and list", () => {
+  it('should update transaction status in both current and list', () => {
     const state = {
       currentTransaction: mockTransaction,
       transactions: [mockTransaction, mockTransaction2],
@@ -184,21 +182,21 @@ describe("transactionsSlice", () => {
     };
 
     const action = updateTransactionStatus({
-      transactionId: "TXN001",
-      status: "COMPLETED",
+      transactionId: 'TXN001',
+      status: 'COMPLETED',
     });
     const result = transactionsReducer(state, action);
 
-    expect(result.currentTransaction?.status).toBe("COMPLETED");
-    expect(result.transactions[0].status).toBe("COMPLETED");
+    expect(result.currentTransaction?.status).toBe('COMPLETED');
+    expect(result.transactions[0].status).toBe('COMPLETED');
   });
 
-  it("should clear current transaction", () => {
+  it('should clear current transaction', () => {
     const state = {
       currentTransaction: mockTransaction,
       transactions: [],
       loading: false,
-      error: "Some error",
+      error: 'Some error',
       creatingTransaction: false,
       processingPayment: false,
     };
@@ -210,7 +208,7 @@ describe("transactionsSlice", () => {
     expect(result.error).toBeNull();
   });
 
-  it("should handle multiple state changes in sequence", () => {
+  it('should handle multiple state changes in sequence', () => {
     let state = initialState;
 
     state = transactionsReducer(state, setLoading(true));
@@ -222,5 +220,32 @@ describe("transactionsSlice", () => {
     expect(state.currentTransaction).toEqual(mockTransaction);
     expect(state.loading).toBe(false);
     expect(state.creatingTransaction).toBe(false);
+  });
+
+  it('should handle updateTransactionStatus when no current transaction exists', () => {
+    const action = updateTransactionStatus({ transactionId: 'TXN001', status: 'COMPLETED' });
+    const result = transactionsReducer(initialState, action);
+    expect(result.currentTransaction).toBeNull();
+  });
+
+  it('should handle updateTransactionStatus when current transaction ID does not match', () => {
+    const state = { ...initialState, currentTransaction: mockTransaction };
+    const action = updateTransactionStatus({ transactionId: 'TXN_OTHER', status: 'COMPLETED' });
+    const result = transactionsReducer(state, action);
+    expect(result.currentTransaction?.status).toBe('PENDING');
+  });
+
+  it('should handle updateTransactionStatus when transaction not in list', () => {
+    const state = { ...initialState, transactions: [mockTransaction] };
+    const action = updateTransactionStatus({ transactionId: 'TXN_OTHER', status: 'COMPLETED' });
+    const result = transactionsReducer(state, action);
+    expect(result.transactions[0].status).toBe('PENDING');
+  });
+
+  it('should handle setCurrentTransaction(null)', () => {
+    const state = { ...initialState, currentTransaction: mockTransaction };
+    const action = setCurrentTransaction(null);
+    const result = transactionsReducer(state, action);
+    expect(result.currentTransaction).toBeNull();
   });
 });

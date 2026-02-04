@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import React from 'react';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
@@ -12,6 +13,8 @@ import purchasedItemsSlice from '@/application/store/slices/purchasedItemsSlice'
 import transactionsSlice from '@/application/store/slices/transactionsSlice';
 import wishlistSlice from '@/application/store/slices/wishlistSlice';
 import LoginPage from '@/presentation/pages/LoginPage';
+import { I18nextProvider } from 'react-i18next';
+import i18n from '@/i18n/config';
 
 // Mock useNavigate
 const mockNavigate = jest.fn();
@@ -50,21 +53,25 @@ describe('LoginPage', () => {
           isLoading: false,
           error: null,
           isAuthenticated: false,
-        }
-      } as any
+        },
+      } as any,
     });
 
     mockNavigate.mockClear();
     (global.fetch as jest.Mock).mockClear();
+    i18n.changeLanguage('en');
   });
 
-  const renderLoginPage = () => render(
-    <Provider store={store}>
-      <BrowserRouter>
-        <LoginPage />
-      </BrowserRouter>
-    </Provider>
-  );
+  const renderLoginPage = () =>
+    render(
+      <Provider store={store}>
+        <I18nextProvider i18n={i18n}>
+          <BrowserRouter>
+            <LoginPage />
+          </BrowserRouter>
+        </I18nextProvider>
+      </Provider>
+    );
 
   it('should render login page with form fields', () => {
     renderLoginPage();
@@ -73,43 +80,52 @@ describe('LoginPage', () => {
   });
 
   it('should show validation errors for empty email and password', async () => {
+    i18n.changeLanguage('en');
     renderLoginPage();
+    const user = userEvent.setup();
     const emailInput = screen.getByLabelText(/Email/i);
     const passwordInput = screen.getByLabelText(/Password/i);
-    
-    fireEvent.change(emailInput, { target: { value: '', name: 'email' } });
-    fireEvent.change(passwordInput, { target: { value: '', name: 'password' } });
-    fireEvent.blur(emailInput);
-    fireEvent.blur(passwordInput);
-    
-    const submitButton = screen.getByRole('button', { name: /Login/i });
-    fireEvent.click(submitButton);
 
-    await waitFor(() => {
-      const errors = screen.getAllByText('This field is required');
-      expect(errors.length).toBeGreaterThan(0);
-    });
+    await user.clear(emailInput);
+    await user.clear(passwordInput);
+    await user.tab();
+
+    const submitButton = screen.getByRole('button', { name: /Login/i });
+    await user.click(submitButton);
+
+    expect(await screen.findAllByText(/required/i)).not.toHaveLength(0);
   });
 
   it('should show error for invalid email', async () => {
-    renderLoginPage();
-    const emailInput = screen.getByLabelText(/Email/i);
-    fireEvent.change(emailInput, { target: { value: 'invalid-email', name: 'email' } });
-    fireEvent.blur(emailInput);
-    
-    const submitButton = screen.getByRole('button', { name: /Login/i });
-    fireEvent.click(submitButton);
+    i18n.changeLanguage('en');
+    render(
+      <Provider store={store}>
+        <I18nextProvider i18n={i18n}>
+          <BrowserRouter>
+            <LoginPage />
+          </BrowserRouter>
+        </I18nextProvider>
+      </Provider>
+    );
 
-    await waitFor(() => {
-      expect(screen.getByText('Invalid email')).toBeInTheDocument();
-    });
+    const user = userEvent.setup();
+    const emailInput = screen.getByLabelText(/Email/i);
+
+    await user.clear(emailInput);
+    await user.type(emailInput, 'invalid-email');
+    await user.tab();
+
+    const submitButton = screen.getByRole('button', { name: /Login/i });
+    await user.click(submitButton);
+
+    expect(await screen.findByText(/Invalid email/i)).toBeInTheDocument();
   });
 
   it('should call navigate on successful login', async () => {
     renderLoginPage();
-    
+
     const submitButton = screen.getByRole('button', { name: /Login/i });
-    
+
     await act(async () => {
       fireEvent.click(submitButton);
     });
@@ -129,10 +145,10 @@ describe('LoginPage', () => {
           isLoading: false,
           error: 'Invalid credentials',
           isAuthenticated: false,
-        }
+        },
       } as any,
     });
-    
+
     renderLoginPage();
     expect(screen.getByText('Invalid credentials')).toBeInTheDocument();
   });

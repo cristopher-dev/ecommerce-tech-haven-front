@@ -31,10 +31,11 @@ describe('Header Component', () => {
         cart: cartReducer,
         wishlist: wishlistReducer,
       } as any,
-      preloadedState: preloadedState || {
+      preloadedState: {
         auth: { user: null, token: null, status: 'idle', error: null },
         cart: { items: [], total: 0, totalItems: 0 },
         wishlist: { items: [], count: 0 },
+        ...preloadedState,
       },
     });
 
@@ -84,6 +85,7 @@ describe('Header Component', () => {
         ],
         loading: false,
         error: null,
+        count: 2,
       },
     };
     renderHeader(state);
@@ -91,93 +93,146 @@ describe('Header Component', () => {
     expect(wishlistBadges.length).toBeGreaterThan(0);
   });
 
-  it('toggles language dropdown', () => {
+  it('toggles language dropdown and changes language', () => {
+    i18n.changeLanguage('en');
     renderHeader();
+    // Search by title or text depending on what RTL sees
     const langButton = screen.getByTitle(/Select Language/i);
     fireEvent.click(langButton);
-    expect(screen.getByText(/Español/i)).toBeInTheDocument();
+    const spanishBtn = screen.getByText(/Español/i);
+    fireEvent.click(spanishBtn);
+    expect(i18n.language).toBe('es');
+
+    fireEvent.click(langButton);
+    const englishBtn = screen.getByText(/English/i);
+    fireEvent.click(englishBtn);
+    expect(i18n.language).toBe('en');
   });
 
-  it('shows login button when user is not logged in', () => {
+  it('handles search form submission', () => {
+    i18n.changeLanguage('en');
     renderHeader();
-    const loginButton = screen.getByText(/Login/i);
-    expect(loginButton).toBeInTheDocument();
-  });
-
-  it('triggers search when form is submitted', () => {
-    renderHeader();
-    const searchInput = screen.getByPlaceholderText(/header\.search|search products/i);
+    const searchInput = screen.getByPlaceholderText(/Search products/i);
     fireEvent.change(searchInput, { target: { value: 'laptop' } });
 
-    const form = searchInput.closest('form');
-    fireEvent.submit(form!);
+    const searchForm = searchInput.closest('form');
+    fireEvent.submit(searchForm!);
 
-    expect(mockNavigate).toHaveBeenCalledWith(expect.stringContaining('search=laptop'));
+    expect(mockNavigate).toHaveBeenCalledWith('/product?search=laptop');
   });
 
-  it('performs mock login when login button is clicked', async () => {
-    (globalThis.fetch as jest.Mock).mockResolvedValue({
+  it('handles search form submission with empty value', () => {
+    renderHeader();
+    const searchForm = screen.getByRole('searchbox').closest('form');
+    fireEvent.submit(searchForm!);
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  it('navigates to categories', () => {
+    i18n.changeLanguage('en');
+    renderHeader();
+    const categoriesBtn = screen.getAllByText(/Categories/i)[0];
+    fireEvent.click(categoriesBtn);
+
+    const electronicsBtn = screen.getByText(/Electronics/i);
+    fireEvent.click(electronicsBtn);
+
+    expect(mockNavigate).toHaveBeenCalledWith('/product?category=electronics');
+  });
+
+  it('performs mock login successfully', async () => {
+    i18n.changeLanguage('en');
+    (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ email: 'admin@techhaven.com', role: 'ADMIN', token: 'fake-token' }),
+      json: async () => ({
+        email: 'admin@techhaven.com',
+        token: 'mock-token',
+        role: 'ADMIN',
+      }),
     });
 
     renderHeader();
-    const loginButton = screen.getByText(/Login/i);
+    const loginBtn = screen.getByTitle(/Demo: Click to login as Admin/i);
 
     await act(async () => {
-      fireEvent.click(loginButton);
+      fireEvent.click(loginBtn);
     });
 
     expect(globalThis.fetch).toHaveBeenCalled();
   });
 
-  it('shows user menu and performs logout', () => {
-    const loggedInState = {
+  it('handles failed mock login', async () => {
+    i18n.changeLanguage('en');
+    (globalThis.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+    });
+    const spyConsole = jest.spyOn(console, 'error').mockImplementation();
+    const spyAlert = jest.spyOn(window, 'alert').mockImplementation();
+
+    renderHeader();
+    const loginBtn = screen.getByTitle(/Demo: Click to login as Admin/i);
+
+    await act(async () => {
+      fireEvent.click(loginBtn);
+    });
+
+    expect(spyAlert).toHaveBeenCalled();
+    spyConsole.mockRestore();
+    spyAlert.mockRestore();
+  });
+
+  it('handles logout with timeout', async () => {
+    i18n.changeLanguage('en');
+    jest.useFakeTimers();
+    const state = {
       auth: {
-        user: {
-          id: '1',
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'john@example.com',
-        },
-        token: 'fake-token',
-        status: 'succeeded',
-        error: null,
+        user: { firstName: 'John', lastName: 'Doe', email: 'john@example.com' },
+        token: 'token',
       },
     };
+    renderHeader(state);
 
-    renderHeader(loggedInState);
+    const userBtn = screen.getByText('John');
+    fireEvent.click(userBtn);
 
-    // Should show John instead of Login
-    expect(screen.getByText('John')).toBeInTheDocument();
+    const logoutBtn = screen.getByText(/Logout/i);
+    fireEvent.click(logoutBtn);
 
-    // Click on account to show logout
-    const accountButton = screen.getByText('John').closest('button');
-    fireEvent.click(accountButton!);
+    act(() => {
+      jest.advanceTimersByTime(100);
+    });
 
-    const logoutButton = screen.getByText(/logout/i);
-    fireEvent.click(logoutButton);
+    expect(mockNavigate).toHaveBeenCalledWith('/');
+    jest.useRealTimers();
   });
 
-  it('navigates to categories', () => {
+  it('covers mouse interactions on wishlist, purchases, and cart', () => {
+    i18n.changeLanguage('en');
     renderHeader();
-    // Use getAllByText and take the first one (the dropdown toggle)
-    const categoriesButton = screen.getAllByText(/Categories/i)[0];
-    fireEvent.click(categoriesButton);
 
-    const electronicsButton = screen.getByText(/Electronics/i);
-    fireEvent.click(electronicsButton);
-
-    expect(mockNavigate).toHaveBeenCalledWith('/product?category=electronics');
-  });
-
-  it('navigates to wishlist', () => {
-    renderHeader();
-    const wishlistLink = screen.getByRole('link', { name: /wishlist/i });
+    // Wishlist
+    const wishlistLink = screen.getByRole('link', { name: /Wishlist/i });
+    fireEvent.mouseEnter(wishlistLink);
+    fireEvent.mouseLeave(wishlistLink);
     expect(wishlistLink).toHaveAttribute('href', '/wishlist');
+
+    // Purchases
+    const ordersText = i18n.t('common.orders') || 'Orders';
+    const purchasesLink = screen.getByRole('link', {
+      name: new RegExp(`${ordersText}|Purchases`, 'i'),
+    });
+    fireEvent.mouseEnter(purchasesLink);
+    fireEvent.mouseLeave(purchasesLink);
+    expect(purchasesLink).toHaveAttribute('href', '/purchases');
+
+    // Cart button (it's a button, not a link)
+    const cartBtn = screen.getByRole('button', { name: /Total/i });
+    fireEvent.mouseEnter(cartBtn);
+    fireEvent.mouseLeave(cartBtn);
   });
 
   it('shows cart items and handles remove', () => {
+    i18n.changeLanguage('en');
     const cartWithItems = {
       cart: {
         items: [
@@ -195,11 +250,9 @@ describe('Header Component', () => {
 
     renderHeader(cartWithItems);
 
-    // Total price should be displayed
     const priceElements = screen.getAllByText(/\$200\.00/);
     expect(priceElements.length).toBeGreaterThan(0);
 
-    // Click cart to show items
     const cartButton = priceElements[0].closest('button');
     fireEvent.click(cartButton!);
 
@@ -209,5 +262,34 @@ describe('Header Component', () => {
     if (removeButton) {
       fireEvent.click(removeButton);
     }
+  });
+
+  it('navigates to other categories from search bar', () => {
+    i18n.changeLanguage('en');
+    renderHeader();
+    const categoriesBtns = screen.getAllByText(/Categories/i);
+    const mainCategoriesBtn = categoriesBtns[0];
+    fireEvent.click(mainCategoriesBtn);
+
+    // "All Categories" is both the toggle and an item
+    const allBtns = screen.getAllByText(/All Categories/i);
+    const allBtnItem = allBtns.find((el) => el.classList.contains('dropdown-item')) || allBtns[1];
+    fireEvent.click(allBtnItem);
+    expect(mockNavigate).toHaveBeenCalledWith('/product?category=all');
+
+    fireEvent.click(mainCategoriesBtn);
+    const fashionBtn = screen.getByText(/Fashion/i);
+    fireEvent.click(fashionBtn);
+    expect(mockNavigate).toHaveBeenCalledWith('/product?category=fashion');
+
+    fireEvent.click(mainCategoriesBtn);
+    const homeBtn = screen.getByText(/Home & Garden/i);
+    fireEvent.click(homeBtn);
+    expect(mockNavigate).toHaveBeenCalledWith('/product?category=home-garden');
+
+    fireEvent.click(mainCategoriesBtn);
+    const sportsBtn = screen.getByText(/Sports/i);
+    fireEvent.click(sportsBtn);
+    expect(mockNavigate).toHaveBeenCalledWith('/product?category=sports');
   });
 });

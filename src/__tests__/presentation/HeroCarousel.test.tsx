@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import HeroCarousel from '@/presentation/components/HeroCarousel';
 import { I18nextProvider } from 'react-i18next';
 import i18n from '@/i18n/config';
@@ -11,6 +11,19 @@ describe('HeroCarousel Component', () => {
   it('should render hero carousel without crashing', () => {
     const { container } = renderWithI18n(<HeroCarousel />);
     expect(container).toBeInTheDocument();
+  });
+
+  it('should apply hover effects to shop now buttons', () => {
+    renderWithI18n(<HeroCarousel />);
+
+    const shopNowButtons = screen.getAllByRole('button');
+    const firstButton = shopNowButtons[0];
+
+    fireEvent.mouseEnter(firstButton);
+    expect(firstButton.style.transform).toContain('translateY(-2px)');
+
+    fireEvent.mouseLeave(firstButton);
+    expect(firstButton.style.transform).toBe('translateY(0) scale(1)');
   });
 
   it('should render carousel inner structure', () => {
