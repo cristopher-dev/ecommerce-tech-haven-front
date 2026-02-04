@@ -47,7 +47,7 @@ const CheckoutFinalStatusPage: React.FC = () => {
   };
 
   // Use transactionItems if available, otherwise fall back to purchasedItems, otherwise fall back to checkout.cartItems
-  let displayItems = checkout.cartItems;
+  let displayItems = checkout.cartItems || [];
   if (purchasedItems.length > 0) {
     displayItems = purchasedItems;
   }

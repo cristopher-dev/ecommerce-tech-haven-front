@@ -1,35 +1,47 @@
 export default {
-  preset: "ts-jest",
-  testEnvironment: "jsdom",
-  extensionsToTreatAsEsm: [".ts", ".tsx"],
-  moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/src/$1",
-    "\\.(css|scss|sass)$": "identity-obj-proxy",
-    "\\.(jpg|jpeg|png|gif|svg)$": "<rootDir>/__mocks__/fileMock.js",
+  preset: 'ts-jest',
+  testEnvironment: 'jsdom',
+  extensionsToTreatAsEsm: ['.ts', '.tsx'],
+  globals: {
+    'ts-jest': {
+      useESM: true,
+      tsconfig: {
+        module: 'esnext',
+      },
+    },
   },
-  setupFilesAfterEnv: ["<rootDir>/src/setupTests.ts"],
+  moduleNameMapper: {
+    '^@/styles/.*\\.s?css$': 'identity-obj-proxy',
+    '^@/(.*)$': '<rootDir>/src/$1',
+    '\\.(css|scss|sass)$': 'identity-obj-proxy',
+    '\\.(jpg|jpeg|png|gif|svg)$': '<rootDir>/__mocks__/fileMock.js',
+  },
+  setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
+  testEnvironmentOptions: {
+    customExportConditions: [''],
+  },
   transform: {
-    "^.+\\.tsx?$": [
-      "ts-jest",
+    '^.+\\.tsx?$': [
+      'ts-jest',
       {
         useESM: true,
         tsconfig: {
-          module: "esnext",
+          module: 'esnext',
           esModuleInterop: true,
-          jsx: "react-jsx",
+          jsx: 'react-jsx',
         },
       },
     ],
   },
   testMatch: [
-    "<rootDir>/src/**/__tests__/**/*.(ts|tsx|js)",
-    "<rootDir>/src/**/*.(test|spec).(ts|tsx|js)",
+    '<rootDir>/src/**/__tests__/**/*.(ts|tsx|js)',
+    '<rootDir>/src/**/*.(test|spec).(ts|tsx|js)',
   ],
-  moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   collectCoverageFrom: [
-    "src/**/*.{ts,tsx}",
-    "!src/**/*.d.ts",
-    "!src/main.tsx",
-    "!src/__tests__/**",
+    'src/**/*.{ts,tsx}',
+    '!src/**/*.d.ts',
+    '!src/main.tsx',
+    '!src/__tests__/**',
   ],
 };

@@ -251,7 +251,7 @@ const ProductPage: React.FC = () => {
     const loadData = async () => {
       try {
         setLoading(true);
-        const repo = new TechHavenApiProductRepository();
+        const repo = TechHavenApiProductRepository.getInstance();
 
         if (searchQuery) {
           setIsSearchMode(true);
