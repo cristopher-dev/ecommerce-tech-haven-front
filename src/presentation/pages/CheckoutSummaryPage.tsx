@@ -311,102 +311,172 @@ const CheckoutSummaryPage: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className="checkout-summary-page">
       <Header />
-      <main className="container-fluid px-2 px-sm-3 px-md-4 py-2 py-sm-3 py-md-4">
-        {/* Breadcrumb */}
-        <nav aria-label="breadcrumb" className="mb-3 mb-md-4">
-          <ol className="breadcrumb breadcrumb-sm">
+      <main className="checkout-main container-fluid px-3 px-sm-4 px-md-5 py-4 py-md-5">
+        {/* Enhanced Breadcrumb */}
+        <nav aria-label="breadcrumb" className="breadcrumb-nav mb-4 mb-md-5">
+          <ol className="breadcrumb breadcrumb-modern">
             <li className="breadcrumb-item">
-              <Link to="/">{t('header.home')}</Link>
+              <Link to="/" className="breadcrumb-link">
+                <span className="breadcrumb-icon">🏠</span>
+                {t('header.home')}
+              </Link>
             </li>
             <li className="breadcrumb-item">
-              <Link to="/cart">{t('header.cart')}</Link>
+              <Link to="/cart" className="breadcrumb-link">
+                <span className="breadcrumb-icon">🛒</span>
+                {t('header.cart')}
+              </Link>
             </li>
             <li className="breadcrumb-item">
-              <Link to="/checkout/delivery">{t('checkoutDelivery.breadcrumb')}</Link>
+              <Link to="/checkout/delivery" className="breadcrumb-link">
+                <span className="breadcrumb-icon">📦</span>
+                {t('checkoutDelivery.breadcrumb')}
+              </Link>
             </li>
             <li className="breadcrumb-item active" aria-current="page">
-              {t('checkoutSummary.breadcrumb')}
+              <span className="breadcrumb-current">
+                <span className="breadcrumb-icon">📋</span>
+                {t('checkoutSummary.breadcrumb')}
+              </span>
             </li>
           </ol>
         </nav>
 
-        {/* Progress Bar */}
-        <div className="mb-3 mb-md-4">
-          <div className="progress" style={{ height: '1.5rem' }}>
-            <progress className="progress-bar" style={{ width: '66%' }} value={66} max={100}>
-              {t('checkoutSummary.progressBar')}
-            </progress>
+        {/* Enhanced Progress Bar */}
+        <div className="progress-container mb-4 mb-md-5">
+          <div className="progress-wrapper">
+            <div className="progress-bar-modern" style={{ width: '66%' }}>
+              <div className="progress-glow"></div>
+            </div>
+          </div>
+          <div className="progress-steps">
+            <span className="step completed" title="Carrito completado">
+              <span className="step-icon">✓</span>
+              <span className="step-label">Carrito</span>
+            </span>
+            <span className="step completed" title="Entrega completada">
+              <span className="step-icon">✓</span>
+              <span className="step-label">Entrega</span>
+            </span>
+            <span className="step active" title="Resumen del pedido">
+              <span className="step-number">3</span>
+              <span className="step-label">Resumen</span>
+            </span>
           </div>
         </div>
 
         {/* Error Alert */}
         {checkout.error && (
-          <output className="alert alert-danger alert-dismissible fade show fs-6 fs-md-5 mb-3 mb-md-4">
-            {checkout.error}
+          <div className="error-alert alert-modern alert-error fade-in-up">
+            <div className="alert-icon">⚠️</div>
+            <div className="alert-content">
+              <h4 className="alert-title">{t('common.error')}</h4>
+              <p className="alert-message">{checkout.error}</p>
+            </div>
             <button
               type="button"
-              className="btn-close"
+              className="alert-close"
               onClick={() => dispatch(setError(null))}
               aria-label="Close"
-            />
-          </output>
+            >
+              ✕
+            </button>
+          </div>
         )}
 
-        {/* Title */}
-        <h1 className="h3 h2-lg h1-xl mb-3 mb-md-4">{t('checkoutSummary.orderSummary')}</h1>
+        {/* Enhanced Title */}
+        <header className="page-header mb-4 mb-md-5">
+          <h1 className="page-title fade-in-up">
+            <span className="title-icon">📋</span>
+            {t('checkoutSummary.orderSummary')}
+          </h1>
+          <p className="page-subtitle">
+            <span className="subtitle-icon">✨</span>
+            Revisa los detalles de tu pedido antes de confirmar la compra
+          </p>
+          <div className="header-decoration">
+            <div className="decoration-line"></div>
+            <div className="decoration-dot"></div>
+            <div className="decoration-line"></div>
+          </div>
+        </header>
 
         {/* Main Content */}
-        <div className="row g-2 g-md-3 g-lg-4">
+        <div className="checkout-grid">
           {/* Left Column - Items & Delivery */}
-          <div className="col-12 col-lg-8 mb-3 mb-lg-0">
-            {/* Items Section */}
-            <section className="mb-4 mb-md-5">
-              <h2 className="h4 h3-md h2-lg mb-3">{t('checkoutSummary.items')}</h2>
+          <div className="checkout-content">
+            {/* Enhanced Items Section */}
+            <section className="order-items-section fade-in-up">
+              <div className="section-header">
+                <h2 className="section-title">
+                  <span className="section-icon">🛍️</span>
+                  {t('checkoutSummary.items')}
+                </h2>
+                <div className="section-meta">
+                  <span className="item-count">
+                    <span className="count-icon">📊</span>
+                    {cartItems.length} artículo{cartItems.length !== 1 ? 's' : ''}
+                  </span>
+                  <div className="section-status">
+                    <span className="status-dot"></span>
+                    Listo para envío
+                  </div>
+                </div>
+              </div>
 
               {/* Desktop/Tablet Table View */}
-              <div className="d-none d-md-block table-responsive">
-                <table className="table table-striped table-hover">
-                  <thead className="table-light">
-                    <tr>
-                      <th className="fs-6 fw-bold">{t('checkoutSummary.product')}</th>
-                      <th className="fs-6 fw-bold text-center">{t('checkoutSummary.quantity')}</th>
-                      <th className="fs-6 fw-bold text-end">{t('checkoutSummary.price')}</th>
-                      <th className="fs-6 fw-bold text-end">{t('common.total')}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {cartItems.map((item) => (
-                      <tr key={item.id || item.product.id}>
-                        <td className="align-middle">{item.product.name}</td>
-                        <td className="align-middle text-center">{item.quantity}</td>
-                        <td className="align-middle text-end">${item.product.price.toFixed(2)}</td>
-                        <td className="align-middle text-end fw-bold">
-                          ${(item.product.price * item.quantity).toFixed(2)}
-                        </td>
-                      </tr>
+              <div className="items-table-container d-none d-md-block">
+                <div className="modern-table">
+                  <div className="table-header">
+                    <div className="table-cell product-cell">{t('checkoutSummary.product')}</div>
+                    <div className="table-cell qty-cell">{t('checkoutSummary.quantity')}</div>
+                    <div className="table-cell price-cell">{t('checkoutSummary.price')}</div>
+                    <div className="table-cell total-cell">{t('common.total')}</div>
+                  </div>
+                  <div className="table-body">
+                    {cartItems.map((item, index) => (
+                      <div key={item.id || item.product.id} className="table-row" style={{ animationDelay: `${index * 0.1}s` }}>
+                        <div className="table-cell product-cell">
+                          <div className="product-info">
+                            <h4 className="product-name">{item.product.name}</h4>
+                            <span className="product-sku">SKU: {item.product.id}</span>
+                          </div>
+                        </div>
+                        <div className="table-cell qty-cell">
+                          <span className="quantity-badge">{item.quantity}</span>
+                        </div>
+                        <div className="table-cell price-cell">${item.product.price.toFixed(2)}</div>
+                        <div className="table-cell total-cell total-price">${(item.product.price * item.quantity).toFixed(2)}</div>
+                      </div>
                     ))}
-                  </tbody>
-                </table>
+                  </div>
+                </div>
               </div>
 
               {/* Mobile Card View */}
-              <div className="d-md-none">
-                {cartItems.map((item) => (
-                  <div key={item.id || item.product.id} className="card mb-2 mb-sm-3">
-                    <div className="card-body p-2 p-sm-3">
-                      <div className="d-flex justify-content-between align-items-start mb-2">
-                        <h5 className="card-title mb-0 fs-6 flex-grow-1">{item.product.name}</h5>
-                        <span className="badge bg-primary fs-6">x{item.quantity}</span>
+              <div className="items-mobile d-md-none">
+                {cartItems.map((item, index) => (
+                  <div key={item.id || item.product.id} className="item-card-modern fade-in-up" style={{ animationDelay: `${index * 0.1}s` }}>
+                    <div className="item-card-content">
+                      <div className="item-header">
+                        <h3 className="item-name">{item.product.name}</h3>
+                        <span className="item-sku">SKU: {item.product.id}</span>
                       </div>
-                      <div className="d-flex justify-content-between align-items-center">
-                        <span className="text-muted fs-7">
-                          ${item.product.price.toFixed(2)} c/u
-                        </span>
-                        <span className="fw-bold fs-5">
-                          ${(item.product.price * item.quantity).toFixed(2)}
-                        </span>
+                      <div className="item-details">
+                        <div className="detail-row">
+                          <span className="detail-label">{t('checkoutSummary.quantity')}:</span>
+                          <span className="quantity-display">{item.quantity}</span>
+                        </div>
+                        <div className="detail-row">
+                          <span className="detail-label">{t('checkoutSummary.price')}:</span>
+                          <span className="price-display">${item.product.price.toFixed(2)}</span>
+                        </div>
+                        <div className="detail-row total-row">
+                          <span className="detail-label">{t('common.total')}:</span>
+                          <span className="total-display">${(item.product.price * item.quantity).toFixed(2)}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -414,70 +484,45 @@ const CheckoutSummaryPage: React.FC = () => {
               </div>
             </section>
 
-            {/* Delivery Information Section */}
-            <section className="mb-4 mb-md-5">
-              <h2 className="h4 h3-md h2-lg mb-3">{t('checkoutSummary.deliveryInformation')}</h2>
+            {/* Enhanced Delivery Information Section */}
+            <section className="delivery-section fade-in-up">
+              <div className="section-header">
+                <h2 className="section-title">
+                  <span className="section-icon">🚚</span>
+                  {t('checkoutSummary.deliveryInformation')}
+                </h2>
+                <div className="section-meta">
+                  <div className="delivery-badge">
+                    <span className="badge-icon">📍</span>
+                    Envío estándar
+                  </div>
+                </div>
+              </div>
               {checkout.deliveryData && (
-                <div className="card">
-                  <div className="card-body p-3 p-md-4">
-                    <div className="row g-2 g-md-3">
-                      <div className="col-12 col-sm-6">
-                        <p className="mb-2 mb-md-3">
-                          <strong className="d-block text-muted small text-uppercase mb-1">
-                            {t('checkoutSummary.name')}
-                          </strong>
-                          <span className="fs-6 fs-md-5">
-                            {checkout.deliveryData.firstName} {checkout.deliveryData.lastName}
-                          </span>
-                        </p>
+                <div className="delivery-card-modern">
+                  <div className="delivery-content">
+                    <div className="delivery-row">
+                      <div className="delivery-field">
+                        <label className="field-label">{t('checkoutSummary.name')}</label>
+                        <span className="field-value">{checkout.deliveryData.firstName} {checkout.deliveryData.lastName}</span>
                       </div>
-                      <div className="col-12 col-sm-6">
-                        <p className="mb-2 mb-md-3">
-                          <strong className="d-block text-muted small text-uppercase mb-1">
-                            {t('checkoutSummary.phone')}
-                          </strong>
-                          <span className="fs-6 fs-md-5">{checkout.deliveryData.phone}</span>
-                        </p>
+                      <div className="delivery-field">
+                        <label className="field-label">{t('checkoutSummary.phone')}</label>
+                        <span className="field-value">{checkout.deliveryData.phone}</span>
                       </div>
-                      <div className="col-12">
-                        <p className="mb-2 mb-md-3">
-                          <strong className="d-block text-muted small text-uppercase mb-1">
-                            {t('checkoutSummary.email')}
-                          </strong>
-                          <span className="fs-6 fs-md-5">{checkout.deliveryData.email}</span>
-                        </p>
+                    </div>
+                    <div className="delivery-row">
+                      <div className="delivery-field full-width">
+                        <label className="field-label">{t('checkoutSummary.email')}</label>
+                        <span className="field-value">{checkout.deliveryData.email}</span>
                       </div>
-                      <div className="col-12">
-                        <p className="mb-2 mb-md-3">
-                          <strong className="d-block text-muted small text-uppercase mb-1">
-                            {t('checkoutSummary.address')}
-                          </strong>
-                          <span className="fs-6 fs-md-5">{checkout.deliveryData.address}</span>
-                        </p>
-                      </div>
-                      <div className="col-12 col-sm-6">
-                        <p className="mb-0">
-                          <strong className="d-block text-muted small text-uppercase mb-1">
-                            {t('checkoutSummary.city')}
-                          </strong>
-                          <span className="fs-6 fs-md-5">{checkout.deliveryData.city}</span>
-                        </p>
-                      </div>
-                      <div className="col-12 col-sm-6">
-                        <p className="mb-0">
-                          <strong className="d-block text-muted small text-uppercase mb-1">
-                            {t('checkoutSummary.state')}
-                          </strong>
-                          <span className="fs-6 fs-md-5">{checkout.deliveryData.state}</span>
-                        </p>
-                      </div>
-                      <div className="col-12 col-sm-6">
-                        <p className="mb-0">
-                          <strong className="d-block text-muted small text-uppercase mb-1">
-                            {t('checkoutSummary.zip')}
-                          </strong>
-                          <span className="fs-6 fs-md-5">{checkout.deliveryData.postalCode}</span>
-                        </p>
+                    </div>
+                    <div className="delivery-row">
+                      <div className="delivery-field full-width">
+                        <label className="field-label">{t('checkoutSummary.address')}</label>
+                        <span className="field-value">
+                          {checkout.deliveryData.address}, {checkout.deliveryData.city}, {checkout.deliveryData.state} {checkout.deliveryData.postalCode}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -487,90 +532,91 @@ const CheckoutSummaryPage: React.FC = () => {
           </div>
 
           {/* Right Column - Cost Breakdown & Payment */}
-          <div className="col-12 col-lg-4">
-            <div className="card sticky-top-responsive">
-              <div className="card-body p-3 p-md-4">
+          <div className="checkout-sidebar">
+            <div className="order-summary-card">
+              <div className="summary-header">
+                <h2 className="summary-title">
+                  <span className="summary-icon">💰</span>
+                  {t('checkoutSummary.costBreakdown')}
+                </h2>
+                <div className="summary-subtitle">Resumen de costos</div>
+              </div>
+
+              <div className="summary-content">
                 {/* Cost Breakdown */}
-                <h2 className="h4 h3-md h2-lg mb-3">{t('checkoutSummary.costBreakdown')}</h2>
-
-                <div className="mb-2 d-flex justify-content-between align-items-center pb-2">
-                  <span className="text-muted">{t('checkoutSummary.subtotal')}:</span>
-                  <span className="fw-500 fs-6 fs-md-5">${subtotal.toFixed(2)}</span>
-                </div>
-
-                <div className="mb-2 d-flex justify-content-between align-items-center pb-2">
-                  <span className="text-muted">{t('checkoutSummary.baseFee')}:</span>
-                  <span className="fw-500 fs-6 fs-md-5">${baseFee.toFixed(2)}</span>
-                </div>
-
-                <div className="mb-3 d-flex justify-content-between align-items-center pb-3 border-bottom">
-                  <span className="text-muted">{t('checkoutSummary.deliveryFee')}:</span>
-                  <span className="fw-500 fs-6 fs-md-5">${deliveryFee.toFixed(2)}</span>
-                </div>
-
-                <div className="mb-4 d-flex justify-content-between align-items-center">
-                  <span className="fw-bold fs-5 fs-lg-4">{t('checkoutSummary.total')}:</span>
-                  <span className="fw-bold fs-4 fs-md-3 text-primary">${total.toFixed(2)}</span>
-                </div>
-
-                {/* Payment Information */}
-                <h3 className="h5 h4-md mb-3 pb-3 border-top">
-                  {t('checkoutSummary.paymentInformation')}
-                </h3>
-
-                {checkout.paymentData && (
-                  <div className="mb-4">
-                    <div className="mb-2">
-                      <p className="mb-1 text-muted small text-uppercase">
-                        <strong>{t('checkoutSummary.card')}</strong>
-                      </p>
-                      <p className="mb-0 fs-6 fs-md-5">{checkout.paymentData.cardNumber}</p>
-                    </div>
-                    <div className="mb-2">
-                      <p className="mb-1 text-muted small text-uppercase">
-                        <strong>{t('checkoutSummary.holder')}</strong>
-                      </p>
-                      <p className="mb-0 fs-6 fs-md-5">{checkout.paymentData.cardholderName}</p>
-                    </div>
-                    <div>
-                      <p className="mb-1 text-muted small text-uppercase">
-                        <strong>{t('checkoutSummary.expires')}</strong>
-                      </p>
-                      <p className="mb-0 fs-6 fs-md-5">
-                        {checkout.paymentData.expirationMonth.toString().padStart(2, '0')}/
-                        {checkout.paymentData.expirationYear.toString().slice(-2)}
-                      </p>
-                    </div>
+                <div className="cost-breakdown">
+                  <div className="cost-row">
+                    <span className="cost-label">{t('checkoutSummary.subtotal')}</span>
+                    <span className="cost-value">${subtotal.toFixed(2)}</span>
                   </div>
-                )}
+                  <div className="cost-row">
+                    <span className="cost-label">{t('checkoutSummary.baseFee')}</span>
+                    <span className="cost-value">${baseFee.toFixed(2)}</span>
+                  </div>
+                  <div className="cost-row">
+                    <span className="cost-label">{t('checkoutSummary.deliveryFee')}</span>
+                    <span className="cost-value">${deliveryFee.toFixed(2)}</span>
+                  </div>
+                  <div className="cost-divider"></div>
+                  <div className="cost-row total-row">
+                    <span className="cost-label total-label">{t('checkoutSummary.total')}</span>
+                    <span className="cost-value total-value">${total.toFixed(2)}</span>
+                  </div>
+                </div>
+
+                {/* Enhanced Payment Information */}
+                <div className="payment-section">
+                  <h3 className="payment-title">
+                    <span className="payment-icon">🔒</span>
+                    {t('checkoutSummary.paymentInformation')}
+                  </h3>
+                  <div className="payment-security">
+                    <span className="security-badge">
+                      <span className="security-icon">🛡️</span>
+                      Pago seguro SSL
+                    </span>
+                  </div>
+                  {checkout.paymentData && (
+                    <div className="payment-details">
+                      <div className="payment-field">
+                        <label className="payment-label">{t('checkoutSummary.card')}</label>
+                        <span className="payment-value">•••• •••• •••• {checkout.paymentData.cardNumber.slice(-4)}</span>
+                      </div>
+                      <div className="payment-field">
+                        <label className="payment-label">{t('checkoutSummary.holder')}</label>
+                        <span className="payment-value">{checkout.paymentData.cardholderName}</span>
+                      </div>
+                      <div className="payment-field">
+                        <label className="payment-label">{t('checkoutSummary.expires')}</label>
+                        <span className="payment-value">
+                          {checkout.paymentData.expirationMonth.toString().padStart(2, '0')}/{checkout.paymentData.expirationYear.toString().slice(-2)}
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
 
                 {/* Action Buttons */}
-                <div className="d-grid gap-2 gap-md-3 mt-4">
+                <div className="action-buttons">
                   <button
-                    className="btn btn-primary btn-lg fs-6 fs-md-5 py-2 py-md-3"
+                    className="btn-primary-modern btn-place-order"
                     onClick={handlePlaceOrder}
                     disabled={isProcessing || checkout.loading}
                   >
                     {isProcessing ? (
-                      <>
-                        <span
-                          className="spinner-border spinner-border-sm me-2"
-                          role="status"
-                          aria-hidden="true"
-                        >
-                          {t('checkoutSummary.processingPayment')}
-                        </span>
+                      <div className="loading-state">
+                        <div className="spinner-modern"></div>
                         <span>{t('checkoutSummary.processingPayment')}</span>
-                      </>
+                      </div>
                     ) : (
-                      `${t('checkoutSummary.placeOrder')} (${total.toFixed(2)})`
+                      <div className="order-button-content">
+                        <span className="button-text">{t('checkoutSummary.placeOrder')}</span>
+                        <span className="button-amount">${total.toFixed(2)}</span>
+                      </div>
                     )}
                   </button>
 
-                  <Link
-                    to="/checkout/delivery"
-                    className="btn btn-outline-secondary fs-6 fs-md-5 py-2 py-md-3"
-                  >
+                  <Link to="/checkout/delivery" className="btn-secondary-modern">
                     {t('checkoutSummary.backToDelivery')}
                   </Link>
                 </div>

@@ -326,7 +326,13 @@
       "zipCodeRequired": "Zip code is required",
       "emailRequired": "Email is required",
       "emailInvalid": "Email is invalid",
-      "phoneRequired": "Phone is required"
+      "phoneRequired": "Phone is required",
+      "nameMinLength": "Must be at least 2 characters",
+      "addressMinLength": "Must be at least 5 characters",
+      "cityMinLength": "Must be at least 2 characters",
+      "stateMinLength": "Must be at least 2 characters",
+      "zipCodeInvalid": "Zip code must contain only numbers (5-10 digits)",
+      "phoneInvalid": "Phone must contain only numbers (9-15 digits)"
     }
   },
   "checkoutSummary": {

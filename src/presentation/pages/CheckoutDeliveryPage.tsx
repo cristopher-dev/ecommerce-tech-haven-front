@@ -38,6 +38,10 @@ const INITIAL_FORM_DATA: FormDataType = {
 
 const isValidEmail = (email: string): boolean => /\S+@\S+\.\S+/.test(email);
 
+const isValidPhone = (phone: string): boolean => /^\d{9,15}$/.test(phone.replace(/\s+/g, ''));
+
+const isValidZipCode = (zipCode: string): boolean => /^\d{5,10}$/.test(zipCode.replace(/\s+/g, ''));
+
 const getFieldError = (
   name: keyof FormDataType,
   value: string,
@@ -56,9 +60,46 @@ const getFieldError = (
   };
 
   if (isEmpty) return messages[name];
-  if (name === 'email' && !isValidEmail(value)) {
-    return t('checkoutDelivery.validation.emailInvalid');
+
+  switch (name) {
+    case 'firstName':
+    case 'lastName':
+      if (value.trim().length < 2) {
+        return t('checkoutDelivery.validation.nameMinLength');
+      }
+      break;
+    case 'address':
+      if (value.trim().length < 5) {
+        return t('checkoutDelivery.validation.addressMinLength');
+      }
+      break;
+    case 'city':
+      if (value.trim().length < 2) {
+        return t('checkoutDelivery.validation.cityMinLength');
+      }
+      break;
+    case 'state':
+      if (value.trim().length < 2) {
+        return t('checkoutDelivery.validation.stateMinLength');
+      }
+      break;
+    case 'zipCode':
+      if (!isValidZipCode(value)) {
+        return t('checkoutDelivery.validation.zipCodeInvalid');
+      }
+      break;
+    case 'email':
+      if (!isValidEmail(value)) {
+        return t('checkoutDelivery.validation.emailInvalid');
+      }
+      break;
+    case 'phone':
+      if (!isValidPhone(value)) {
+        return t('checkoutDelivery.validation.phoneInvalid');
+      }
+      break;
   }
+
   return '';
 };
 
