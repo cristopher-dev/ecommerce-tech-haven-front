@@ -11,7 +11,13 @@ export const getApiBaseUrl = (): string => {
     return cachedUrl;
   }
 
-  // Try process.env first (Jest environment)
+  // Try import.meta.env first (Vite environment)
+  if (import.meta?.env?.VITE_TECH_HAVEN_API_URL) {
+    cachedUrl = import.meta.env.VITE_TECH_HAVEN_API_URL;
+    return cachedUrl;
+  }
+
+  // Try process.env (Jest or other environments)
   if (typeof process !== 'undefined' && process.env?.VITE_TECH_HAVEN_API_URL) {
     cachedUrl = process.env.VITE_TECH_HAVEN_API_URL;
     return cachedUrl;
